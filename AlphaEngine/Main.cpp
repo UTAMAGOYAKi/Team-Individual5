@@ -2,7 +2,7 @@
 // includes
 
 #include "AEEngine.h"
-
+#include "Mesh.h"
 
 
 // ---------------------------------------------------------------------------
@@ -30,6 +30,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	// reset the system modules
 	AESysReset();
 
+	AEGfxVertexList* pmesh = createmesh();
 
 
 	// Game Loop
@@ -58,4 +59,6 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
 	// free the system
 	AESysExit();
+
+	AEGfxMeshFree(pmesh);
 }
