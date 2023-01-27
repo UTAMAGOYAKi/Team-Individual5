@@ -2,11 +2,16 @@
 // includes
 
 #include "AEEngine.h"
+#include "player.h"
+#include <iostream>
+#include <string>
 
 
 
 // ---------------------------------------------------------------------------
 // main
+int i = 0;
+float position = 1000.0;
 
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	_In_opt_ HINSTANCE hPrevInstance,
@@ -19,59 +24,79 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
 	int gGameRunning = 1;
 
-	// Initialization of your own variables go here
-
 	// Using custom window procedure
 	AESysInit(hInstance, nCmdShow, 800, 600, 1, 60, true, NULL);
 
 	// Changing the window title
-	AESysSetWindowTitle("My New Demo!");
+	AESysSetWindowTitle("Alchemy -- Daniel's testing branch");
 
 	// reset the system modules
 	AESysReset();
 
-	//_______________MESH CREATION________________________________________
+	// Initialization of your own variables go here
+	s8 test_font = AEGfxCreateFont("Assets/Roboto-Regular.ttf", 20);
+	const char* test_str = { "Test" };
+	const char* rat_name_1 = { "Rat 1" };
+	const char* rat_name_2 = { "Rat 2" };
+	int rat_hp_1 = 10;
+	player* alchemice = player_create();
+	std::string rat_hp;
 	// Pointer to Mesh
 	AEGfxVertexList* pMesh = 0;
 	// Informing the library that we're about to start adding triangles
 	AEGfxMeshStart();
 	// This shape has 2 triangles that makes up a square
-	// Color parameters represent colours as ARGB in hexadecimal
-	// (e.g. 0xFFFF0000 is red, 0xFF00FF00 is green)
+	// Color parameters represent colours as ARGB
 	// UV coordinates to read from loaded textures
 	AEGfxTriAdd(
-		-0.5f, -0.5f, 0xFFFFFFFF, 0.0f, 0.0f,
-		0.5f, -0.5f, 0xFFFFFFFF, 1.0f, 0.0f,
-		-0.5f, 0.5f, 0xFFFFFFFF, 0.0f, 1.0f);
+		-0.5f, -0.5f, 0xFFFF00FF, 0.0f, 0.0f,
+		0.5f, -0.5f, 0xFFFFFF00, 1.0f, 0.0f,
+		-0.5f, 0.5f, 0xFF00FFFF, 0.0f, 1.0f);
 	AEGfxTriAdd(
 		0.5f, -0.5f, 0xFFFFFFFF, 1.0f, 0.0f,
 		0.5f, 0.5f, 0xFFFFFFFF, 1.0f, 1.0f,
 		-0.5f, 0.5f, 0xFFFFFFFF, 0.0f, 1.0f);
 	// Saving the mesh (list of triangles) in pMesh
 	pMesh = AEGfxMeshEnd();
-
-	//ADDING TEXTURE
-	AEGfxTexture* pTex = AEGfxTextureLoad("Assets/PlanetTexture.png");
-
-
-
+	AEGfxTexture* pTex = AEGfxTextureLoad("Assets/rat_Piskel.png");
+	AEGfxTexture* chara = AEGfxTextureLoad("Assets/character.png");
+	AEGfxTexture* rat = AEGfxTextureLoad("Assets/rat_Piskel.png");
 	// Game Loop
 	while (gGameRunning)
 	{
 		// Informing the system about the loop's start
 		AESysFrameStart();
 
-
-
 		// Handling Input
 		AEInputUpdate();
 
 		// Your own update logic goes here
+		if (AEInputCheckTriggered(AEVK_Q))
+		{
+			rat_hp_1--;
+			std::cout << "The player has : " << alchemice->avail_ingre << " available ingredients\n";
+		}
+		if (rat_hp_1 > 0)
+		{
+			rat_hp.clear();
+			rat_hp += std::to_string(rat_hp_1);
+			rat_hp += "/10";
+			position = 1000.0;
+		}
+		else
+		{
+			if (AEInputCheckTriggered(AEVK_Q) && rat_hp_1 == 0)
+			{
+				std::cout << rat_name_1 << " is defeated!\n";
+			}
+			position = 0.0;
+		}
+
 
 
 		// Your own rendering logic goes here
 		// Set the background to black.
-		AEGfxSetBackgroundColor(0.0f, 0.0f, 0.0f);
+		AEGfxSetBackgroundColor(.2f, .2f, .2f);
 		// Tell the engine to get ready to draw something with texture.
 		AEGfxSetRenderMode(AE_GFX_RM_TEXTURE);
 		// Set the tint to white, so that the sprite can 
@@ -88,21 +113,76 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 		AEMtx33Scale(&scale, 100.f, 100.f);
 		// Create a rotation matrix that rotates by 45 degrees
 		AEMtx33 rotate = { 0 };
-		AEMtx33Rot(&rotate, PI / 4);
+
+		AEMtx33Rot(&rotate, PI);
 		// Create a translation matrix that translates by
 		// 100 in the x-axis and 100 in the y-axis
 		AEMtx33 translate = { 0 };
-		AEMtx33Trans(&translate, 100.f, 100.f);
-		// Concatenate the matrices (TRS)
+
+		AEMtx33Trans(&translate, (250.f), -20.f);
+		// Concat the matrices (TRS)
 		AEMtx33 transform = { 0 };
 		AEMtx33Concat(&transform, &rotate, &scale);
 		AEMtx33Concat(&transform, &translate, &transform);
-		// Choose the transform to apply onto the vertices 
-		// of the mesh that we are choose to draw in the next line.
+		// Choose the transform to use
 		AEGfxSetTransform(transform.m);
-		// With the above settings, draw the mesh.
+		// Actually drawing the mesh 
 		AEGfxMeshDraw(pMesh, AE_GFX_MDM_TRIANGLES);
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+		AEGfxTextureSet(chara, 0, 0);
+		AEMtx33Trans(&translate, (-200.f), 20.f);
+		AEMtx33Rot(&rotate, PI);
+		AEMtx33Scale(&scale, -200.f, 200.f);
+		AEMtx33Concat(&transform, &rotate, &scale);
+		AEMtx33Concat(&transform, &translate, &transform);
+		AEGfxSetTransform(transform.m);
+		AEGfxMeshDraw(pMesh, AE_GFX_MDM_TRIANGLES);
+
+
+
+
+
+
+
+
+
+
+
+		AEGfxTextureSet(rat, 0, 0);
+		AEMtx33Trans(&translate, (position - 900.f), -20.f);
+		AEMtx33Rot(&rotate, PI);
+		AEMtx33Scale(&scale, 100.f, 100.f);
+		AEMtx33Concat(&transform, &rotate, &scale);
+		AEMtx33Concat(&transform, &translate, &transform);
+		AEGfxSetTransform(transform.m);
+		AEGfxMeshDraw(pMesh, AE_GFX_MDM_TRIANGLES);
+
+
+		AEGfxPrint(test_font, (s8*)test_str, -0.65f, 0.5f, 1, 0.0f, 0.0f, 0.0f);
+		if (rat_hp_1 > 0)
+		{
+			AEGfxPrint(test_font, (s8*)rat_name_1, 0.225f, 0.2f, 1, 0.0f, 0.0f, 0.0f);
+			AEGfxPrint(test_font, (s8*)rat_hp.c_str(), 0.225f, 0.1f, 1, 0.0f, 0.0f, 0.0f);
+		}
+
+		AEGfxPrint(test_font, (s8*)rat_name_2, 0.625f, 0.2f, 1, 0.0f, 0.0f, 0.0f);
 		// Informing the system about the loop's end
 		AESysFrameEnd();
 
@@ -111,9 +191,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 			gGameRunning = 0;
 	}
 
-	AEGfxTextureUnload(pTex);
 	AEGfxMeshFree(pMesh);
-
+	AEGfxTextureUnload(pTex);
 	// free the system
 	AESysExit();
 }
