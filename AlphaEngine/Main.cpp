@@ -280,6 +280,10 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
  						spell_pos = outside;
 						burn_to_mouse = false;
 						combination = false;
+						if (rat_hp_1 < 0)
+						{
+							std::cout << "Rat 1 was defeated\n";
+						}
 					}
 					else
 					{
