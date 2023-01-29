@@ -6,7 +6,15 @@
 #include <iostream>
 #include <string>
 
-
+//Reference for controls
+//Q - basic attack against first rat
+//W - start alchemy
+//Z - check for mouse position
+//X - cancel alchemy
+//E - in alchemy, try combination
+//drag& drop fire to left spell slot of glyth
+//poison on right
+//burn can be placed on either rat, but second rat has no hp
 
 // ---------------------------------------------------------------------------
 // main
@@ -23,7 +31,9 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	UNREFERENCED_PARAMETER(hPrevInstance);
 	UNREFERENCED_PARAMETER(lpCmdLine);
 
-
+	enum spell_slot {empty, fire_slot, poison_slot, lighting_slot};
+	int spell_slot_one = empty;
+	int spell_slot_two = empty;
 	int gGameRunning = 1;
 
 	// Using custom window procedure
@@ -55,6 +65,14 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	float fire_y = -250.0;
 	float fire_x = (spell_pos - 100);
 	bool fire_to_mouse = false;
+	
+	float poison_y = -250.0;
+	float poison_x = (spell_pos + 100);
+	bool poison_to_mouse = false;
+	
+	float burn_y = -250.0;
+	float burn_x = (spell_pos + 100);
+	bool burn_to_mouse = false;
 
 	player* alchemice = player_create();
 	std::string rat_hp;
@@ -80,6 +98,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	AEGfxTexture* rat = AEGfxTextureLoad("Assets/rat_Piskel.png");
 	AEGfxTexture* spell_g = AEGfxTextureLoad("Assets/spell_glyph.png");
 	AEGfxTexture* fire = AEGfxTextureLoad("Assets/not_fire.png");
+	AEGfxTexture* poison = AEGfxTextureLoad("Assets/not_posion.png");
+	AEGfxTexture* shame = AEGfxTextureLoad("Assets/not_burn.png");
 	// Game Loop
 	while (gGameRunning)
 	{
@@ -127,7 +147,10 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 			spell_pos = 0.0;
 			fire_y = 250;
 			fire_x = (spell_pos - 100);
+			poison_x = (spell_pos + 100);
+			poison_y = 250;
 			alchemy_mode = true;
+
 
 		}
 
@@ -148,6 +171,19 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 						fire_to_mouse = true;
 					}
 				}
+
+				if (poison_to_mouse)
+				{
+					poison_y = pY-330;
+					poison_x = pX-400;
+				}
+				else
+				{
+					if (pX < 550 && pX >440 && pY >500 && pY < 580)
+					{
+						poison_to_mouse = true;
+					}
+				}
 			}
 
 			if (AEInputCheckReleased(AEVK_LBUTTON))
@@ -165,6 +201,23 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 					}
 					fire_x = (spell_pos - 100);
 					fire_to_mouse = false;
+					spell_slot_one = fire_slot;
+				}
+
+				if (poison_to_mouse)
+				{
+					if (pX < 540 && pX > 450 && pY < 175 && pY > 120)
+					{
+						poison_y = -150;
+
+					}
+					else
+					{
+						poison_y = 250;
+					}
+					poison_x = (spell_pos + 100);
+					poison_to_mouse = false;
+					spell_slot_two = poison_slot;
 				}
 			}
 
@@ -178,9 +231,18 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 			}
 			if (AEInputCheckTriggered(AEVK_E))
 			{
-				if (0)
+				if (spell_slot_one && spell_slot_two)
 				{
 					combination = true;
+					alchemy_mode = false;
+					fire_y = -outside;
+					poison_y = -outside;
+
+					fire_x = (spell_pos - 100);
+					poison_x = (spell_pos + 100);
+					std::cout << "Alchemy combination!\n BURN";
+					burn_x = spell_pos;
+					burn_y = -150;
 				}
 				else
 				{
@@ -190,7 +252,57 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
 		}
 
+		if (combination)
+		{
+			if (AEInputCheckTriggered(AEVK_LBUTTON) || AEInputCheckCurr(AEVK_LBUTTON))
+			{
+				if (burn_to_mouse)
+				{
+					burn_y = pY - 330;
+					burn_x = pX - 400;
+				}
+				else
+				{
+					if (pX < 450 && pX >340 && pY < 175 && pY > 120)
+					{
+						burn_to_mouse = true;
+					}
+				}
+			}
 
+			if (AEInputCheckReleased(AEVK_LBUTTON))
+			{
+				if (burn_to_mouse)
+				{
+					if (pX < 550 && pX > 450 && pY < 350 && pY > 250)
+					{
+						rat_hp_1 -= 5;
+ 						spell_pos = outside;
+						burn_to_mouse = false;
+						combination = false;
+					}
+					else
+					{
+						burn_x = spell_pos;
+						burn_y = -150;
+					}
+					if (pX < 700 && pX > 620 && pY < 350 && pY > 250)
+					{
+						//rat_hp_2 -= 5;
+						spell_pos = outside;
+						burn_to_mouse = false;
+						combination = false;
+					}
+					else
+					{
+						burn_x = spell_pos;
+						burn_y = -150;
+					}
+				}
+			}
+
+
+		}
 
 
 
@@ -253,24 +365,50 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 		AEGfxMeshDraw(pMesh, AE_GFX_MDM_TRIANGLES);
 
 
+		if(alchemy_mode || combination)
+		{
+			AEGfxTextureSet(spell_g, 0, 0);
+			AEMtx33Trans(&translate, (spell_pos), 150.f);
+			AEMtx33Rot(&rotate, PI);
+			AEMtx33Scale(&scale, 300.f, 300.f);
+			AEMtx33Concat(&transform, &rotate, &scale);
+			AEMtx33Concat(&transform, &translate, &transform);
+			AEGfxSetTransform(transform.m);
+			AEGfxMeshDraw(pMesh, AE_GFX_MDM_TRIANGLES);
+		}
 
-		AEGfxTextureSet(spell_g, 0, 0);
-		AEMtx33Trans(&translate, (spell_pos), 150.f);
-		AEMtx33Rot(&rotate, PI);
-		AEMtx33Scale(&scale, 300.f, 300.f);
-		AEMtx33Concat(&transform, &rotate, &scale);
-		AEMtx33Concat(&transform, &translate, &transform);
-		AEGfxSetTransform(transform.m);
-		AEGfxMeshDraw(pMesh, AE_GFX_MDM_TRIANGLES);
+		if(alchemy_mode)
+		{
+			AEGfxTextureSet(fire, 0, 0);
+			AEMtx33Trans(&translate, fire_x, -fire_y);
+			AEMtx33Rot(&rotate, PI);
+			AEMtx33Scale(&scale, 100.f, 100.f);
+			AEMtx33Concat(&transform, &rotate, &scale);
+			AEMtx33Concat(&transform, &translate, &transform);
+			AEGfxSetTransform(transform.m);
+			AEGfxMeshDraw(pMesh, AE_GFX_MDM_TRIANGLES);
 
-		AEGfxTextureSet(fire, 0, 0);
-		AEMtx33Trans(&translate, fire_x, -fire_y);
-		AEMtx33Rot(&rotate, PI);
-		AEMtx33Scale(&scale, 100.f, 100.f);
-		AEMtx33Concat(&transform, &rotate, &scale);
-		AEMtx33Concat(&transform, &translate, &transform);
-		AEGfxSetTransform(transform.m);
-		AEGfxMeshDraw(pMesh, AE_GFX_MDM_TRIANGLES);
+			AEGfxTextureSet(poison, 0, 0);
+			AEMtx33Trans(&translate, poison_x, -poison_y);
+			AEMtx33Rot(&rotate, PI);
+			AEMtx33Scale(&scale, 100.f, 100.f);
+			AEMtx33Concat(&transform, &rotate, &scale);
+			AEMtx33Concat(&transform, &translate, &transform);
+			AEGfxSetTransform(transform.m);
+			AEGfxMeshDraw(pMesh, AE_GFX_MDM_TRIANGLES);
+		}
+
+		if(combination)
+		{
+			AEGfxTextureSet(shame, 0, 0);
+			AEMtx33Trans(&translate, burn_x, -burn_y);
+			AEMtx33Rot(&rotate, PI);
+			AEMtx33Scale(&scale, 100.f, 100.f);
+			AEMtx33Concat(&transform, &rotate, &scale);
+			AEMtx33Concat(&transform, &translate, &transform);
+			AEGfxSetTransform(transform.m);
+			AEGfxMeshDraw(pMesh, AE_GFX_MDM_TRIANGLES);
+		}
 
 		AEGfxPrint(test_font, (s8*)test_str, -0.65f, 0.5f, 1, 0.0f, 0.0f, 0.0f);
 		if (rat_hp_1 > 0)
@@ -292,6 +430,9 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	AEGfxTextureUnload(pTex);
 	AEGfxTextureUnload(rat);
 	AEGfxTextureUnload(chara);
+	AEGfxTextureUnload(shame);
+	AEGfxTextureUnload(fire);
+	AEGfxTextureUnload(poison);
 	// free the system
 	AESysExit();
 }
