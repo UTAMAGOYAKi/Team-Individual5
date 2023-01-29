@@ -13,6 +13,8 @@
 int i = 0;
 float position = 1000.0;
 
+
+
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	_In_opt_ HINSTANCE hPrevInstance,
 	_In_ LPWSTR    lpCmdLine,
@@ -39,6 +41,19 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	const char* rat_name_1 = { "Rat 1" };
 	const char* rat_name_2 = { "Rat 2" };
 	int rat_hp_1 = 10;
+	float outside = -1000.0;
+	float center_x = 400.0;
+	float center_y = 300.0;
+	s32 pX ;
+	s32 pY ;
+	bool alchemy_mode = false;
+	bool combination = false;
+	float spell_pos = outside;
+	float item_one_pos = (spell_pos - 100);
+	float item_two_pos = (spell_pos + 100);
+
+	float fire_y = -250.0;
+
 	player* alchemice = player_create();
 	std::string rat_hp;
 	// Pointer to Mesh
@@ -61,6 +76,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	AEGfxTexture* pTex = AEGfxTextureLoad("Assets/rat_Piskel.png");
 	AEGfxTexture* chara = AEGfxTextureLoad("Assets/character.png");
 	AEGfxTexture* rat = AEGfxTextureLoad("Assets/rat_Piskel.png");
+	AEGfxTexture* spell_g = AEGfxTextureLoad("Assets/spell_glyph.png");
+	AEGfxTexture* fire = AEGfxTextureLoad("Assets/not_fire.png");
 	// Game Loop
 	while (gGameRunning)
 	{
@@ -74,7 +91,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 		if (AEInputCheckTriggered(AEVK_Q))
 		{
 			rat_hp_1--;
-			std::cout << "The player has : " << alchemice->avail_ingre << " available ingredients\n";
+			std::cout << "The player used basic attack\n";
+			//std::cout << "The player has : " << alchemice->avail_ingre << " available ingredients\n";
 		}
 		if (rat_hp_1 > 0)
 		{
@@ -91,6 +109,55 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 			}
 			position = 0.0;
 		}
+
+
+		AEInputGetCursorPosition(&pX, &pY);
+
+		if(AEInputCheckTriggered(AEVK_Z))
+		{
+			std::cout << "The rough position of the mouse is x: " << pX << " y: " << pY<< "\n";
+		}
+
+
+		if (AEInputCheckTriggered(AEVK_W) && spell_pos != 0.0)
+		{
+			std::cout << "Aclhemy start\n";
+			spell_pos = 0.0;
+			alchemy_mode = true;
+
+		}
+
+		if (alchemy_mode)
+		{
+
+
+
+
+			if (AEInputCheckTriggered(AEVK_X) || combination )
+			{
+				spell_pos = outside;
+				alchemy_mode = false;
+				std::cout << "Aclhemy end\n";
+			}
+			if (AEInputCheckTriggered(AEVK_E))
+			{
+				if (0)
+				{
+					combination = true;
+				}
+				else
+				{
+					std::cout << "Alchemy combination invalid\n";
+				}
+			}
+
+		}
+
+
+
+
+
+
 
 
 
@@ -129,23 +196,6 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 		// Actually drawing the mesh 
 		AEGfxMeshDraw(pMesh, AE_GFX_MDM_TRIANGLES);
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 		AEGfxTextureSet(chara, 0, 0);
 		AEMtx33Trans(&translate, (-200.f), 20.f);
 		AEMtx33Rot(&rotate, PI);
@@ -154,15 +204,6 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 		AEMtx33Concat(&transform, &translate, &transform);
 		AEGfxSetTransform(transform.m);
 		AEGfxMeshDraw(pMesh, AE_GFX_MDM_TRIANGLES);
-
-
-
-
-
-
-
-
-
 
 
 		AEGfxTextureSet(rat, 0, 0);
@@ -174,6 +215,25 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 		AEGfxSetTransform(transform.m);
 		AEGfxMeshDraw(pMesh, AE_GFX_MDM_TRIANGLES);
 
+
+
+		AEGfxTextureSet(spell_g, 0, 0);
+		AEMtx33Trans(&translate, (spell_pos), 150.f);
+		AEMtx33Rot(&rotate, PI);
+		AEMtx33Scale(&scale, 300.f, 300.f);
+		AEMtx33Concat(&transform, &rotate, &scale);
+		AEMtx33Concat(&transform, &translate, &transform);
+		AEGfxSetTransform(transform.m);
+		AEGfxMeshDraw(pMesh, AE_GFX_MDM_TRIANGLES);
+
+		AEGfxTextureSet(fire, 0, 0);
+		AEMtx33Trans(&translate, (spell_pos-100), fire_y);
+		AEMtx33Rot(&rotate, PI);
+		AEMtx33Scale(&scale, 100.f, 100.f);
+		AEMtx33Concat(&transform, &rotate, &scale);
+		AEMtx33Concat(&transform, &translate, &transform);
+		AEGfxSetTransform(transform.m);
+		AEGfxMeshDraw(pMesh, AE_GFX_MDM_TRIANGLES);
 
 		AEGfxPrint(test_font, (s8*)test_str, -0.65f, 0.5f, 1, 0.0f, 0.0f, 0.0f);
 		if (rat_hp_1 > 0)
@@ -193,6 +253,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
 	AEGfxMeshFree(pMesh);
 	AEGfxTextureUnload(pTex);
+	AEGfxTextureUnload(rat);
+	AEGfxTextureUnload(chara);
 	// free the system
 	AESysExit();
 }
