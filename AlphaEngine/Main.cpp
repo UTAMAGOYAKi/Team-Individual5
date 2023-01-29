@@ -53,6 +53,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	float item_two_pos = (spell_pos + 100);
 
 	float fire_y = -250.0;
+	float fire_x = (spell_pos - 100);
+	bool fire_to_mouse = false;
 
 	player* alchemice = player_create();
 	std::string rat_hp;
@@ -123,6 +125,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 		{
 			std::cout << "Aclhemy start\n";
 			spell_pos = 0.0;
+			fire_y = 250;
+			fire_x = (spell_pos - 100);
 			alchemy_mode = true;
 
 		}
@@ -130,14 +134,47 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 		if (alchemy_mode)
 		{
 
+			if (AEInputCheckTriggered(AEVK_LBUTTON)|| AEInputCheckCurr(AEVK_LBUTTON))
+			{
+				if (fire_to_mouse)
+				{
+					fire_y = pY-330;
+					fire_x = pX-400;
+				}
+				else
+				{
+					if (pX < 350 && pX >240 && pY >500 && pY < 580)
+					{
+						fire_to_mouse = true;
+					}
+				}
+			}
 
+			if (AEInputCheckReleased(AEVK_LBUTTON))
+			{
+				if(fire_to_mouse)
+				{
+					if (pX < 340 && pX > 250 && pY < 175 && pY > 120)
+					{
+						fire_y = -150;
 
+					}
+					else
+					{
+						fire_y = 250;
+					}
+					fire_x = (spell_pos - 100);
+					fire_to_mouse = false;
+				}
+			}
 
 			if (AEInputCheckTriggered(AEVK_X) || combination )
 			{
 				spell_pos = outside;
 				alchemy_mode = false;
 				std::cout << "Aclhemy end\n";
+				fire_y = -250.0;
+				fire_x = (spell_pos - 100);
 			}
 			if (AEInputCheckTriggered(AEVK_E))
 			{
@@ -227,7 +264,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 		AEGfxMeshDraw(pMesh, AE_GFX_MDM_TRIANGLES);
 
 		AEGfxTextureSet(fire, 0, 0);
-		AEMtx33Trans(&translate, (spell_pos-100), fire_y);
+		AEMtx33Trans(&translate, fire_x, -fire_y);
 		AEMtx33Rot(&rotate, PI);
 		AEMtx33Scale(&scale, 100.f, 100.f);
 		AEMtx33Concat(&transform, &rotate, &scale);
