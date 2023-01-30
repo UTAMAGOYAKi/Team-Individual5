@@ -165,7 +165,11 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 			water_y = 250;
 			water_x = (spell_pos - 200);
 			alchemy_mode = true;
-
+			fire_to_mouse = false;
+			water_to_mouse = false;
+			poison_to_mouse = false;
+			spell_slot_one = empty;
+			spell_slot_two = empty;
 
 		}
 
@@ -221,6 +225,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 					if (pX < 340 && pX > 250 && pY < 175 && pY > 120)
 					{
 						fire_y = -150;
+						spell_slot_one = fire_slot;
 
 					}
 					else
@@ -229,7 +234,6 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 					}
 					fire_x = (spell_pos - 100);
 					fire_to_mouse = false;
-					spell_slot_one = fire_slot;
 				}
 
 				if (poison_to_mouse && !spell_slot_two)
@@ -237,6 +241,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 					if (pX < 540 && pX > 450 && pY < 175 && pY > 120)
 					{
 						poison_y = -150;
+						spell_slot_two = poison_slot;
 
 					}
 					else
@@ -245,7 +250,6 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 					}
 					poison_x = (spell_pos + 100);
 					poison_to_mouse = false;
-					spell_slot_two = poison_slot;
 				}
 
 
@@ -255,6 +259,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 					{
 						water_y = -150;
 						water_x = (spell_pos - 100);
+						spell_slot_one = water_slot;
 
 					}
 					else
@@ -264,7 +269,6 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
 					}
 					water_to_mouse = false;
-					spell_slot_one = water_slot;
 				}
 			}
 
@@ -280,6 +284,10 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 				std::cout << "Aclhemy end\n";
 				fire_y = -250.0;
 				fire_x = (spell_pos - 100);
+				poison_y = -250.0;
+				poison_x = (spell_pos - 100);
+				water_y = -250.0;
+				water_x= (spell_pos - 100);
 			}
 			if (AEInputCheckTriggered(AEVK_E))
 			{
