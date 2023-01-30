@@ -1,8 +1,10 @@
 // ---------------------------------------------------------------------------
 // includes
-
+#pragma once
 #include "AEEngine.h"
 #include "player.h"
+#include "Spells.h"
+#include "Ingredients.h"
 #include <iostream>
 #include <string>
 
@@ -32,15 +34,15 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	UNREFERENCED_PARAMETER(lpCmdLine);
 
 	enum spell_slot {empty, fire_slot, poison_slot, lighting_slot};
-	int spell_slot_one = empty;
-	int spell_slot_two = empty;
+	Ingredients spell_slot_one = NILL;
+	Ingredients spell_slot_two = NILL;
 	int gGameRunning = 1;
 
 	// Using custom window procedure
 	AESysInit(hInstance, nCmdShow, 800, 600, 1, 60, true, NULL);
 
 	// Changing the window title
-	AESysSetWindowTitle("Alchemy -- Daniel's testing branch");
+	AESysSetWindowTitle("Alchemy -- Daniel's testing branch + Ee Loong Combination");
 
 	// reset the system modules
 	AESysReset();
@@ -143,7 +145,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
 		if (AEInputCheckTriggered(AEVK_W) && spell_pos != 0.0)
 		{
-			std::cout << "Aclhemy start\n";
+			std::cout << "Aclhemy start\n";		
+
 			spell_pos = 0.0;
 			fire_y = 250;
 			fire_x = (spell_pos - 100);
@@ -201,7 +204,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 					}
 					fire_x = (spell_pos - 100);
 					fire_to_mouse = false;
-					spell_slot_one = fire_slot;
+					spell_slot_one = FIRE;
 				}
 
 				if (poison_to_mouse)
@@ -217,7 +220,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 					}
 					poison_x = (spell_pos + 100);
 					poison_to_mouse = false;
-					spell_slot_two = poison_slot;
+					spell_slot_two = POISON;
 				}
 			}
 
@@ -231,7 +234,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 			}
 			if (AEInputCheckTriggered(AEVK_E))
 			{
-				if (spell_slot_one && spell_slot_two)
+				//if ()
+				if (createSpell(spell_slot_one, spell_slot_two) == BURN)
 				{
 					combination = true;
 					alchemy_mode = false;
@@ -240,7 +244,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
 					fire_x = (spell_pos - 100);
 					poison_x = (spell_pos + 100);
-					std::cout << "Alchemy combination!\n BURN";
+					std::string name = returnname(createSpell(spell_slot_one, spell_slot_two));
+					std::cout << "Alchemy combination!\n"<<name<<std::endl;
 					burn_x = spell_pos;
 					burn_y = -150;
 				}

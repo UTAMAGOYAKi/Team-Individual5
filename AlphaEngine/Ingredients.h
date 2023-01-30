@@ -7,5 +7,7 @@ enum Ingredients {
     ELECTRIC,
     POISON,
     FREEZE,
-    WIND
+    WIND,
+    NILL
 };
+

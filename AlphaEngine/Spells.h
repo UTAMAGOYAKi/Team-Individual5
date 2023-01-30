@@ -1,5 +1,6 @@
 #pragma once
-#include <vector>
+#include "Ingredients.h"
+#include <string>
 
 enum Spells {
     STEAM_TORNADO,
@@ -12,5 +13,14 @@ enum Spells {
     INFERNO,
     ICE_NOVA,
     ICE_STORM,
+    BURN,
     INVALID
 };
+
+struct structspells {
+    int id = 0;
+    std::string name = "";
+};
+
+std::string returnname(Spells id );
+Spells createSpell(Ingredients ingredient1, Ingredients ingredient2, Ingredients ingredient3 = NILL );
