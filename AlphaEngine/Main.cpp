@@ -174,40 +174,40 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
 			if (AEInputCheckTriggered(AEVK_LBUTTON)|| AEInputCheckCurr(AEVK_LBUTTON))
 			{
-				if (fire_to_mouse)
+				if (fire_to_mouse && !spell_slot_one && !water_to_mouse && !poison_to_mouse)
 				{
 					fire_y = pY-330;
 					fire_x = pX-400;
 				}
 				else
 				{
-					if (pX < 350 && pX >240 && pY >500 && pY < 580)
+					if (pX < 350 && pX >240 && pY >500 && pY < 580 && !spell_slot_one && !water_to_mouse && !poison_to_mouse)
 					{
 						fire_to_mouse = true;
 					}
 				}
 
-				if (poison_to_mouse)
+				if (poison_to_mouse && !spell_slot_two && !fire_to_mouse && !water_to_mouse)
 				{
 					poison_y = pY-330;
 					poison_x = pX-400;
 				}
 				else
 				{
-					if (pX < 550 && pX >440 && pY >500 && pY < 580)
+					if (pX < 550 && pX >440 && pY >500 && pY < 580 && !spell_slot_two && !fire_to_mouse && !water_to_mouse)
 					{
 						poison_to_mouse = true;
 					}
 				}
 
-				if (water_to_mouse)
+				if (water_to_mouse && !spell_slot_one && !fire_to_mouse && !poison_to_mouse)
 				{
 					water_y = pY - 330;
 					water_x = pX - 400;
 				}
 				else
 				{
-					if (pX < 250 && pX >140 && pY > 500 && pY < 580)
+					if (pX < 250 && pX >140 && pY > 500 && pY < 580 && !spell_slot_one && !fire_to_mouse && !poison_to_mouse)
 					{
 						water_to_mouse = true;
 					}
@@ -232,7 +232,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 					spell_slot_one = fire_slot;
 				}
 
-				if (poison_to_mouse && !spell_slot_one)
+				if (poison_to_mouse && !spell_slot_two)
 				{
 					if (pX < 540 && pX > 450 && pY < 175 && pY > 120)
 					{
@@ -249,7 +249,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 				}
 
 
-				if (water_to_mouse)
+				if (water_to_mouse && !spell_slot_one)
 				{
 					if (pX < 340 && pX > 250 && pY < 175 && pY > 120)
 					{
@@ -272,6 +272,11 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 			{
 				spell_pos = outside;
 				alchemy_mode = false;
+				fire_to_mouse = false;
+				water_to_mouse = false;
+				poison_to_mouse = false;
+				spell_slot_one = empty;
+				spell_slot_two = empty;
 				std::cout << "Aclhemy end\n";
 				fire_y = -250.0;
 				fire_x = (spell_pos - 100);
@@ -280,7 +285,9 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 			{
 				if (spell_slot_one && spell_slot_two)
 				{
-
+					fire_to_mouse = false;
+					water_to_mouse = false;
+					poison_to_mouse = false;
 					switch (spell_slot_one)
 					{
 					case fire_slot:
@@ -310,6 +317,9 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 						spell_slot_combine = toxic;
 						break;
 					}
+					spell_slot_one = empty;
+					spell_slot_two = empty;
+
 				}
 				else
 				{
