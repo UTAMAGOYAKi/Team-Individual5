@@ -22,6 +22,6 @@ Spells create_spell(ingredients ingredient1, ingredients ingredient2, ingredient
 }
 
 
-std::string returnname(Spells id) {
+std::string return_name(Spells id) {
 	return availablespell[id].name;
 }

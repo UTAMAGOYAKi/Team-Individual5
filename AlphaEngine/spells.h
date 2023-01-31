@@ -2,6 +2,7 @@
 #include "ingredients.h"
 #include <string>
 
+
 enum Spells {
     STEAM_TORNADO,
     THUNDERSTRIKE,
