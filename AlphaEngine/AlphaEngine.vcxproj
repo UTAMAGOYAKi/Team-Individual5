@@ -98,11 +98,13 @@ xcopy "$(SolutionDir)Extern\AlphaEngine_V3.08\lib\fmod.dll" "$(OutDir)" /s /r /y
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Buttons.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="enemy_obj.cpp" />
     <ClCompile Include="player.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Buttons.hpp" />
     <ClInclude Include="enemy_obj.h" />
     <ClInclude Include="player.h" />
   </ItemGroup>
