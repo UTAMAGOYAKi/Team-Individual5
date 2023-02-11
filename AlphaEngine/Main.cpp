@@ -5,6 +5,7 @@
 #include "player.h"
 #include "Spells.h"
 #include "Ingredients.h"
+#include "GSM.h"
 #include <iostream>
 #include <string>
 
@@ -102,6 +103,10 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	AEGfxTexture* fire = AEGfxTextureLoad("Assets/not_fire.png");
 	AEGfxTexture* poison = AEGfxTextureLoad("Assets/not_posion.png");
 	AEGfxTexture* shame = AEGfxTextureLoad("Assets/not_burn.png");
+
+	//GSMInit(GS_ALCHEMICE);
+	//while (gGameStateCurr == GS_ALCHEMICE)
+	
 	// Game Loop
 	while (gGameRunning)
 	{
