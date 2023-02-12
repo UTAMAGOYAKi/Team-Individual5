@@ -1,6 +1,5 @@
 #include "Buttons.hpp"
 
-namespace Inputs {
 
 
 	dragdrop::dragdrop(double s1x, double s1y, double s2x, double s2y, bool flag, int refer)
@@ -111,7 +110,7 @@ namespace Inputs {
 		}
 		else
 		{
-			return -1;
+			return 0;
 		}
 	}
 
@@ -162,5 +161,3 @@ namespace Inputs {
 		d += (first.y - second.y) * (first.y - second.y);
 		return sqrt(d);
 	}
-
-}

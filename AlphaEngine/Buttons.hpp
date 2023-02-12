@@ -7,7 +7,6 @@
 #include <float.h>
 #include <cmath>
 
-namespace Inputs {
 
 struct coord {
 		double x;	//the x-axis coordinate. Don't be funny on this part please
@@ -27,6 +26,7 @@ class dragdrop {
 
 public:
 	//constructor
+
 	dragdrop(double s1x, double s1y, double s2x, double s2y, bool flag, int refer);
 	//constructor
 	dragdrop() : bounding{ {0.0, 0.0}, {0.0, 0.0}, {0.0, 0.0}, {0.0, 0.0} }  {};
@@ -96,7 +96,7 @@ int aabbbutton(dragdrop* box, dragdrop* spell);
 
 
 
-}
+
 
 
 

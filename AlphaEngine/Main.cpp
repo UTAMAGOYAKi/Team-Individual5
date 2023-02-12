@@ -3,6 +3,7 @@
 
 #include "AEEngine.h"
 #include "player.h"
+#include "Buttons.hpp"
 #include <iostream>
 #include <string>
 
@@ -85,6 +86,12 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	float water_x = (spell_pos - 200);
 	bool water_to_mouse = false;
 
+
+	dragdrop next_des{ 100,100,-100,-100,1,1 };
+
+	coord mouse;
+
+
 	player* alchemice = player_create();
 	std::string rat_hp;
 	// Pointer to Mesh
@@ -147,6 +154,14 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
 
 		AEInputGetCursorPosition(&pX, &pY);
+		mouse.x = pX;
+		mouse.y = pY;
+
+		if (aabbbutton(&next_des, mouse)&& AEInputCheckTriggered(AEVK_LBUTTON))
+		{
+			std::cout << "It works\n";
+
+		}
 
 		if(AEInputCheckTriggered(AEVK_Z))
 		{
