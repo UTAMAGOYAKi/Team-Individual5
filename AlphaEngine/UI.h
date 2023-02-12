@@ -8,7 +8,7 @@
 #include "AEEngine.h"
 #include "EnemyObject.h"
 #include <string>
-
+#include "Spells.h"
 
 
  
@@ -28,8 +28,9 @@ void name_bar(std::string name, aabb place);
 // How do we plan to assign textures to buttons
 //void button_draw();
 
-void pause_menu_draw(AEGfxTexture* menu, AEGfxTexture* buttons);
+void pause_menu_draw(AEGfxTexture* menu, AEGfxTexture* buttons, AEGfxVertexList* menu_mesh, AEGfxVertexList* button_mesh);
 
+void sub_menu_draw(AEGfxTexture* sub_menu, AEGfxTexture* spells[], int known_spells);
 
 
 

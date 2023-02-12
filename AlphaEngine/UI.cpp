@@ -17,6 +17,11 @@ const float hp_bar_boss_width = 20.0f;
 
 extern s8 font;	//to be changed in the future? Dependent on how it font will be connected
 
+AEMtx33 scale = { 0 };
+AEMtx33 rotate = { 0 };
+AEMtx33 translate = { 0 };
+AEMtx33 transform = { 0 };
+
 void enemy_info(enemy ref)
 {
 	std::string tmp{ ref.name };
@@ -50,11 +55,81 @@ void name_bar(std::string name, aabb place)
 
 
 
-void pause_menu_draw(AEGfxTexture* menu, AEGfxTexture* buttons)
+void pause_menu_draw(AEGfxTexture* menu, AEGfxTexture* buttons, AEGfxVertexList* mesh)
 {
 	//AEGfxGetWindowHeight(); doess not work, remember to bring up for the documentation
 	float tmpx = AEGetWindowWidth(); // to ensure the pause menu is centred 
 	float tmpy = AEGetWindowHeight();
 
+	std::string menu_words[]{ "Resume","Options","Exit" };
+
+	AEGfxTextureSet(menu, 0, 0);
+	AEMtx33Trans(&transform, tmpx, tmpy);
+	AEMtx33Rot(&rotate, PI);
+	AEMtx33Scale(&scale, 1.0f, 1.0f);
+	AEMtx33Concat(&transform, &rotate, &scale);
+	AEMtx33Concat(&transform, &translate, &transform);
+	AEGfxSetTransform(transform.m);
+	AEGfxMeshDraw(mesh, AE_GFX_MDM_TRIANGLES);
+
+	tmpy = AEGfxGetWinMaxY();
+
+	for(int i =0; i < 3;i++)	//Resume, Options, Exit
+	{
+		AEGfxTextureSet(buttons, 0, 0);
+		AEMtx33Trans(&transform, tmpx, tmpy - (150.f*(float)i));
+		AEMtx33Rot(&rotate, PI);
+		AEMtx33Scale(&scale, 1.0f, 1.0f);
+		AEMtx33Concat(&transform, &rotate, &scale);
+		AEMtx33Concat(&transform, &translate, &transform);
+		AEGfxSetTransform(transform.m);
+		AEGfxMeshDraw(mesh, AE_GFX_MDM_TRIANGLES);
+
+		AEGfxPrint(font, (s8*)menu_words[i].c_str(), tmpx, tmpy - (150.f * (float)i), 0.0f, 0.0f, 0.0f, 0.0f);
+
+	}
+}
+
+
+
+void sub_menu_draw(AEGfxTexture* sub_menu, AEGfxTexture* spells[], int num_known,int known_spells[], AEGfxVertexList* mesh)
+{
+	// to ensure the sub_menu is on left 
+	float tmpy = AEGetWindowHeight();
+
+	std::string sub_words[]{ "Known spell lists"};
+
+	AEGfxTextureSet(sub_menu, 0, 0);
+	AEMtx33Trans(&transform, 0.0f, tmpy);
+	AEMtx33Rot(&rotate, PI);
+	AEMtx33Scale(&scale, 1.0f, 1.0f);
+	AEMtx33Concat(&transform, &rotate, &scale);
+	AEMtx33Concat(&transform, &translate, &transform);
+	AEGfxSetTransform(transform.m);
+	AEGfxMeshDraw(mesh, AE_GFX_MDM_TRIANGLES);
+
+	AEGfxPrint(font, (s8*)sub_words[0].c_str(), 0, tmpy - (150.f), 0.0f, 0.0f, 0.0f, 0.0f);
+
+	for (int i = 0; i < num_known; i++)
+	{
+		//switch (known_spells[i])
+		//{
+		//case STEAM_TORNADO://or whatever spell format used
+
+		//break;
+
+		//}
+
+		//using combination reference
+		// draw related spell
+
+
+	}
+
 
 }
+
+
+
+
+
