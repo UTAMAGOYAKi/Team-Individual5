@@ -1,5 +1,4 @@
 #pragma once
-#pragma once
 #include <iostream>
 
 enum player_sit { p_idle, p_attack, p_alch, p_status, p_dead };

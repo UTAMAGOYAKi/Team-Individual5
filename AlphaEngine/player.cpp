@@ -1,5 +1,3 @@
-
-
 #include "player.h"
 
 player* player_create() // add 

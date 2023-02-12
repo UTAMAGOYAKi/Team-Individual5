@@ -1,6 +1,5 @@
 #pragma once
-
-#include "AEEngine.h"
+#include "Main.h"
 //#include "GameStateList.h"
 enum
 {
@@ -18,12 +17,12 @@ extern unsigned int gGameStateCurr;
 extern unsigned int gGameStatePrev;
 extern unsigned int gGameStateNext;
 
-extern void (*GameStateLoad)();
-extern void (*GameStateInit)();
-extern void (*GameStateUpdate)();
-extern void (*GameStateDraw)();
-extern void (*GameStateFree)();
-extern void (*GameStateUnload)();
+extern void (*GSLoad)();
+extern void (*GSInit)();
+extern void (*GSUpdate)();
+extern void (*GSDraw)();
+extern void (*GSFree)();
+extern void (*GSUnload)();
 
-void GSMInit(unsigned int);
+void GSMInit(unsigned int gameStateInit);
 void GSMUpdate();
