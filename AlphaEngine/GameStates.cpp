@@ -4,6 +4,7 @@
 #include "Main.h"
 #include <iostream>
 #include <fstream>
+#include "Buttons.h"
 
 //Reference for controls
 //Q - basic attack against first rat

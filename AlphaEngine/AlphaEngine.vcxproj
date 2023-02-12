@@ -98,6 +98,7 @@ xcopy "$(SolutionDir)Extern\AlphaEngine_V3.08\lib\fmod.dll" "$(OutDir)" /s /r /y
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Buttons.cpp" />
     <ClCompile Include="GameStates.cpp" />
     <ClCompile Include="GSM.cpp" />
     <ClCompile Include="Ingredients.cpp" />
@@ -106,8 +107,10 @@ xcopy "$(SolutionDir)Extern\AlphaEngine_V3.08\lib\fmod.dll" "$(OutDir)" /s /r /y
     <ClCompile Include="EnemyObject.cpp" />
     <ClCompile Include="player.cpp" />
     <ClCompile Include="Spells.cpp" />
+    <ClCompile Include="UI.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Buttons.h" />
     <ClInclude Include="GameStates.h" />
     <ClInclude Include="GSM.h" />
     <ClInclude Include="EnemyObject.h" />
@@ -116,6 +119,7 @@ xcopy "$(SolutionDir)Extern\AlphaEngine_V3.08\lib\fmod.dll" "$(OutDir)" /s /r /y
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="player.h" />
     <ClInclude Include="Spells.h" />
+    <ClInclude Include="UI.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
