@@ -2,6 +2,8 @@
 // includes
 #pragma once
 #include "Main.h"
+#include <iostream>
+#include <fstream>
 
 //Reference for controls
 //Q - basic attack against first rat
@@ -30,8 +32,8 @@ AEGfxTexture* pTex{}, * chara{}, * rat{}, * spell_g{}, * fire{}, * poison{}, * s
 
 
 /// <summary>
-s8 test_font = AEGfxCreateFont("Assets/Roboto-Regular.ttf", 26);
-const char *test_str = "Test", *rat_name_1 = "Rat 1", *rat_name_2 = "Rat 2";
+s8 test_font;
+const char *test_str = "Test", *rat_name_1 = "Rat 1", *rat_name_2 = "Rat 2"; //enemy struct to store enemy names and enemy indentifiers
 int rat_hp_1{};
 float outside{};
 float center_x{};
@@ -72,6 +74,8 @@ void GameStateAlchemiceLoad() {
 	// Saving the mesh (list of triangles) in pMesh
 	pMesh = AEGfxMeshEnd();
 
+	test_font = AEGfxCreateFont("Assets/Roboto-Regular.ttf", 26);
+
 	pTex = AEGfxTextureLoad("Assets/rat_Piskel.png");
 	chara = AEGfxTextureLoad("Assets/character.png");
 	rat = AEGfxTextureLoad("Assets/rat_Piskel.png");
@@ -109,7 +113,10 @@ void GameStateAlchemiceInit() {
 }
 
 void GameStateAlchemiceUpdate() {
-
+	/*std::ifstream ifs;
+	ifs.open("test.txt", std::ifstream::in);
+	std::cout << ifs.get();
+	ifs.close();*/
 	//if (AEInputCheckTriggered(AEVK_ESCAPE) || 0 == AESysDoesWindowExist())
 	//{ 
 	//	//gGameRunning = 0;
@@ -317,7 +324,6 @@ void GameStateAlchemiceUpdate() {
 }
 
 void GameStateAlchemiceDraw() {
-
 	// Your own rendering logic goes here
 	// Set the background to black.
 	AEGfxSetBackgroundColor(.2f, .2f, .2f);
