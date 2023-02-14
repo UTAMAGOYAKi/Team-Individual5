@@ -1,6 +1,6 @@
 #include "player.h"
 
-player* player_create() // add 
+player* create_player() // add 
 {
 	player* alchemist{ new player };
 
@@ -15,23 +15,21 @@ player* player_create() // add
 		if (1) // get a input for choosing y/n
 		{
 			//creation of associated file
-
 			alchemist->avail_ingre = 3;
 			alchemist->hp = 30;
-
 			std::cout << "New save created!\n";
 		}
 		else //no new save
 		{
-
 			alchemist->avail_ingre = -1; //illegal value / flag for exiting
 			alchemist->hp = -999;
-
 		}
-
 	}
-
 	return alchemist;
+}
+
+void delete_player(player* player_ptr) {
+	delete player_ptr;
 }
 
 
@@ -51,7 +49,6 @@ player_sit player_flag(player guy)
 	{
 		return p_alch;
 	}
-
 
 	return p_idle; // if no choice has been made, ie making up their mind, return them being idle
 }

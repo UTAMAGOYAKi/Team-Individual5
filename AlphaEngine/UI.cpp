@@ -25,7 +25,7 @@ void enemy_info(enemy ref, s8 font)
 {
 	std::string tmp{ ref.name };
 
-	AEGfxPrint(font, (s8*)tmp.c_str(), ref.pos_x, ref.pos_y+name_offset, 0.0f, 0.0f, 0.0f, 0.0f);
+	//AEGfxPrint(font, (s8*)tmp.c_str(), ref.pos_x, ref.pos_y+name_offset, 0.0f, 0.0f, 0.0f, 0.0f);
 	tmp.clear();
 	tmp = std::to_string(ref.hp);
 	//The rest requires referencing value to do a hp bar size
