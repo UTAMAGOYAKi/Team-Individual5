@@ -45,9 +45,6 @@ s32 pY{};
 bool alchemy_mode = 0;
 
 player* alchemice{};
-enemy* enemy1{};
-enemy* enemy2{};
-enemy* enemy3{};
 
 //GameObject creations
 std::string rat_hp{};
