@@ -89,5 +89,16 @@ int aabbbutton(dragdrop* spell, aabb box);
 
 //std::istream& operator>> (std::istream is, dragdrop& box);
 
+#include "AEEngine.h"
+
+typedef struct position {
+	float x, y;
+}position;
+
+extern coord player_position;
+extern coord enemy_position[3];
+
+void PositionInit();
+
 
 #endif // !BUTTON_HPP

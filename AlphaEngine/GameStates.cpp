@@ -71,21 +71,27 @@ void GameStateAlchemiceLoad() {
 	//font
 	test_font = AEGfxCreateFont("Assets/Roboto-Regular.ttf", 26);
 
-	pTex = AEGfxTextureLoad("Assets/rat_Piskel.png");
+	std::cout << chara << std::endl;
+
 	chara = AEGfxTextureLoad("Assets/character.png");
-	pTex = AEGfxTextureLoad("Assets/rat_Piskel.png");
+	std::cout << "Character MemLoc: " << chara << std::endl;
 	rat = AEGfxTextureLoad("Assets/rat_Piskel.png");
+	std::cout << "Rat MemLoc: " << rat << std::endl;
 
 	//spells
 	spell_g = AEGfxTextureLoad("Assets/spell_glyph.png");
+	std::cout << "spell_g MemLoc: " << spell_g << std::endl;
 	fire = AEGfxTextureLoad("Assets/not_fire.png");
+	std::cout << "fire MemLoc: " << fire << std::endl;
 	poison = AEGfxTextureLoad("Assets/not_posion.png");
+	std::cout << "poison MemLoc: " << poison << std::endl;
 	shame = AEGfxTextureLoad("Assets/not_burn.png");
+	std::cout << "shame MemLoc: " << shame << std::endl;
 }
 
 // Initialization of your own variables go here
 void GameStateAlchemiceInit() {
-	LevelManagerInit();
+	PositionInit();
 	alchemice = create_player();
 
 	//Just for for testing; to be changed when we have a level system. 
@@ -183,8 +189,10 @@ void GameStateAlchemiceFree() {
 }
 
 void GameStateAlchemiceUnload() {
-	AEGfxTextureUnload(rat);
 	AEGfxTextureUnload(chara);
+	AEGfxTextureUnload(rat);
+
+	AEGfxTextureUnload(spell_g);
 	AEGfxTextureUnload(shame);
 	AEGfxTextureUnload(fire);
 	AEGfxTextureUnload(poison);

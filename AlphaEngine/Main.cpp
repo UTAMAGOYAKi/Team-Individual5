@@ -69,11 +69,13 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 		}
 		GSFree();
 
-		if (gGameStateNext != GS_RESTART)
+		if (gGameStateNext != GS_RESTART) {
 			GSUnload();
+		}
 
 		gGameStatePrev = gGameStateCurr;
 		gGameStateCurr = gGameStateNext;
 	}
+
 	AESysExit();
 }
