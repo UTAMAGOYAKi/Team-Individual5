@@ -33,10 +33,13 @@
     <ClCompile Include="Ingredients.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="LevelManager.cpp">
+    <ClCompile Include="BattleSystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Spells.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Buttons.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -65,7 +68,10 @@
     <ClInclude Include="EnemyObject.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="LevelManager.h">
+    <ClInclude Include="BattleSystem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Buttons.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

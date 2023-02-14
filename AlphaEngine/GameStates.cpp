@@ -73,14 +73,13 @@ void GameStateAlchemiceLoad() {
 	shame = AEGfxTextureLoad("Assets/not_burn.png");
 }
 
+// Initialization of your own variables go here
 void GameStateAlchemiceInit() {
-	// Initialization of your own variables go here
 	LevelManagerInit();
 	alchemice = player_create();
 }
 
 void GameStateAlchemiceUpdate() {
-
 
 	if (alchemy_mode)
 	{
@@ -101,28 +100,11 @@ void GameStateAlchemiceDraw() {
 	// This will allow transparency.
 	AEGfxSetBlendMode(AE_GFX_BM_BLEND);
 	AEGfxSetTransparency(1.0f);
-	// Set the texture to pTex
-	AEGfxTextureSet(pTex, 0, 0);
-	// Create a scale matrix that scales by 100 x and y
+
 	AEMtx33 scale = { 0 };
-	AEMtx33Scale(&scale, 100.f, 100.f);
-	// Create a rotation matrix that rotates by 45 degrees
 	AEMtx33 rotate = { 0 };
-
-	AEMtx33Rot(&rotate, PI);
-	// Create a translation matrix that translates by
-	// 100 in the x-axis and 100 in the y-axis
 	AEMtx33 translate = { 0 };
-
-	AEMtx33Trans(&translate, (250.f), -20.f);
-	// Concat the matrices (TRS)
 	AEMtx33 transform = { 0 };
-	AEMtx33Concat(&transform, &rotate, &scale);
-	AEMtx33Concat(&transform, &translate, &transform);
-	// Choose the transform to use
-	AEGfxSetTransform(transform.m);
-	// Actually drawing the mesh 
-	AEGfxMeshDraw(pMesh, AE_GFX_MDM_TRIANGLES);
 
 	//Character drawing
 	AEGfxTextureSet(chara, 0, 0);
@@ -134,7 +116,8 @@ void GameStateAlchemiceDraw() {
 	AEGfxSetTransform(transform.m);
 	AEGfxMeshDraw(pMesh, AE_GFX_MDM_TRIANGLES);
 
-	for (int i = 0; i < 2; ++i) {
+	//Enemy Drawing
+	for (int i = 0; i < 3; ++i) {
 		AEGfxTextureSet(rat, 0, 0);
 		AEMtx33Trans(&translate, enemy_position[i].x, enemy_position[i].y);
 		AEMtx33Rot(&rotate, PI);
@@ -144,17 +127,6 @@ void GameStateAlchemiceDraw() {
 		AEGfxSetTransform(transform.m);
 		AEGfxMeshDraw(pMesh, AE_GFX_MDM_TRIANGLES);
 	}
-	//Enemy Drawing (Needs to be a loop in the future)
-	/*AEGfxTextureSet(rat, 0, 0);
-	AEMtx33Trans(&translate, (position - 900.f), -20.f);
-	AEMtx33Rot(&rotate, PI);
-	AEMtx33Scale(&scale, 100.f, 100.f);
-	AEMtx33Concat(&transform, &rotate, &scale);
-	AEMtx33Concat(&transform, &translate, &transform);
-	AEGfxSetTransform(transform.m);
-	AEGfxMeshDraw(pMesh, AE_GFX_MDM_TRIANGLES);*/
-
-
 
 	//if (alchemy_mode)
 	//{

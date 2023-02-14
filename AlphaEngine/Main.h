@@ -6,7 +6,7 @@
 #include "GameStates.h"
 #include "GSM.h"
 #include "Ingredients.h"
-#include "LevelManager.h"
+#include "BattleSystem.h"
 #include "Mesh.h"
 #include "player.h"
 #include "Spells.h"
