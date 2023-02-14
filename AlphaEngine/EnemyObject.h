@@ -11,11 +11,9 @@ struct enemy {
     int atk{};
     float pos_x;
     float pos_y;
-
 };
 
 enum enemy_types {
     base_rat,
     big_rat
 };
-#pragma once
