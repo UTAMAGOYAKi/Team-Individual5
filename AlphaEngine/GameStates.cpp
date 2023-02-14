@@ -75,7 +75,7 @@ void GameStateAlchemiceLoad() {
 
 void GameStateAlchemiceInit() {
 	// Initialization of your own variables go here
-
+	LevelManagerInit();
 	alchemice = player_create();
 }
 
@@ -126,7 +126,7 @@ void GameStateAlchemiceDraw() {
 
 	//Character drawing
 	AEGfxTextureSet(chara, 0, 0);
-	AEMtx33Trans(&translate, (-200.f), 20.f);
+	AEMtx33Trans(&translate, player_position.x, player_position.y);
 	AEMtx33Rot(&rotate, PI);
 	AEMtx33Scale(&scale, -200.f, 200.f);
 	AEMtx33Concat(&transform, &rotate, &scale);
@@ -134,15 +134,25 @@ void GameStateAlchemiceDraw() {
 	AEGfxSetTransform(transform.m);
 	AEGfxMeshDraw(pMesh, AE_GFX_MDM_TRIANGLES);
 
+	for (int i = 0; i < 2; ++i) {
+		AEGfxTextureSet(rat, 0, 0);
+		AEMtx33Trans(&translate, enemy_position[i].x, enemy_position[i].y);
+		AEMtx33Rot(&rotate, PI);
+		AEMtx33Scale(&scale, 100.f, 100.f);
+		AEMtx33Concat(&transform, &rotate, &scale);
+		AEMtx33Concat(&transform, &translate, &transform);
+		AEGfxSetTransform(transform.m);
+		AEGfxMeshDraw(pMesh, AE_GFX_MDM_TRIANGLES);
+	}
 	//Enemy Drawing (Needs to be a loop in the future)
-	AEGfxTextureSet(rat, 0, 0);
+	/*AEGfxTextureSet(rat, 0, 0);
 	AEMtx33Trans(&translate, (position - 900.f), -20.f);
 	AEMtx33Rot(&rotate, PI);
 	AEMtx33Scale(&scale, 100.f, 100.f);
 	AEMtx33Concat(&transform, &rotate, &scale);
 	AEMtx33Concat(&transform, &translate, &transform);
 	AEGfxSetTransform(transform.m);
-	AEGfxMeshDraw(pMesh, AE_GFX_MDM_TRIANGLES);
+	AEGfxMeshDraw(pMesh, AE_GFX_MDM_TRIANGLES);*/
 
 
 

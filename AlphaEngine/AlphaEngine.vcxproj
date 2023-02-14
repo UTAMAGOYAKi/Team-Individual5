@@ -112,6 +112,7 @@ xcopy "$(SolutionDir)Extern\AlphaEngine_V3.08\lib\fmod.dll" "$(OutDir)" /s /r /y
     <ClInclude Include="GSM.h" />
     <ClInclude Include="EnemyObject.h" />
     <ClInclude Include="Ingredients.h" />
+    <ClInclude Include="LevelManager.h" />
     <ClInclude Include="Main.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="player.h" />
