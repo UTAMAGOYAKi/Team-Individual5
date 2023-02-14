@@ -20,4 +20,5 @@ enum enemy_types {
     big_rat
 };
 
-enemy* create_enemy(enemy_types type);
+enemy* create_enemy(enemy_types type, AEGfxTexture* texture);
+void delete_enemy(enemy* ptr);
