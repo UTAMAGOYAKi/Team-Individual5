@@ -21,3 +21,4 @@ enum enemy_types {
 };
 
 enemy* create_enemy(enemy_types type);
+void delete_enemy(enemy* enemy_ptr);

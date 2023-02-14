@@ -30,7 +30,7 @@ Ingredients spell_slot_two = NILL;
 
 //Loading of Mesh and Texture
 AEGfxVertexList *pMesh{};
-AEGfxTexture* pTex{}, * chara{}, * rat{}, * spell_g{}, * fire{}, * poison{}, * shame{};
+AEGfxTexture *pTex{}, *chara{}, *rat{}, *spell_g{}, *fire{}, *poison{}, *shame{};
 
 aabb* chara_pos;
 aabb* Enemy_pos_1;
@@ -68,11 +68,15 @@ void GameStateAlchemiceLoad() {
 	// Saving the mesh (list of triangles) in pMesh
 	pMesh = AEGfxMeshEnd();
 
+	//font
 	test_font = AEGfxCreateFont("Assets/Roboto-Regular.ttf", 26);
-
-	pTex = AEGfxTextureLoad("Assets/rat_Piskel.png");
+	
+	//objects
 	chara = AEGfxTextureLoad("Assets/character.png");
+	pTex = AEGfxTextureLoad("Assets/rat_Piskel.png");
 	rat = AEGfxTextureLoad("Assets/rat_Piskel.png");
+
+	//spells
 	spell_g = AEGfxTextureLoad("Assets/spell_glyph.png");
 	fire = AEGfxTextureLoad("Assets/not_fire.png");
 	poison = AEGfxTextureLoad("Assets/not_posion.png");
@@ -82,7 +86,7 @@ void GameStateAlchemiceLoad() {
 // Initialization of your own variables go here
 void GameStateAlchemiceInit() {
 	LevelManagerInit();
-	alchemice = player_create();
+	alchemice = create_player();
 
 	//Just for for testing; to be changed when we have a level system. 
 	for (int i = 0; i < 3; i++) {
@@ -114,10 +118,10 @@ void GameStateAlchemiceDraw() {
 	AEGfxSetBlendMode(AE_GFX_BM_BLEND);
 	AEGfxSetTransparency(1.0f);
 
-	AEMtx33 scale = { 0 };
-	AEMtx33 rotate = { 0 };
-	AEMtx33 translate = { 0 };
-	AEMtx33 transform = { 0 };
+	AEMtx33 scale{ 0 };
+	AEMtx33 rotate{ 0 };
+	AEMtx33 translate{ 0 };
+	AEMtx33 transform{ 0 };
 
 	//Character drawing
 	AEGfxTextureSet(chara, 0, 0);
@@ -129,7 +133,6 @@ void GameStateAlchemiceDraw() {
 	AEGfxSetTransform(transform.m);
 	AEGfxMeshDraw(pMesh, AE_GFX_MDM_TRIANGLES);
 
-	//Enemy Drawing
 	for (int i = 0; i < 3; ++i) {
 		AEGfxTextureSet(enemies[i]->texture, 0, 0);
 		AEMtx33Trans(&translate, enemies[i]->pos_x, enemies[i]->pos_y);
@@ -172,6 +175,10 @@ void GameStateAlchemiceDraw() {
 }
 
 void GameStateAlchemiceFree() {
+	delete_player(alchemice);
+	for (int i = 0; i<3; ++i) {
+		delete_enemy(enemies[i]);
+	}
 	AEGfxMeshFree(pMesh);
 }
 
