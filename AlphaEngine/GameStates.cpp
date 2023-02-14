@@ -97,8 +97,8 @@ void GameStateAlchemiceInit() {
 	//Just for for testing; to be changed when we have a level system. 
 	for (int i = 0; i < 3; i++) {
 		enemies[i] = create_enemy(base_rat, rat);
-		enemies[i]->pos_x = enemy_position[i].x;
-		enemies[i]->pos_y = enemy_position[i].y;
+		enemies[i]->pos.x = enemy_position[i].x;
+		enemies[i]->pos.y = enemy_position[i].y;
 	}
 }
 
@@ -141,7 +141,7 @@ void GameStateAlchemiceDraw() {
 
 	for (int i = 0; i < 3; ++i) {
 		AEGfxTextureSet(enemies[i]->texture, 0, 0);
-		AEMtx33Trans(&translate, enemies[i]->pos_x, enemies[i]->pos_y);
+		AEMtx33Trans(&translate, enemies[i]->pos.x, enemies[i]->pos.y);
 		AEMtx33Rot(&rotate, PI);
 		AEMtx33Scale(&scale, 100.f, 100.f);
 		AEMtx33Concat(&transform, &rotate, &scale);

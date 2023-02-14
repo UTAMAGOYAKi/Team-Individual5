@@ -91,10 +91,6 @@ int aabbbutton(dragdrop* spell, aabb box);
 
 #include "AEEngine.h"
 
-typedef struct position {
-	float x, y;
-}position;
-
 extern coord player_position;
 extern coord enemy_position[3];
 

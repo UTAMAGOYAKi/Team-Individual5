@@ -6,7 +6,6 @@
     <ClCompile Include="GameStates.cpp" />
     <ClCompile Include="GSM.cpp" />
     <ClCompile Include="Ingredients.cpp" />
-    <ClCompile Include="BattleSystem.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="EnemyObject.cpp" />
     <ClCompile Include="player.cpp" />
@@ -20,7 +19,6 @@
     <ClInclude Include="GSM.h" />
     <ClInclude Include="EnemyObject.h" />
     <ClInclude Include="Ingredients.h" />
-    <ClInclude Include="BattleSystem.h" />
     <ClInclude Include="Main.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="player.h" />
