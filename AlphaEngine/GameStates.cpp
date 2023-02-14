@@ -30,7 +30,7 @@ Ingredients spell_slot_two = NILL;
 
 //Loading of Mesh and Texture
 AEGfxVertexList *pMesh{};
-AEGfxTexture* pTex{}, * chara{}, * rat{}, * spell_g{}, * fire{}, * poison{}, * shame{};
+AEGfxTexture* chara{}, * rat{}, * spell_g{}, * fire{}, * poison{}, * shame{};
 
 aabb* chara_pos;
 aabb* Enemy_pos_1;
@@ -70,7 +70,6 @@ void GameStateAlchemiceLoad() {
 
 	test_font = AEGfxCreateFont("Assets/Roboto-Regular.ttf", 26);
 
-	pTex = AEGfxTextureLoad("Assets/rat_Piskel.png");
 	chara = AEGfxTextureLoad("Assets/character.png");
 	rat = AEGfxTextureLoad("Assets/rat_Piskel.png");
 	spell_g = AEGfxTextureLoad("Assets/spell_glyph.png");
@@ -86,7 +85,7 @@ void GameStateAlchemiceInit() {
 
 	//Just for for testing; to be changed when we have a level system. 
 	for (int i = 0; i < 3; i++) {
-		enemies[i] = create_enemy(base_rat);
+		enemies[i] = create_enemy(base_rat, rat);
 		enemies[i]->pos_x = enemy_position[i].x;
 		enemies[i]->pos_y = enemy_position[i].y;
 	}
@@ -124,7 +123,7 @@ void GameStateAlchemiceDraw() {
 	AEMtx33Trans(&translate, player_position.x, player_position.y);
 	AEMtx33Rot(&rotate, PI);
 	AEMtx33Scale(&scale, -200.f, 200.f);
-	AEMtx33Concat(&transform, &rotate, &scale);
+	AEMtx33Concat(&transform, &rotate, &scale);	
 	AEMtx33Concat(&transform, &translate, &transform);
 	AEGfxSetTransform(transform.m);
 	AEGfxMeshDraw(pMesh, AE_GFX_MDM_TRIANGLES);
@@ -176,7 +175,6 @@ void GameStateAlchemiceFree() {
 }
 
 void GameStateAlchemiceUnload() {
-	AEGfxTextureUnload(pTex);
 	AEGfxTextureUnload(rat);
 	AEGfxTextureUnload(chara);
 	AEGfxTextureUnload(shame);
