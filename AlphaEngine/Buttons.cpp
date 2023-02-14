@@ -129,6 +129,20 @@ int aabbbutton(dragdrop* box, dragdrop* spell)
 	}
 }
 
+int aabbbutton(dragdrop* spell, aabb box)
+{
+	aabb tmp = spell->getcoord();
+	if ((tmp.tr.x<box.bl.x || tmp.bl.x>box.tr.x)
+		|| (tmp.tr.y < box.bl.y || tmp.bl.y>box.tr.y))
+	{
+		return 1;
+	}
+	else
+	{
+		return -1;
+	}
+}
+
 //Extra functions for main functions
 coord midpoint(aabb box)
 {

@@ -14,12 +14,12 @@
  
 
 
-void enemy_info(enemy ref);
+void enemy_info(enemy ref, s8 font);
 
 void player_hp_bar(int hp, aabb play_pos);
 
-void name_bar(std::string name, coord place);
-void name_bar(std::string name, aabb place);
+void name_bar(std::string name, coord place, s8 font);
+void name_bar(std::string name, aabb place, s8 font);
 
 //void name_bar(int hp, aabb place);
 
@@ -28,9 +28,9 @@ void name_bar(std::string name, aabb place);
 // How do we plan to assign textures to buttons
 //void button_draw();
 
-void pause_menu_draw(AEGfxTexture* menu, AEGfxTexture* buttons, AEGfxVertexList* menu_mesh, AEGfxVertexList* button_mesh);
+void pause_menu_draw(AEGfxTexture* menu, AEGfxTexture* buttons, AEGfxVertexList* mesh, s8 font);
 
-void sub_menu_draw(AEGfxTexture* sub_menu, AEGfxTexture* spells[], int known_spells);
+void sub_menu_draw(AEGfxTexture* sub_menu, AEGfxTexture* spells[], int known_spells, s8 font);
 
 
 

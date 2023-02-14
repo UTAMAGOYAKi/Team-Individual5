@@ -15,14 +15,13 @@ const float hp_bar_player_width = 10.0f;
 const float hp_bar_enemy_width = 10.0f;
 const float hp_bar_boss_width = 20.0f;
 
-extern s8 font;	//to be changed in the future? Dependent on how it font will be connected
 
 AEMtx33 scale = { 0 };
 AEMtx33 rotate = { 0 };
 AEMtx33 translate = { 0 };
 AEMtx33 transform = { 0 };
 
-void enemy_info(enemy ref)
+void enemy_info(enemy ref, s8 font)
 {
 	std::string tmp{ ref.name };
 
@@ -41,13 +40,13 @@ void player_hp_bar(int hp, aabb play_pos)
 }
 
 
-void name_bar(std::string name, coord place)
+void name_bar(std::string name, coord place,s8 font)
 {
 	AEGfxPrint(font, (s8*)name.c_str(), place.x, place.y + name_offset, 0.0f, 0.0f, 0.0f, 0.0f);
 	//remeber to check for centering offset %
 }
 
-void name_bar(std::string name, aabb place)
+void name_bar(std::string name, aabb place, s8 font)
 {
 	AEGfxPrint(font, (s8*)name.c_str(), place.mid.x, place.mid.y, 0.0f, 0.0f, 0.0f, 0.0f);
 	//remeber to check for centering offset %
@@ -55,7 +54,7 @@ void name_bar(std::string name, aabb place)
 
 
 
-void pause_menu_draw(AEGfxTexture* menu, AEGfxTexture* buttons, AEGfxVertexList* mesh)
+void pause_menu_draw(AEGfxTexture* menu, AEGfxTexture* buttons, AEGfxVertexList* mesh, s8 font)
 {
 	//AEGfxGetWindowHeight(); doess not work, remember to bring up for the documentation
 	float tmpx = AEGetWindowWidth(); // to ensure the pause menu is centred 
@@ -92,7 +91,7 @@ void pause_menu_draw(AEGfxTexture* menu, AEGfxTexture* buttons, AEGfxVertexList*
 
 
 
-void sub_menu_draw(AEGfxTexture* sub_menu, AEGfxTexture* spells[], int num_known,int known_spells[], AEGfxVertexList* mesh)
+void sub_menu_draw(AEGfxTexture* sub_menu, AEGfxTexture* spells[], int num_known,int known_spells[], AEGfxVertexList* mesh, s8 font)
 {
 	// to ensure the sub_menu is on left 
 	float tmpy = AEGetWindowHeight();
