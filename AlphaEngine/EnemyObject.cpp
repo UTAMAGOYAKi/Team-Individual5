@@ -12,6 +12,7 @@ enemy* create_enemy(enemy_types type) {
         new_enemy->atk = 10;
         new_enemy->max_hp = 10;
         new_enemy->hp = new_enemy->max_hp; //Initialized hp will be same as max_hp;
+        new_enemy->texture = AEGfxTextureLoad("Assets/rat_Piskel.png");
         break;
 
     case big_rat:
@@ -19,6 +20,7 @@ enemy* create_enemy(enemy_types type) {
         new_enemy->atk = 15;
         new_enemy->max_hp = 15;
         new_enemy->hp = new_enemy->max_hp;
+        new_enemy->texture = AEGfxTextureLoad("Assets/rat_Piskel.png");
         break;
 
     default:

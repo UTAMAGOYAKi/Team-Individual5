@@ -49,8 +49,9 @@ enemy* enemy1{};
 enemy* enemy2{};
 enemy* enemy3{};
 
+//GameObject creations
 std::string rat_hp{};
-
+enemy* enemies[3]{};
 
 void GameStateAlchemiceLoad() {
 	pMesh = 0;
@@ -86,8 +87,12 @@ void GameStateAlchemiceInit() {
 	LevelManagerInit();
 	alchemice = player_create();
 
-	//Level 1
-	enemy1 = create_enemy(base_rat);
+	//Just for for testing; to be changed when we have a level system. 
+	for (int i = 0; i < 3; i++) {
+		enemies[i] = create_enemy(base_rat);
+		enemies[i]->pos_x = enemy_position[i].x;
+		enemies[i]->pos_y = enemy_position[i].y;
+	}
 }
 
 void GameStateAlchemiceUpdate() {
@@ -129,8 +134,8 @@ void GameStateAlchemiceDraw() {
 
 	//Enemy Drawing
 	for (int i = 0; i < 3; ++i) {
-		AEGfxTextureSet(rat, 0, 0);
-		AEMtx33Trans(&translate, enemy_position[i].x, enemy_position[i].y);
+		AEGfxTextureSet(enemies[i]->texture, 0, 0);
+		AEMtx33Trans(&translate, enemies[i]->pos_x, enemies[i]->pos_y);
 		AEMtx33Rot(&rotate, PI);
 		AEMtx33Scale(&scale, 100.f, 100.f);
 		AEMtx33Concat(&transform, &rotate, &scale);

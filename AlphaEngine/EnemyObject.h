@@ -1,16 +1,18 @@
 #pragma once
 
 //Unused currently
-#include <iostream>
-#include <string.h>
+#include "Main.h"
+#include "string"
 
 struct enemy {
-    
+
     std::string name;
     int hp{};
     int max_hp{};
     int atk{};
-    int battle_pos; //The position it is in the battle system;
+    float pos_x;
+    float pos_y;
+    AEGfxTexture* texture;
 };
 
 enum enemy_types {
