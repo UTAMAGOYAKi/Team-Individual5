@@ -10,6 +10,7 @@
 #include "Mesh.h"
 #include "player.h"
 #include "Spells.h"
+#include "EnemyObject.h"
 
 
 #include <iostream>

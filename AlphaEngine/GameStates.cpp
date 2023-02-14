@@ -41,6 +41,10 @@ s32 pY{};
 bool alchemy_mode = 0;
 
 player* alchemice{};
+enemy* enemy1{};
+enemy* enemy2{};
+enemy* enemy3{};
+
 std::string rat_hp{};
 
 
@@ -77,6 +81,9 @@ void GameStateAlchemiceLoad() {
 void GameStateAlchemiceInit() {
 	LevelManagerInit();
 	alchemice = player_create();
+
+	//Level 1
+	enemy1 = create_enemy(base_rat);
 }
 
 void GameStateAlchemiceUpdate() {
