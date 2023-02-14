@@ -85,6 +85,7 @@ double distance_diagonal(coord first, coord second);
 //ref is return if true, -1 for false
 int aabbbutton(dragdrop* box, coord mouse);
 int aabbbutton(dragdrop* box, dragdrop* spell);
+int aabbbutton(dragdrop* spell, aabb box);
 
 //std::istream& operator>> (std::istream is, dragdrop& box);
 

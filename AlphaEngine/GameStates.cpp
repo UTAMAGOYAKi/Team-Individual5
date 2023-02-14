@@ -4,6 +4,8 @@
 #include "Main.h"
 #include <iostream>
 #include <fstream>
+#include "Buttons.h"
+#include "Battle_system.h"
 
 //Reference for controls
 //Q - basic attack against first rat
@@ -30,7 +32,9 @@ Ingredients spell_slot_two = NILL;
 AEGfxVertexList *pMesh{};
 AEGfxTexture* pTex{}, * chara{}, * rat{}, * spell_g{}, * fire{}, * poison{}, * shame{};
 
-
+aabb* chara_pos;
+aabb* Enemy_pos_1;
+aabb* Enemy_pos_2;
 /// <summary>
 s8 test_font;
 

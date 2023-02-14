@@ -42,6 +42,9 @@
     <ClCompile Include="Buttons.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="UI.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameStates.h">
@@ -68,11 +71,14 @@
     <ClInclude Include="EnemyObject.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="BattleSystem.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Buttons.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="UI.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="BattleSystem.h">
+      <Filter>Header Files</Filter>
+   
   </ItemGroup>
 </Project>
