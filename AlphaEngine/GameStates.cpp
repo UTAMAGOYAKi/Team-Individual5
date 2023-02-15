@@ -24,8 +24,8 @@ float position = 1000.0;
 
 
 enum spell_slot { empty, fire_slot, poison_slot, lighting_slot };
-Ingredients spell_slot_one = NILL;
-Ingredients spell_slot_two = NILL;
+//Ingredients spell_slot_one = NILL;
+//Ingredients spell_slot_two = NILL;
 //int gGameRunning = 1;
 
 //Loading of Mesh and Texture
