@@ -1,4 +1,5 @@
 #include "EnemyObject.h"
+#include "Buttons.h"
 
 //Unused currently
 enemy* create_enemy(enemy_types type, AEGfxTexture* texture) {

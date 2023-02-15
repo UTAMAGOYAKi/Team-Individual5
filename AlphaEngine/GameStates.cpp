@@ -71,28 +71,34 @@ void GameStateAlchemiceLoad() {
 	//font
 	test_font = AEGfxCreateFont("Assets/Roboto-Regular.ttf", 26);
 
-	pTex = AEGfxTextureLoad("Assets/rat_Piskel.png");
+	std::cout << chara << std::endl;
+
 	chara = AEGfxTextureLoad("Assets/character.png");
-	pTex = AEGfxTextureLoad("Assets/rat_Piskel.png");
+	std::cout << "Character MemLoc: " << chara << std::endl;
 	rat = AEGfxTextureLoad("Assets/rat_Piskel.png");
+	std::cout << "Rat MemLoc: " << rat << std::endl;
 
 	//spells
 	spell_g = AEGfxTextureLoad("Assets/spell_glyph.png");
+	std::cout << "spell_g MemLoc: " << spell_g << std::endl;
 	fire = AEGfxTextureLoad("Assets/not_fire.png");
+	std::cout << "fire MemLoc: " << fire << std::endl;
 	poison = AEGfxTextureLoad("Assets/not_posion.png");
+	std::cout << "poison MemLoc: " << poison << std::endl;
 	shame = AEGfxTextureLoad("Assets/not_burn.png");
+	std::cout << "shame MemLoc: " << shame << std::endl;
 }
 
 // Initialization of your own variables go here
 void GameStateAlchemiceInit() {
-	LevelManagerInit();
+	PositionInit();
 	alchemice = create_player();
 
 	//Just for for testing; to be changed when we have a level system. 
 	for (int i = 0; i < 3; i++) {
 		enemies[i] = create_enemy(base_rat, rat);
-		enemies[i]->pos_x = enemy_position[i].x;
-		enemies[i]->pos_y = enemy_position[i].y;
+		enemies[i]->pos.x = enemy_position[i].x;
+		enemies[i]->pos.y = enemy_position[i].y;
 	}
 }
 
@@ -135,7 +141,7 @@ void GameStateAlchemiceDraw() {
 
 	for (int i = 0; i < 3; ++i) {
 		AEGfxTextureSet(enemies[i]->texture, 0, 0);
-		AEMtx33Trans(&translate, enemies[i]->pos_x, enemies[i]->pos_y);
+		AEMtx33Trans(&translate, enemies[i]->pos.x, enemies[i]->pos.y);
 		AEMtx33Rot(&rotate, PI);
 		AEMtx33Scale(&scale, 100.f, 100.f);
 		AEMtx33Concat(&transform, &rotate, &scale);
@@ -183,8 +189,10 @@ void GameStateAlchemiceFree() {
 }
 
 void GameStateAlchemiceUnload() {
-	AEGfxTextureUnload(rat);
 	AEGfxTextureUnload(chara);
+	AEGfxTextureUnload(rat);
+
+	AEGfxTextureUnload(spell_g);
 	AEGfxTextureUnload(shame);
 	AEGfxTextureUnload(fire);
 	AEGfxTextureUnload(poison);

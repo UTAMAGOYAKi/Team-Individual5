@@ -3,6 +3,7 @@
 //Unused currently
 #include "Main.h"
 #include "string"
+#include "Buttons.h"
 
 struct enemy {
 
@@ -10,8 +11,7 @@ struct enemy {
     int hp{};
     int max_hp{};
     int atk{};
-    float pos_x;
-    float pos_y;
+    coord pos{};
     AEGfxTexture* texture;
 };
 
