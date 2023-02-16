@@ -38,7 +38,7 @@ aabb* chara_pos;
 aabb* Enemy_pos_1;
 aabb* Enemy_pos_2;
 /// <summary>
-s8 font;
+s8 font = AEGfxCreateFont("\Assets\Roboto-Regular.ttf",1);
 
 s32 pX{};
 s32 pY{};
@@ -111,6 +111,13 @@ void GameStateAlchemiceInit() {
 }
 
 void GameStateAlchemiceUpdate() {
+
+	if (AEInputCheckTriggered(AEVK_Q))
+	{
+		enemies[rand() % 3]->hp--;
+	}
+		
+
 	if (AEInputCheckTriggered(AEVK_ESCAPE)) {
 		pause_mode = !pause_mode;
 	}
@@ -165,7 +172,7 @@ void GameStateAlchemiceDraw() {
 		AEGfxSetTransform(transform.m);
 		AEGfxMeshDraw(pMesh, AE_GFX_MDM_TRIANGLES);
 
-		enemy_info(enemies[i], test_font, pMesh);
+		enemy_info(enemies[i], font, pMesh);
 	}
 
 	if (pause_mode) {
