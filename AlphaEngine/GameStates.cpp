@@ -32,11 +32,7 @@ Ingredients spell_slot_two = NILL;
 
 //Loading of Mesh and Texture
 AEGfxVertexList *pMesh{};
-<<<<<<< HEAD
 AEGfxTexture *chara{}, * rat{}, * spell_g{}, * fire{}, * poison{}, * shame{}, * box{};
-=======
-AEGfxTexture* pTex{}, * chara{}, * rat{}, * spell_g{}, * fire{}, * poison{}, * shame{};
->>>>>>> parent of db7ccc0 (Integrated Spell Objects to game)
 
 aabb* chara_pos;
 aabb* Enemy_pos_1;
@@ -81,7 +77,6 @@ void GameStateAlchemiceLoad() {
 	font = AEGfxCreateFont("Assets/Roboto-Regular.ttf", 26);
 	chara = AEGfxTextureLoad("Assets/character.png");
 	rat = AEGfxTextureLoad("Assets/rat_Piskel.png");
-<<<<<<< HEAD
 
 	//spells
 	spell_g = AEGfxTextureLoad("Assets/spell_glyph.png");
@@ -90,19 +85,6 @@ void GameStateAlchemiceLoad() {
 	shame = AEGfxTextureLoad("Assets/not_burn.png");
 
 	box = AEGfxTextureLoad("Assets/box.png");
-=======
-	std::cout << "Rat MemLoc: " << rat << std::endl;
-
-	//spells
-	spell_g = AEGfxTextureLoad("Assets/spell_glyph.png");
-	std::cout << "spell_g MemLoc: " << spell_g << std::endl;
-	fire = AEGfxTextureLoad("Assets/not_fire.png");
-	std::cout << "fire MemLoc: " << fire << std::endl;
-	poison = AEGfxTextureLoad("Assets/not_posion.png");
-	std::cout << "poison MemLoc: " << poison << std::endl;
-	shame = AEGfxTextureLoad("Assets/not_burn.png");
-	std::cout << "shame MemLoc: " << shame << std::endl;
->>>>>>> parent of db7ccc0 (Integrated Spell Objects to game)
 }
 
 // Initialization of your own variables go here
@@ -116,7 +98,6 @@ void GameStateAlchemiceInit() {
 		enemies[i]->pos.x = enemy_position[i].x;
 		enemies[i]->pos.y = enemy_position[i].y;
 	}
-<<<<<<< HEAD
 
 	for (int i = 0; i < sizeof(buttons) / sizeof(buttons[0]); ++i) {
 		buttons[i].mid.x = 0;
@@ -130,14 +111,6 @@ void GameStateAlchemiceInit() {
 }
 
 void GameStateAlchemiceUpdate() {
-=======
-}
-
-void GameStateAlchemiceUpdate() {
-
-	if (alchemy_mode)
-	{
->>>>>>> parent of db7ccc0 (Integrated Spell Objects to game)
 
 	if (AEInputCheckTriggered(AEVK_Q))
 	{
@@ -201,7 +174,6 @@ void GameStateAlchemiceDraw() {
 
 		enemy_info(enemies[i], font, pMesh);
 	}
-<<<<<<< HEAD
 
 	if (pause_mode) {
 		AEGfxTextureSet(box, 0, 0);
@@ -229,8 +201,6 @@ void GameStateAlchemiceDraw() {
 			AEMtx33Concat(&transform, &translate, &transform);
 			AEGfxSetTransform(transform.m);
 			AEGfxMeshDraw(pMesh, AE_GFX_MDM_TRIANGLES);
-=======
->>>>>>> parent of db7ccc0 (Integrated Spell Objects to game)
 
 			AEGfxPrint(font, (s8*)mytex[i], middle, textY, 1, 0, 0, 0);
 		}
@@ -282,9 +252,5 @@ void GameStateAlchemiceUnload() {
 	AEGfxTextureUnload(shame);
 	AEGfxTextureUnload(fire);
 	AEGfxTextureUnload(poison);
-<<<<<<< HEAD
 }
   
-=======
-}
->>>>>>> parent of db7ccc0 (Integrated Spell Objects to game)

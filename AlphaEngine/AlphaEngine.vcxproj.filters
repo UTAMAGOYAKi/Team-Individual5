@@ -1,7 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-<<<<<<< HEAD
     <ClCompile Include="Battle_system.cpp">
       <Filter>Source file</Filter>
     </ClCompile>
@@ -35,19 +34,6 @@
     <ClCompile Include="LevelManager.cpp">
       <Filter>Source file</Filter>
     </ClCompile>
-=======
-    <ClCompile Include="Battle_system.cpp" />
-    <ClCompile Include="Buttons.cpp" />
-    <ClCompile Include="GameStates.cpp" />
-    <ClCompile Include="GSM.cpp" />
-    <ClCompile Include="Elements.cpp" />
-    <ClCompile Include="BattleSystem.cpp" />
-    <ClCompile Include="Main.cpp" />
-    <ClCompile Include="EnemyObject.cpp" />
-    <ClCompile Include="player.cpp" />
-    <ClCompile Include="Spells.cpp" />
-    <ClCompile Include="UI.cpp" />
->>>>>>> parent of db7ccc0 (Integrated Spell Objects to game)
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Battle_system.h">

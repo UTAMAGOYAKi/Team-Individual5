@@ -102,13 +102,8 @@ xcopy "$(SolutionDir)Extern\AlphaEngine_V3.08\lib\fmod.dll" "$(OutDir)" /s /r /y
     <ClCompile Include="Buttons.cpp" />
     <ClCompile Include="GameStates.cpp" />
     <ClCompile Include="GSM.cpp" />
-<<<<<<< HEAD
     <ClCompile Include="Ingredients.cpp" />
     <ClCompile Include="LevelManager.cpp" />
-=======
-    <ClCompile Include="Elements.cpp" />
-    <ClCompile Include="BattleSystem.cpp" />
->>>>>>> parent of db7ccc0 (Integrated Spell Objects to game)
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="EnemyObject.cpp" />
     <ClCompile Include="Player.cpp" />
