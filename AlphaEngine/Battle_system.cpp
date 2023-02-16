@@ -1,3 +1,4 @@
+
 #include "Battle_system.h"
 
 AEMtx33 scale_battle = { 0 };
