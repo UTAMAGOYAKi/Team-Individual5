@@ -15,6 +15,7 @@ dragdrop::dragdrop(double s1x, double s1y, double s2x, double s2y, bool flag, in
 	bounding.flag = flag;
 	active = flag;
 	ref = refer;
+
 }
 
 aabb dragdrop::getcoord() const
