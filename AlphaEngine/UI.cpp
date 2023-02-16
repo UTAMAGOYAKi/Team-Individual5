@@ -1,6 +1,4 @@
-#include "UI.h"
-
-
+#include "Main.h"
 
 /*---------------------------------*/
 //	Defines
@@ -42,13 +40,13 @@ void player_hp_bar(int hp, aabb play_pos)
 
 void name_bar(std::string name, coord place,s8 font)
 {
-	AEGfxPrint(font, (s8*)name.c_str(), place.x, place.y + name_offset, 0.0f, 0.0f, 0.0f, 0.0f);
+	AEGfxPrint(font, (s8*)name.c_str(), (f32)place.x, (f32)place.y + name_offset, 0.0f, 0.0f, 0.0f, 0.0f);
 	//remeber to check for centering offset %
 }
 
 void name_bar(std::string name, aabb place, s8 font)
 {
-	AEGfxPrint(font, (s8*)name.c_str(), place.mid.x, place.mid.y, 0.0f, 0.0f, 0.0f, 0.0f);
+	AEGfxPrint(font, (s8*)name.c_str(), (f32)place.mid.x, (f32)place.mid.y, 0.0f, 0.0f, 0.0f, 0.0f);
 	//remeber to check for centering offset %
 }
 
@@ -56,9 +54,8 @@ void name_bar(std::string name, aabb place, s8 font)
 
 void pause_menu_draw(AEGfxTexture* menu, AEGfxTexture* buttons, AEGfxVertexList* mesh, s8 font)
 {
-	//AEGfxGetWindowHeight(); doess not work, remember to bring up for the documentation
-	float tmpx = AEGetWindowWidth(); // to ensure the pause menu is centred 
-	float tmpy = AEGetWindowHeight();
+	float tmpx = (float)AEGetWindowWidth(); // to ensure the pause menu is centred 
+	float tmpy = (float)AEGetWindowHeight();
 
 	std::string menu_words[]{ "Resume","Options","Exit" };
 
@@ -85,7 +82,6 @@ void pause_menu_draw(AEGfxTexture* menu, AEGfxTexture* buttons, AEGfxVertexList*
 		AEGfxMeshDraw(mesh, AE_GFX_MDM_TRIANGLES);
 
 		AEGfxPrint(font, (s8*)menu_words[i].c_str(), tmpx, tmpy - (150.f * (float)i), 0.0f, 0.0f, 0.0f, 0.0f);
-
 	}
 }
 
@@ -94,7 +90,7 @@ void pause_menu_draw(AEGfxTexture* menu, AEGfxTexture* buttons, AEGfxVertexList*
 void sub_menu_draw(AEGfxTexture* sub_menu, AEGfxTexture* spells[], int num_known,int known_spells[], AEGfxVertexList* mesh, s8 font)
 {
 	// to ensure the sub_menu is on left 
-	float tmpy = AEGetWindowHeight();
+	float tmpy = (float)AEGetWindowHeight();
 
 	std::string sub_words[]{ "Known spell lists"};
 
@@ -122,13 +118,5 @@ void sub_menu_draw(AEGfxTexture* sub_menu, AEGfxTexture* spells[], int num_known
 		//using combination reference
 		// draw related spell
 
-
 	}
-
-
 }
-
-
-
-
-
