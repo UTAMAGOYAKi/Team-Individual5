@@ -34,16 +34,6 @@
     <ClCompile Include="LevelManager.cpp">
       <Filter>Source file</Filter>
     </ClCompile>
-    <ClCompile Include="Battle_system.cpp" />
-    <ClCompile Include="Buttons.cpp" />
-    <ClCompile Include="GameStates.cpp" />
-    <ClCompile Include="GSM.cpp" />
-    <ClCompile Include="Elements.cpp" />
-    <ClCompile Include="Main.cpp" />
-    <ClCompile Include="EnemyObject.cpp" />
-    <ClCompile Include="player.cpp" />
-    <ClCompile Include="Spells.cpp" />
-    <ClCompile Include="UI.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Battle_system.h">
@@ -82,18 +72,6 @@
     <ClInclude Include="LevelManager.h">
       <Filter>Header file</Filter>
     </ClInclude>
-    <ClInclude Include="Battle_system.h" />
-    <ClInclude Include="Buttons.h" />
-    <ClInclude Include="GameStates.h" />
-    <ClInclude Include="GSM.h" />
-    <ClInclude Include="EnemyObject.h" />
-    <ClInclude Include="Elements.h" />
-    <ClInclude Include="BattleSystem.h" />
-    <ClInclude Include="Main.h" />
-    <ClInclude Include="Mesh.h" />
-    <ClInclude Include="player.h" />
-    <ClInclude Include="Spells.h" />
-    <ClInclude Include="UI.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Source file">
