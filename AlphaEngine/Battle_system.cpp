@@ -1,5 +1,5 @@
-
 #include "Battle_system.h"
+
 AEMtx33 scale_battle = { 0 };
 AEMtx33 rotate_battle = { 0 };
 AEMtx33 translate_battle = { 0 };
@@ -69,7 +69,7 @@ void Battle_posistion_draw(aabb* pos, AEGfxVertexList* mesh) // for testing/know
 	AEGfxTextureSet(NULL, 0, 0);
 	AEGfxSetTintColor(1.0f, 1.0f, 1.0f, 1.0f);
 
-	AEMtx33Trans(&translate_battle, pos->mid.x, pos->mid.y);
+	AEMtx33Trans(&translate_battle, (f32)pos->mid.x, (f32)pos->mid.y);
 	AEMtx33Rot(&rotate_battle, PI);
 	AEMtx33Scale(&scale_battle, -20.f, 20.f);
 	AEMtx33Concat(&transform_battle, &rotate_battle, &scale_battle);

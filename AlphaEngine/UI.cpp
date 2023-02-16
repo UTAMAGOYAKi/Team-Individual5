@@ -1,6 +1,4 @@
-#include "UI.h"
-
-
+#include "Main.h"
 
 /*---------------------------------*/
 //	Defines
@@ -122,7 +120,7 @@ void name_bar(std::string name, coord place,s8 font)
 void sub_menu_draw(AEGfxTexture* sub_menu, AEGfxTexture* spells[], int num_known,int known_spells[], AEGfxVertexList* mesh, s8 font)
 {
 	// to ensure the sub_menu is on left 
-	float tmpy = AEGetWindowHeight();
+	float tmpy = (float)AEGetWindowHeight();
 
 	std::string sub_words[]{ "Known spell lists"};
 
@@ -150,13 +148,5 @@ void sub_menu_draw(AEGfxTexture* sub_menu, AEGfxTexture* spells[], int num_known
 		//using combination reference
 		// draw related spell
 
-
 	}
-
-
 }
-
-
-
-
-

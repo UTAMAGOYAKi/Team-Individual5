@@ -64,7 +64,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
 			AESysFrameEnd();
 
-			if ((AESysDoesWindowExist() == false) || AEInputCheckTriggered(AEVK_ESCAPE))
+			if (AESysDoesWindowExist() == false)
 				gGameStateNext = GS_QUIT;
 		}
 		GSFree();

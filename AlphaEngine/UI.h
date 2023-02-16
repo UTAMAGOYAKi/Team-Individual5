@@ -33,11 +33,6 @@ void pause_menu_draw(AEGfxTexture* menu, AEGfxTexture* buttons, AEGfxVertexList*
 
 void sub_menu_draw(AEGfxTexture* sub_menu, AEGfxTexture* spells[], int known_spells, s8 font);
 
-
-
-
-
-
 #endif //UI_h
 
 
