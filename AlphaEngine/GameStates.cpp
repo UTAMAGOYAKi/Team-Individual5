@@ -22,20 +22,19 @@
 int i = 0;
 float position = 1000.0;
 
-
 //Card Code
-
 //---------------------------------------------------------------------------------
 // Card Details 
 //---------------------------------------------------------------------------------
 const float			card_size = 100.0f;		// card size
-//Contains all spells
+//Contains all spells in a dynamically allocated array
 Spell* spellbook;	
-//Coords for cards
+//Coords for active cards
 AEVec2 cards;
-
 //---------------------------------------------------------------------------------
-enum spell_slot { empty, fire_slot, poison_slot, lighting_slot };
+
+
+//enum spell_slot { empty, fire_slot, poison_slot, lighting_slot };
 //Ingredients spell_slot_one = NILL;
 //Ingredients spell_slot_two = NILL;
 //int gGameRunning = 1;
@@ -107,7 +106,7 @@ void GameStateAlchemiceInit() {
 	//Init All Spells
 	spellbook = init_allspells();
 
-	//Draw all spells active at beginning
+	//Draw all spells that are active at beginning
 	AEVec2Zero(&cards);
 	AEVec2Set(&cards, -(AEGetWindowWidth() / 2) + 100, -(AEGetWindowHeight() /2 ) + 100);
 	for (int i = 0; i <= max_spells; i++) {
@@ -120,7 +119,9 @@ void GameStateAlchemiceInit() {
 
 
 void GameStateAlchemiceUpdate() {
-	//Draw spells player unlocks
+
+	//Draw spells player unlocks / combines
+	// TO BE IMPLEMENTED
 	/*AEVec2Set(&cards, 20, AEGetWindowHeight() - 200);
 	for (int i = 0; i <= max_spells; i++) {
 		if (spellbook[i].unlocked == true) {
@@ -128,6 +129,8 @@ void GameStateAlchemiceUpdate() {
 			cards.x += 20;
 		}
 	}*/
+
+
 	if (alchemy_mode)
 	{
 

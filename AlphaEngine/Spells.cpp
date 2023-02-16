@@ -1,13 +1,15 @@
 #include "Spells.h"
 
+//Number of spells that will be created
 const int max_spells = 10;
 
-
+//Textures for spells
 AEGfxTexture* toxic_deluge{}, * inferno_blast{}, * umbral_tendrils{}, * maelstrom_surge{};
 
 Spell* init_allspells()
 {
 	
+	//Currently Textures are used as placeholder, ignore the meaning
 	umbral_tendrils = AEGfxTextureLoad("Assets/spell_glyph.png");
 	std::cout << "spell_g MemLoc: " << umbral_tendrils << std::endl;
 	inferno_blast = AEGfxTextureLoad("Assets/not_fire.png");
@@ -28,7 +30,7 @@ Spell* init_allspells()
 		// Tier 2 spells
 		Spell(VENOMOUS_BITE, 2, POISON, "Venomous Bite",umbral_tendrils,false, 5, 1, 5),
 		Spell(SHADOW_CLOAK, 2, SHADOW, "Shadow Cloak",umbral_tendrils,false, 5, 1, 5),
-		Spell(FLAME_BURST, 2, FIRE, "Flame Burst",umbral_tendrils,false, 5, 1, 5),
+		Spell(FLAME_BURST, 2, FIRE, "Flame Burst",umbral_tendrils,true, 5, 1, 5),
 		// Tier 1 spells
 		Spell(RAT_SWARM, 1, SHADOW, "Rat Swarm",umbral_tendrils,false, 5, 1, 5),
 		Spell(BUBONIC_BLAZE, 1, FIRE, "Bubonic Blaze",umbral_tendrils,false, 5, 1, 5),
@@ -38,19 +40,20 @@ Spell* init_allspells()
 	return spellbook;
 }
 
-
+//destructor for the coordinates
 Spell::~Spell()
 {
 	delete coords;
 }
 
+//Function that will set coords to a spell when called
 void Spell::init_spells_draw(Spell& spell, AEVec2 coords)
 {
 	*spell.coords = coords;
 }
 
 
-// Returns true if spell can be unlocked
+// Returns true if spell can be unlocked (Not Implemented)
 bool combineSpells(Spell* spellbook, int id1, int id2) {
 	if (spellbook[id1].tier == 3 && spellbook[id2].tier == 3) {
 		// combine tier 3 spells
@@ -103,6 +106,8 @@ bool combineSpells(Spell* spellbook, int id1, int id2) {
 	}
 }
 
+
+// Called when level ends etc.
 void unload_spells(Spell * spellbook ) {
 	AEGfxTextureUnload(toxic_deluge);
 	AEGfxTextureUnload(inferno_blast);
