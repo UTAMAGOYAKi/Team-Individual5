@@ -16,7 +16,7 @@
     <ClCompile Include="GSM.cpp">
       <Filter>Source file</Filter>
     </ClCompile>
-    <ClCompile Include="Ingredients.cpp">
+    <ClCompile Include="Elements.cpp">
       <Filter>Source file</Filter>
     </ClCompile>
     <ClCompile Include="Main.cpp">
@@ -51,7 +51,7 @@
     <ClInclude Include="GSM.h">
       <Filter>Header file</Filter>
     </ClInclude>
-    <ClInclude Include="Ingredients.h">
+    <ClInclude Include="Elements.h">
       <Filter>Header file</Filter>
     </ClInclude>
     <ClInclude Include="Main.h">

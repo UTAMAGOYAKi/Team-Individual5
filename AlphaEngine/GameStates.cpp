@@ -24,21 +24,32 @@
 int i = 0;
 float position = 1000.0;
 
+//Card Variables
+//---------------------------------------------------------------------------------
+// Card Details 
+//---------------------------------------------------------------------------------
+const float			card_size = 100.0f;		// card size
+//Contains all spells in a dynamically allocated array
+Spell* spellbook;
+//Coords for active cards
+AEVec2 cards;
+//---------------------------------------------------------------------------------
 
-enum spell_slot { empty, fire_slot, poison_slot, lighting_slot };
-Ingredients spell_slot_one = NILL;
-Ingredients spell_slot_two = NILL;
+
+//enum spell_slot { empty, fire_slot, poison_slot, lighting_slot };
+//Elements spell_slot_one = NILL;
+//Elements spell_slot_two = NILL;
 //int gGameRunning = 1;
 
 //Loading of Mesh and Texture
-AEGfxVertexList *pMesh{};
-AEGfxTexture *chara{}, * rat{}, * spell_g{}, * fire{}, * poison{}, * shame{}, * box{};
+AEGfxVertexList* pMesh{};
+AEGfxTexture* chara{}, * rat{}, * spell_g{}, * box{};
 
 aabb* chara_pos;
 aabb* Enemy_pos_1;
 aabb* Enemy_pos_2;
 /// <summary>
-s8 font = AEGfxCreateFont("\Assets\Roboto-Regular.ttf",1);
+s8 font = AEGfxCreateFont("\Assets\Roboto-Regular.ttf", 1);
 
 s32 pX{};
 s32 pY{};
@@ -78,12 +89,6 @@ void GameStateAlchemiceLoad() {
 	chara = AEGfxTextureLoad("Assets/character.png");
 	rat = AEGfxTextureLoad("Assets/rat_Piskel.png");
 
-	//spells
-	spell_g = AEGfxTextureLoad("Assets/spell_glyph.png");
-	fire = AEGfxTextureLoad("Assets/not_fire.png");
-	poison = AEGfxTextureLoad("Assets/not_posion.png");
-	shame = AEGfxTextureLoad("Assets/not_burn.png");
-
 	box = AEGfxTextureLoad("Assets/box.png");
 }
 
@@ -91,6 +96,19 @@ void GameStateAlchemiceLoad() {
 void GameStateAlchemiceInit() {
 	PositionInit();
 	alchemice = create_player();
+
+	//Init All Spells
+	spellbook = init_allspells();
+
+	//Draw all spells that are active at beginning
+	AEVec2Zero(&cards);
+	AEVec2Set(&cards, -(AEGetWindowWidth() / 2) + 100, -(AEGetWindowHeight() / 2) + 100);
+	for (int i = 0; i <= max_spells; i++) {
+		if (spellbook[i].unlocked == true) {
+			spellbook[i].init_spells_draw(spellbook[i], cards);
+			cards.x += 100;
+		}
+	}
 
 	//Just for for testing; to be changed when we have a level system. 
 	for (int i = 0; i < 3; i++) {
@@ -112,11 +130,22 @@ void GameStateAlchemiceInit() {
 
 void GameStateAlchemiceUpdate() {
 
+	//Draw spells player unlocks / combines
+// TO BE IMPLEMENTED
+/*AEVec2Set(&cards, 20, AEGetWindowHeight() - 200);
+for (int i = 0; i <= max_spells; i++) {
+	if (spellbook[i].unlocked == true) {
+		spellbook[i].init_spells_draw(spellbook[i], cards);
+		cards.x += 20;
+	}
+}*/
+
+
 	if (AEInputCheckTriggered(AEVK_Q))
 	{
 		enemies[rand() % 3]->hp--;
 	}
-		
+
 
 	if (AEInputCheckTriggered(AEVK_ESCAPE)) {
 		pause_mode = !pause_mode;
@@ -157,10 +186,24 @@ void GameStateAlchemiceDraw() {
 	AEMtx33Trans(&translate, (f32)player_position.x, (f32)player_position.y);
 	AEMtx33Rot(&rotate, PI);
 	AEMtx33Scale(&scale, -200.f, 200.f);
-	AEMtx33Concat(&transform, &rotate, &scale);	
+	AEMtx33Concat(&transform, &rotate, &scale);
 	AEMtx33Concat(&transform, &translate, &transform);
 	AEGfxSetTransform(transform.m);
 	AEGfxMeshDraw(pMesh, AE_GFX_MDM_TRIANGLES);
+
+	// Card Drawing
+	for (int i = 0; i <= max_spells; i++) {
+		if (spellbook[i].unlocked == true) {
+			AEGfxTextureSet(spellbook[i].texture, 0, 0);
+			AEMtx33Trans(&translate, spellbook[i].coords->x, spellbook[i].coords->y);
+			AEMtx33Rot(&rotate, PI);
+			AEMtx33Scale(&scale, card_size, card_size);
+			AEMtx33Concat(&transform, &rotate, &scale);
+			AEMtx33Concat(&transform, &translate, &transform);
+			AEGfxSetTransform(transform.m);
+			AEGfxMeshDraw(pMesh, AE_GFX_MDM_TRIANGLES);
+		}
+	}
 
 	for (int i = 0; i < 3; ++i) {
 		AEGfxTextureSet(enemies[i]->texture, 0, 0);
@@ -189,7 +232,7 @@ void GameStateAlchemiceDraw() {
 		// 113 characters on screen, start to end, 113/2 =  56.5(left and right for scaling)
 		const char* mytex[3]{ { "Continue" }, { "Options" }, {"Main Menu"} };
 
-		for (int i = 0; i < 3; ++i){
+		for (int i = 0; i < 3; ++i) {
 			f32 middle = -(((float)strlen(mytex[i]) / 2) / 56.5f);
 			f32 textY = ((float)(AEGetWindowHeight() - i * AEGetWindowHeight()) / 2) / AEGetWindowHeight();
 			f32 boxY = (float)(190 - i * 180);
@@ -204,7 +247,7 @@ void GameStateAlchemiceDraw() {
 
 			AEGfxPrint(font, (s8*)mytex[i], middle, textY, 1, 0, 0, 0);
 		}
-		AEGfxPrint(font, (s8*)mytex[1], ((float)300/640), 0, 1, 0, 0, 0);
+		AEGfxPrint(font, (s8*)mytex[1], ((float)300 / 640), 0, 1, 0, 0, 0);
 	}
 	//if (alchemy_mode)
 	//{
@@ -238,7 +281,7 @@ void GameStateAlchemiceDraw() {
 
 void GameStateAlchemiceFree() {
 	delete_player(alchemice);
-	for (int i = 0; i<3; ++i) {
+	for (int i = 0; i < 3; ++i) {
 		delete_enemy(enemies[i]);
 	}
 	AEGfxMeshFree(pMesh);
@@ -247,10 +290,5 @@ void GameStateAlchemiceFree() {
 void GameStateAlchemiceUnload() {
 	AEGfxTextureUnload(chara);
 	AEGfxTextureUnload(rat);
-
-	AEGfxTextureUnload(spell_g);
-	AEGfxTextureUnload(shame);
-	AEGfxTextureUnload(fire);
-	AEGfxTextureUnload(poison);
+	unload_spells(spellbook);
 }
-  
