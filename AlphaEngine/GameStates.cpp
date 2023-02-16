@@ -6,6 +6,8 @@
 #include <fstream>
 #include "Buttons.h"
 #include "Battle_system.h"
+#include "UI.h"
+
 
 //Reference for controls
 //Q - basic attack against first rat
@@ -58,9 +60,9 @@ void GameStateAlchemiceLoad() {
 	// Color parameters represent colours as ARGB
 	// UV coordinates to read from loaded textures
 	AEGfxTriAdd(
-		-0.5f, -0.5f, 0xFFFF00FF, 0.0f, 0.0f,
-		0.5f, -0.5f, 0xFFFFFF00, 1.0f, 0.0f,
-		-0.5f, 0.5f, 0xFF00FFFF, 0.0f, 1.0f);
+		-0.5f, -0.5f, 0xFFFFFFFF, 0.0f, 0.0f,
+		0.5f, -0.5f, 0xFFFFFFFF, 1.0f, 0.0f,
+		-0.5f, 0.5f, 0xFFFFFFFF, 0.0f, 1.0f);
 	AEGfxTriAdd(
 		0.5f, -0.5f, 0xFFFFFFFF, 1.0f, 0.0f,
 		0.5f, 0.5f, 0xFFFFFFFF, 1.0f, 1.0f,
@@ -104,6 +106,11 @@ void GameStateAlchemiceInit() {
 
 void GameStateAlchemiceUpdate() {
 
+	if (AEInputCheckTriggered(AEVK_Q))
+	{
+		enemies[rand() % 3]->hp--;
+	}
+
 	if (alchemy_mode)
 	{
 
@@ -129,6 +136,8 @@ void GameStateAlchemiceDraw() {
 	AEMtx33 translate{ 0 };
 	AEMtx33 transform{ 0 };
 
+
+
 	//Character drawing
 	AEGfxTextureSet(chara, 0, 0);
 	AEMtx33Trans(&translate, player_position.x, player_position.y);
@@ -148,6 +157,8 @@ void GameStateAlchemiceDraw() {
 		AEMtx33Concat(&transform, &translate, &transform);
 		AEGfxSetTransform(transform.m);
 		AEGfxMeshDraw(pMesh, AE_GFX_MDM_TRIANGLES);
+
+		enemy_info(enemies[i], test_font, pMesh);
 	}
 
 	//if (alchemy_mode)
