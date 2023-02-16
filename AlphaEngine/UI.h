@@ -14,12 +14,13 @@
  
 
 
-//void enemy_info(enemy ref, s8 font);
 
 void player_hp_bar(int hp, aabb play_pos);
 
 void name_bar(std::string name, coord place, s8 font);
 void name_bar(std::string name, aabb place, s8 font);
+
+void enemy_info(enemy* ref, s8 font, AEGfxVertexList* mesh);
 
 //void name_bar(int hp, aabb place);
 
