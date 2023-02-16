@@ -1,3 +1,4 @@
+#pragma once
 #ifndef BUTTON_HPP
 #define BUTTON_HPP
 #include <iostream> // istream, ostream

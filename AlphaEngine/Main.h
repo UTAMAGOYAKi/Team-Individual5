@@ -6,12 +6,12 @@
 #include "GameStates.h"
 #include "GSM.h"
 #include "Elements.h"
-#include "BattleSystem.h"
+#include "Battle_system.h"
 #include "Mesh.h"
 #include "player.h"
-#include "Spells.h"
 #include "EnemyObject.h"
 
 
 #include <iostream>
 #include <string>
+#include "Spells.h"
