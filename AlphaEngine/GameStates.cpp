@@ -43,7 +43,7 @@ AEVec2 cards;
 
 //Loading of Mesh and Texture
 AEGfxVertexList* pMesh{};
-AEGfxTexture* chara{}, * rat{}, * spell_g{}, * box{};
+AEGfxTexture* chara{}, * rat{}, * spell_g{}, * box{}, * sub{};
 
 aabb* chara_pos;
 aabb* Enemy_pos_1;
@@ -57,6 +57,7 @@ s32 pY{};
 //Modes
 bool alchemy_mode = 0;
 bool pause_mode = false;
+bool sub_menu = false;
 
 player* alchemice{};
 
@@ -88,7 +89,7 @@ void GameStateAlchemiceLoad() {
 	font = AEGfxCreateFont("Assets/Roboto-Regular.ttf", 26);
 	chara = AEGfxTextureLoad("Assets/character.png");
 	rat = AEGfxTextureLoad("Assets/rat_Piskel.png");
-
+	sub = AEGfxTextureLoad("Assets/submenu.png");
 	box = AEGfxTextureLoad("Assets/box.png");
 }
 
@@ -146,11 +147,11 @@ for (int i = 0; i <= max_spells; i++) {
 	}
 }*/
 
-
-	if (AEInputCheckTriggered(AEVK_Q))
+	if (AEInputCheckTriggered(AEVK_W))
 	{
-		enemies[rand() % 3]->hp--;
+		sub_menu = !sub_menu;
 	}
+	
 
 
 	if (AEInputCheckTriggered(AEVK_ESCAPE)) {
@@ -162,6 +163,10 @@ for (int i = 0; i <= max_spells; i++) {
 		if (alchemy_mode)
 		{
 
+		}
+		if (AEInputCheckTriggered(AEVK_Q))
+		{
+			enemies[rand() % 3]->hp--;
 		}
 	}
 }
@@ -196,6 +201,19 @@ void GameStateAlchemiceDraw() {
 	AEMtx33Concat(&transform, &translate, &transform);
 	AEGfxSetTransform(transform.m);
 	AEGfxMeshDraw(pMesh, AE_GFX_MDM_TRIANGLES);
+	std::string player_hp;
+	if (alchemice->hp)
+	{
+		player_hp += std::to_string(alchemice->hp);
+		player_hp_bar(*alchemice,  player_position, pMesh);
+	}
+	else
+	{
+		player_hp += "0";
+	}
+	player_hp += "/";
+	player_hp += std::to_string(alchemice->max_hp);
+	name_bar(player_hp, player_position, font);
 
 	// Card Drawing
 	for (int i = 0; i <= max_spells; i++) {
@@ -222,6 +240,20 @@ void GameStateAlchemiceDraw() {
 		AEGfxMeshDraw(pMesh, AE_GFX_MDM_TRIANGLES);
 
 		enemy_info(enemies[i], font, pMesh);
+	}
+
+	AEGfxSetRenderMode(AE_GFX_RM_TEXTURE);
+	// Set the tint to white, so that the sprite can 
+	// display the full range of colors (default is black).
+	AEGfxSetTintColor(1.0f, 1.0f, 1.0f, 1.0f);
+	// Set blend mode to AE_GFX_BM_BLEND
+	// This will allow transparency.
+	AEGfxSetBlendMode(AE_GFX_BM_BLEND);
+	AEGfxSetTransparency(1.0f);
+
+	if (sub_menu)
+	{
+		sub_menu_draw(sub, spellbook, pMesh, font);
 	}
 
 	if (pause_mode) {

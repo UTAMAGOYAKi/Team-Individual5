@@ -5,6 +5,7 @@ enum player_sit { p_idle, p_attack, p_alch, p_status, p_dead };
 
 struct player {
 	int hp;
+	int max_hp;
 	int avail_ingre;
 };
 
