@@ -4,6 +4,7 @@
 #include "Main.h"
 #include "string"
 #include "Buttons.h"
+#include <AEVec2.h>
 
 struct enemy {
 
@@ -11,7 +12,7 @@ struct enemy {
     int hp{};
     int max_hp{};
     int atk{};
-    coord pos{};
+    AEVec2 pos{};
     AEGfxTexture* texture;
 };
 
