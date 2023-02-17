@@ -7,7 +7,7 @@
 
 const float hp_bar_height	= 10.0f;
 const float hp_bar_offset	= 5.0f;
-const float name_offset		= 55.0f;
+const float name_offset		= 100.0f;
 
 const float hp_bar_player_width = 10.0f;
 const float hp_bar_enemy_width = 10.0f;
@@ -65,15 +65,26 @@ void enemy_info(enemy* ref, s8 font, AEGfxVertexList* mesh)
 
 }
 
-void player_hp_bar(int hp, aabb play_pos)
+void player_hp_bar(player ref, AEVec2 pos, AEGfxVertexList* mesh)
 {
-	//format for player?
+	AEGfxSetRenderMode(AE_GFX_RM_COLOR);
+	AEGfxTextureSet(NULL, 0, 0);
+	AEGfxSetTintColor(1.0f, .0f, .0f, 1.0f);
+	AEMtx33Trans(&translate,pos.x - (hp_bar_enemy_width * (((float)ref.max_hp - (float)ref.hp) / (float)ref.max_hp) * 10) / 2, pos.y - name_offset);
+	AEMtx33Rot(&rotate, PI);
+	AEMtx33Scale(&scale, hp_bar_enemy_width * ((float)ref.hp / (float)ref.max_hp) * 10, hp_bar_height);
+
+	AEMtx33Concat(&transform, &rotate, &scale);
+	AEMtx33Concat(&transform, &translate, &transform);
+	AEGfxSetTransform(transform.m);
+	AEGfxMeshDraw(mesh, AE_GFX_MDM_TRIANGLES);
+	AEGfxSetRenderMode(AE_GFX_RM_TEXTURE);
 }
 
 
 void name_bar(std::string name, AEVec2 place,s8 font)
 {
-	AEGfxPrint(font, (s8*)name.c_str(), place.x / 640, place.y-.25f, 1.0f, 1.0f, 1.0f, 1.0f);
+	AEGfxPrint(font, (s8*)name.c_str(), place.x / 640, place.y-.35f, 1.0f, 1.0f, 1.0f, 1.0f);
 	//remeber to check for centering offset %
 }
 
@@ -117,36 +128,38 @@ void name_bar(std::string name, AEVec2 place,s8 font)
 
 
 
-void sub_menu_draw(AEGfxTexture* sub_menu, AEGfxTexture* spells[], int num_known,int known_spells[], AEGfxVertexList* mesh, s8 font)
+void sub_menu_draw(AEGfxTexture* sub_menu, Spell spells[], AEGfxVertexList* mesh, s8 font)
 {
 	// to ensure the sub_menu is on left 
 	float tmpy = (float)AEGetWindowHeight();
 
-	std::string sub_words[]{ "Known spell lists"};
 
+	std::string sub_words[]{ "Known spell lists" };
 	AEGfxTextureSet(sub_menu, 0, 0);
-	AEMtx33Trans(&transform, 0.0f, tmpy);
-	AEMtx33Rot(&rotate, PI);
-	AEMtx33Scale(&scale, 1.0f, 1.0f);
+	AEMtx33Trans(&translate, -440, 100);
+	AEMtx33Rot(&rotate, 0);
+	AEMtx33Scale(&scale, 600, 500);
 	AEMtx33Concat(&transform, &rotate, &scale);
 	AEMtx33Concat(&transform, &translate, &transform);
 	AEGfxSetTransform(transform.m);
 	AEGfxMeshDraw(mesh, AE_GFX_MDM_TRIANGLES);
 
-	AEGfxPrint(font, (s8*)sub_words[0].c_str(), 0, tmpy - (150.f), 0.0f, 0.0f, 0.0f, 0.0f);
+	AEGfxPrint(font, (s8*)sub_words[0].c_str(), -0.8f, 0.8f, 1.0f, 1.0f, 1.0f, 1.0f);
 
-	for (int i = 0; i < num_known; i++)
+	for (int i = 0; i < max_spells; i++) 
 	{
-		//switch (known_spells[i])
-		//{
-		//case STEAM_TORNADO://or whatever spell format used
+		if (spells[i].unlocked == true) 
+		{
+			AEGfxTextureSet(spells[i].texture, 0, 0);
+			AEMtx33Trans(&translate, -590,300-i*50);
+			AEMtx33Rot(&rotate, PI);
+			AEMtx33Scale(&scale, 50, 50);
+			AEMtx33Concat(&transform, &rotate, &scale);
+			AEMtx33Concat(&transform, &translate, &transform);
+			AEGfxSetTransform(transform.m);
+			AEGfxMeshDraw(mesh, AE_GFX_MDM_TRIANGLES);
 
-		//break;
-
-		//}
-
-		//using combination reference
-		// draw related spell
-
+			AEGfxPrint(font, (s8*)"+", ((-540.0f / 640.0f) * 1.0f), (((300 - i * 50) / 360.0f) * 1.0f-0.025f), 1, 1.0f, 1.0f, 1.0f);
+		}
 	}
 }

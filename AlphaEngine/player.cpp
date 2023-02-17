@@ -16,6 +16,7 @@ player* create_player() // add
 		{
 			//creation of associated file
 			alchemist->avail_ingre = 3;
+			alchemist->max_hp = 30;
 			alchemist->hp = 30;
 			std::cout << "New save created!\n";
 		}
