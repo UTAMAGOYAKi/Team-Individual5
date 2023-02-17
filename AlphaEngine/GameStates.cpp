@@ -130,6 +130,12 @@ void GameStateAlchemiceInit() {
 
 void GameStateAlchemiceUpdate() {
 
+	//Check for mouse click
+	if (AEInputCheckTriggered(AEVK_LBUTTON))
+	{
+		
+	}
+
 	//Draw spells player unlocks / combines
 // TO BE IMPLEMENTED
 /*AEVec2Set(&cards, 20, AEGetWindowHeight() - 200);
@@ -244,7 +250,6 @@ void GameStateAlchemiceDraw() {
 			AEMtx33Concat(&transform, &translate, &transform);
 			AEGfxSetTransform(transform.m);
 			AEGfxMeshDraw(pMesh, AE_GFX_MDM_TRIANGLES);
-
 			AEGfxPrint(font, (s8*)mytex[i], middle, textY, 1, 0, 0, 0);
 		}
 		AEGfxPrint(font, (s8*)mytex[1], ((float)300 / 640), 0, 1, 0, 0, 0);
