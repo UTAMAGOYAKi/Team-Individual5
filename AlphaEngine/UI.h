@@ -15,7 +15,7 @@
 
 
 
-void player_hp_bar(int hp, aabb play_pos);
+void player_hp_bar(player ref, AEVec2 pos, AEGfxVertexList* mesh);
 
 void name_bar(std::string name, AEVec2 place, s8 font);
 void name_bar(std::string name, aabb place, s8 font);
@@ -31,7 +31,7 @@ void enemy_info(enemy* ref, s8 font, AEGfxVertexList* mesh);
 
 void pause_menu_draw(AEGfxTexture* menu, AEGfxTexture* buttons, AEGfxVertexList* mesh, s8 font);
 
-void sub_menu_draw(AEGfxTexture* sub_menu, AEGfxTexture* spells[], int known_spells, s8 font);
+void sub_menu_draw(AEGfxTexture* sub_menu, Spell spells[], AEGfxVertexList* mesh, s8 font);
 
 #endif //UI_h
 
