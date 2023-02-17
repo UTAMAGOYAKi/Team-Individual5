@@ -71,7 +71,7 @@ void player_hp_bar(int hp, aabb play_pos)
 }
 
 
-void name_bar(std::string name, coord place,s8 font)
+void name_bar(std::string name, AEVec2 place,s8 font)
 {
 	AEGfxPrint(font, (s8*)name.c_str(), place.x / 640, place.y-.25f, 1.0f, 1.0f, 1.0f, 1.0f);
 	//remeber to check for centering offset %

@@ -55,7 +55,7 @@ dragdrop& dragdrop::move(double x, double y)
 }
 
 
-dragdrop& dragdrop::moveto(coord refer)
+dragdrop& dragdrop::moveto(AEVec2 refer)
 {
 	bounding.tr.x += distance(bounding.mid, refer).x;
 	bounding.tr.y += distance(bounding.mid, refer).y;
@@ -95,7 +95,7 @@ aabb dragdrop::resetaabb()
 dragdrop::~dragdrop()
 {}
 
-int aabbbutton(dragdrop* box, coord mouse)
+int aabbbutton(dragdrop* box, AEVec2 mouse)
 {
 	aabb tmp = box->getcoord();
 	if (
@@ -142,31 +142,31 @@ int aabbbutton(dragdrop* spell, aabb box)
 }
 
 //Extra functions for main functions
-coord midpoint(aabb box)
+AEVec2 midpoint(aabb box)
 {
-	coord tmp;
+	AEVec2 tmp;
 	tmp.x = (box.tr.x + box.bl.x) / 2.0;
 	tmp.y = (box.tr.y + box.bl.y) / 2.0;
 	return tmp;
 }
 
-coord midpoint(coord first, coord second)
+AEVec2 midpoint(AEVec2 first, AEVec2 second)
 {
-	coord tmp;
+	AEVec2 tmp;
 	tmp.x = (first.x + second.x) / 2.0;
 	tmp.y = (first.y + second.y) / 2.0;
 	return tmp;
 }
 
-coord distance(coord first, coord second)
+AEVec2 distance(AEVec2 first, AEVec2 second)
 {
-	coord tmp;
+	AEVec2 tmp;
 	tmp.x = first.x - second.x;
 	tmp.y = first.y - second.y;
 	return tmp;
 }
 
-double distance_diagonal(coord first, coord second)
+double distance_diagonal(AEVec2 first, AEVec2 second)
 {
 	double d = 0.0;
 	d = (first.x - second.x) * (first.x - second.x);
@@ -177,8 +177,8 @@ double distance_diagonal(coord first, coord second)
 
 #include "Main.h"
 
-coord enemy_position[3];
-coord player_position;
+AEVec2 enemy_position[3];
+AEVec2 player_position;
 
 void PositionInit() {
 	player_position.x = (float)(-(AEGetWindowWidth() / 4));

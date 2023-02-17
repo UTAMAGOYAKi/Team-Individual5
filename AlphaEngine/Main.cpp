@@ -21,9 +21,9 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	UNREFERENCED_PARAMETER(hPrevInstance);
 	UNREFERENCED_PARAMETER(lpCmdLine);
 
-	enum spell_slot {empty, fire_slot, poison_slot, lighting_slot};
-	Ingredients spell_slot_one = NILL;
-	Ingredients spell_slot_two = NILL;
+	//enum spell_slot {empty, fire_slot, poison_slot, lighting_slot};
+	//Elements spell_slot_one = NILL;
+	//Elements spell_slot_two = NILL;
 	int gGameRunning = 1;
 
 	// Using custom window procedure

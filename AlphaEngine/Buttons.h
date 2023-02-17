@@ -3,21 +3,22 @@
 #include <iostream> // istream, ostream
 #include <string.h>
 #include <float.h>
+#include <AEVec2.h>
 #include <cmath>
 
 
-struct coord {
-	double x;	//the x-axis coordinate. Don't be funny on this part please
-	double y;	//the y-axis coordinate
-};
+//struct coord {
+//	double x;	//the x-axis coordinate. Don't be funny on this part please
+//	double y;	//the y-axis coordinate
+//};
 
 struct aabb {
-
-	coord s1; //orignal top right
-	coord s2; //original bot left
-	coord mid;// middle of aabb
-	coord tr; //active top right
-	coord bl; //active bottom left
+	
+	AEVec2 s1; //orignal top right
+	AEVec2 s2; //original bot left
+	AEVec2 mid;// middle of aabb
+	AEVec2 tr; //active top right
+	AEVec2 bl; //active bottom left
 	bool flag;//usage flag, to check if current aabb is in use. 
 };
 class dragdrop {
@@ -44,7 +45,7 @@ public:
 
 
 	//These functions use the middlepoint as the point it will move to
-	dragdrop& moveto(coord refer);	// move the box to be on a point, mainly for the mouse	
+	dragdrop& moveto(AEVec2 refer);	// move the box to be on a point, mainly for the mouse	
 	dragdrop& moveto(aabb refer);	//for centering a box on another box mainly
 	dragdrop& move(double x_ref, double y_ref);	// simple translation
 
@@ -72,18 +73,18 @@ private:
 };
 
 //used to calculate the midpoint
-coord midpoint(aabb box);
-coord midpoint(coord first, coord second);
+AEVec2 midpoint(aabb box);
+AEVec2 midpoint(AEVec2 first, AEVec2 second);
 
 //For distance, x-axis and y-axis separately, do note that the distance can be negative, for ease of other functions
-coord distance(coord first, coord second); // distance( thing, thang).y to get distance in y
+AEVec2 distance(AEVec2 first, AEVec2 second); // distance( thing, thang).y to get distance in y
 
 //returns true distance. This is mainly for circle collision?
-double distance_diagonal(coord first, coord second);
+double distance_diagonal(AEVec2 first, AEVec2 second);
 
 //checks for static collision of a point/ box with another box
 //ref is return if true, -1 for false
-int aabbbutton(dragdrop* box, coord mouse);
+int aabbbutton(dragdrop* box, AEVec2 mouse);
 int aabbbutton(dragdrop* box, dragdrop* spell);
 int aabbbutton(dragdrop* spell, aabb box);
 
@@ -91,8 +92,8 @@ int aabbbutton(dragdrop* spell, aabb box);
 
 #include "AEEngine.h"
 
-extern coord player_position;
-extern coord enemy_position[3];
+extern AEVec2 player_position;
+extern AEVec2 enemy_position[3];
 
 void PositionInit();
 
