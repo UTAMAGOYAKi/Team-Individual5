@@ -29,9 +29,12 @@ void enemy_info(enemy* ref, s8 font, AEGfxVertexList* mesh);
 // How do we plan to assign textures to buttons
 //void button_draw();
 
-void pause_menu_draw(AEGfxTexture* menu, AEGfxTexture* buttons, AEGfxVertexList* mesh, s8 font);
+//void pause_menu_draw(AEGfxTexture* menu, AEGfxTexture* buttons, AEGfxVertexList* mesh, s8 font);
 
 void sub_menu_draw(AEGfxTexture* sub_menu, Spell spells[], AEGfxVertexList* mesh, s8 font);
+
+
+
 
 #endif //UI_h
 

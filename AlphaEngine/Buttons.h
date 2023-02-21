@@ -41,7 +41,7 @@ public:
 	//toggle the active flag, so it knows to check if it is currently active on screen 
 	bool& flagchange(bool change); //bot.flagchange(true);
 
-
+	dragdrop changeaabb(double width, double height);
 
 
 	//These functions use the middlepoint as the point it will move to
