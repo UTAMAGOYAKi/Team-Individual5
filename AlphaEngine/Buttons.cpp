@@ -40,7 +40,7 @@ bool& dragdrop::flagchange(bool change)
 	return active;
 }
 
-dragdrop dragdrop::changeaabb(double width, double height)
+dragdrop& dragdrop::changeaabb(double width, double height)
 {
 	bounding.s1.x += width / 2;
 	bounding.s1.y += height / 2;
