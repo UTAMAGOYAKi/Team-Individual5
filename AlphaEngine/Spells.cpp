@@ -37,14 +37,14 @@ Spell* init_allspells()
 		Spell(BUBONIC_BLAZE, 1, FIRE, "Bubonic Blaze",umbral_tendrils,false, 5, 1, 5),
 		// Invalid Spell
 		Spell(INVALID_SPELL, 0, INVALID_ELEMENT, "",umbral_tendrils,false, 0, 0, 0),
-
-
-
 	};
 
 	AEVec2Zero(&cards);
 	for (int i = 0; i <= max_spells -1; i++) {
+		//Set all midpoint coords to 0
 		spellbook[i].spell_dragdrop->moveto(cards);
+		//Set all spell boundingboxes
+		spellbook[i].spell_dragdrop->changeaabb(spellbook[i].card_width, spellbook[i].card_height);
 	}
 	return spellbook;
 }
@@ -59,7 +59,6 @@ Spell::~Spell()
 void Spell::init_spells_draw(Spell& spell, AEVec2 coords)
 {
 	spell.spell_dragdrop->moveto(coords);
-
 }
 
 

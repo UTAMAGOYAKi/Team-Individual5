@@ -48,7 +48,7 @@ public:
 	dragdrop* spell_dragdrop{};
 	// card size
 	const float			card_width = 100.0f;
-	const float			card_length = 100.0f;		
+	const float			card_height = 100.0f;		
 	void init_spells_draw(Spell& spell, AEVec2 coord);
 };
 

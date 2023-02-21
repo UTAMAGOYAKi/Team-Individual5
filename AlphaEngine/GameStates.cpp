@@ -23,6 +23,7 @@
 // main
 int i = 0;
 float position = 1000.0;
+AEVec2 mouse_pos{}; // Current mouse pos
 
 //Card Variables
 //---------------------------------------------------------------------------------
@@ -126,10 +127,21 @@ void GameStateAlchemiceInit() {
 
 void GameStateAlchemiceUpdate() {
 
+	// Updates global mouse pos
+	int x , y;
+	AEInputGetCursorPosition(&x, &y);
+	mouse_pos.x = x;
+	mouse_pos.y = y;
+
+
 	//Check for mouse click
 	if (AEInputCheckTriggered(AEVK_LBUTTON))
 	{
-
+		for (int i = 0; i <= max_spells; i++) {
+			if (aabbbutton(spellbook[i].spell_dragdrop, mouse_pos)) {
+				std::cout<< "Clicking "<< spellbook[i].spell_name<<std::endl;
+			}
+		}
 	}
 
 	//Draw spells player unlocks / combines
@@ -218,7 +230,7 @@ void GameStateAlchemiceDraw() {
 			AEGfxTextureSet(spellbook[i].texture, 0, 0);
 			AEMtx33Trans(&translate, spellbook[i].spell_dragdrop->getcoord().mid.x, spellbook[i].spell_dragdrop->getcoord().mid.y);
 			AEMtx33Rot(&rotate, PI);
-			AEMtx33Scale(&scale, spellbook[i].card_width, spellbook[i].card_length);
+			AEMtx33Scale(&scale, spellbook[i].card_width, spellbook[i].card_height);
 			AEMtx33Concat(&transform, &rotate, &scale);
 			AEMtx33Concat(&transform, &translate, &transform);
 			AEGfxSetTransform(transform.m);
