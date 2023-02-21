@@ -146,7 +146,7 @@ void sub_menu_draw(AEGfxTexture* sub_menu, Spell spells[], AEGfxVertexList* mesh
 
 	AEGfxPrint(font, (s8*)sub_words[0].c_str(), -0.8f, 0.8f, 1.0f, 1.0f, 1.0f, 1.0f);
 
-	for (int i = 0; i < max_spells; i++) 
+	for (int i = 0; i < max_spells-1; i++) 
 	{
 		if (spells[i].unlocked == true) 
 		{

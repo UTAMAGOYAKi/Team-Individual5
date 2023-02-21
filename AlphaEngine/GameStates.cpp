@@ -104,7 +104,7 @@ void GameStateAlchemiceInit() {
 
 	//Draw all spells that are active at beginning
 	AEVec2Zero(&cards);
-	AEVec2Set(&cards, -(AEGetWindowWidth() / 2) + 100, -(AEGetWindowHeight() / 2) + 100);
+	AEVec2Set(&cards, (f32) - (AEGetWindowWidth() / 2) + 100,(f32) - (AEGetWindowHeight() / 2) + 100);
 
 
 	//Just for for testing; to be changed when we have a level system. 
@@ -116,12 +116,12 @@ void GameStateAlchemiceInit() {
 
 	for (int i = 0; i < sizeof(buttons) / sizeof(buttons[0]); ++i) {
 		buttons[i].mid.x = 0;
-		buttons[i].mid.y = (190 - i * 180);
+		buttons[i].mid.y = (f32)(190 - i * 180);
 
 		buttons[i].s1.x = 300;
-		buttons[i].s1.y = (190 - i * 180) + 80;
+		buttons[i].s1.y = (f32)(190 - i * 180) + 80;
 		buttons[i].s2.x = -300;
-		buttons[i].s1.y = (190 - i * 180) - 80;
+		buttons[i].s1.y = (f32)(190 - i * 180) - 80;
 	}
 }
 
@@ -130,24 +130,25 @@ void GameStateAlchemiceUpdate() {
 	// Updates global mouse pos
 	int x , y;
 	AEInputGetCursorPosition(&x, &y);
-	mouse_pos.x = x;
-	mouse_pos.y = y;
+	mouse_pos.x = (f32)x - AEGetWindowWidth()/2;
+	mouse_pos.y = (f32)y - AEGetWindowHeight()/2;
 
+	//std::cout << "mouse x:" << mouse_pos.x << "mouse y:" << mouse_pos.y << std::endl;
 
 	//Check for mouse click
-	//if (AEInputCheckTriggered(AEVK_LBUTTON))
-	//{
-	//	for (int i = 0; i <= max_spells; i++) {
-	//		if (aabbbutton(spellbook[i].spell_dragdrop, mouse_pos)) {
-	//			std::cout<< "Clicking "<< spellbook[i].spell_name<<std::endl;
-	//		}
-	//	}
-	//}
+	if (AEInputCheckTriggered(AEVK_LBUTTON))
+	{
+		for (int i = 0; i <= max_spells-1; i++) {
+			if (aabbbutton(spellbook[i].spell_dragdrop, mouse_pos)) {
+				std::cout<< "Clicking "<< spellbook[i].spell_name<<std::endl;
+			}
+		}
+	}
 
 	//Draw spells player unlocks / combines
 //TO BE IMPLEMENTED
 
-	for (int i = 0; i <= max_spells; i++) {
+	for (int i = 0; i <= max_spells-1; i++) {
 		if (spellbook[i].unlocked == true) {
 			if (spellbook[i].spell_dragdrop->getcoord().mid.x == 0 && spellbook[i].spell_dragdrop->getcoord().mid.y == 0) {
 				spellbook[i].init_spells_draw(spellbook[i], cards);
@@ -225,7 +226,7 @@ void GameStateAlchemiceDraw() {
 	name_bar(player_hp, player_position, font);
 
 	// Card Drawing
-	for (int i = 0; i <= max_spells; i++) {
+	for (int i = 0; i <= max_spells-1; i++) {
 		if (spellbook[i].unlocked == true) {
 			AEGfxTextureSet(spellbook[i].texture, 0, 0);
 			AEMtx33Trans(&translate, spellbook[i].spell_dragdrop->getcoord().mid.x, spellbook[i].spell_dragdrop->getcoord().mid.y);

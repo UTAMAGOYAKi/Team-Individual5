@@ -36,11 +36,11 @@ Spell* init_allspells()
 		Spell(RAT_SWARM, 1, SHADOW, "Rat Swarm",umbral_tendrils,false, 5, 1, 5,1),
 		Spell(BUBONIC_BLAZE, 1, FIRE, "Bubonic Blaze",umbral_tendrils,false, 5, 1, 5,5),
 		// Invalid Spell
-		Spell(INVALID_SPELL, 0, INVALID_ELEMENT, "",umbral_tendrils,false, 0, 0, 0,0),
+		Spell(INVALID_SPELL, 0, INVALID_ELEMENT, "",umbral_tendrils,true, 0, 0, 0,0),
 	};
 
 	AEVec2Zero(&cards);
-	for (int i = 0; i <= max_spells - 1; i++) {
+	for (int i = 0; i <= max_spells-1; i++) {
 		//Set all midpoint coords to 0
 		spellbook[i].spell_dragdrop->moveto(cards);
 		//Set all spell boundingboxes
