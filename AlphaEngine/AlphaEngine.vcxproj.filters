@@ -34,6 +34,9 @@
     <ClCompile Include="LevelManager.cpp">
       <Filter>Source file</Filter>
     </ClCompile>
+    <ClCompile Include="Map.cpp">
+      <Filter>Source file</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Battle_system.h">
@@ -70,6 +73,9 @@
       <Filter>Header file</Filter>
     </ClInclude>
     <ClInclude Include="LevelManager.h">
+      <Filter>Header file</Filter>
+    </ClInclude>
+    <ClInclude Include="Map.h">
       <Filter>Header file</Filter>
     </ClInclude>
   </ItemGroup>

@@ -40,6 +40,19 @@ bool& dragdrop::flagchange(bool change)
 	return active;
 }
 
+dragdrop dragdrop::changeaabb(double width, double height)
+{
+	bounding.s1.x += width / 2;
+	bounding.s1.y += height / 2;
+
+	bounding.s2.x -= width / 2;
+	bounding.s2.y -= height / 2;
+
+	bounding.tr = bounding.s1;
+	bounding.bl = bounding.s2;
+
+	return *this;
+}
 
 
 dragdrop& dragdrop::move(double x, double y)
@@ -181,6 +194,7 @@ AEVec2 enemy_position[3];
 AEVec2 player_position;
 
 void PositionInit() {
+
 	player_position.x = (float)(-(AEGetWindowWidth() / 4));
 	player_position.y = 0;// (float)-(AEGetWindowHeight() / 8);
 	enemy_position[0].x = (float)((9.0 / 16.0) * (AEGetWindowWidth() / 2));
