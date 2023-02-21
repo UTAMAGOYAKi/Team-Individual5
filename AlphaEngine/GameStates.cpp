@@ -135,14 +135,14 @@ void GameStateAlchemiceUpdate() {
 
 
 	//Check for mouse click
-	if (AEInputCheckTriggered(AEVK_LBUTTON))
-	{
-		for (int i = 0; i <= max_spells; i++) {
-			if (aabbbutton(spellbook[i].spell_dragdrop, mouse_pos)) {
-				std::cout<< "Clicking "<< spellbook[i].spell_name<<std::endl;
-			}
-		}
-	}
+	//if (AEInputCheckTriggered(AEVK_LBUTTON))
+	//{
+	//	for (int i = 0; i <= max_spells; i++) {
+	//		if (aabbbutton(spellbook[i].spell_dragdrop, mouse_pos)) {
+	//			std::cout<< "Clicking "<< spellbook[i].spell_name<<std::endl;
+	//		}
+	//	}
+	//}
 
 	//Draw spells player unlocks / combines
 //TO BE IMPLEMENTED
