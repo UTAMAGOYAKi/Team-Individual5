@@ -43,9 +43,8 @@ Spell* init_allspells()
 	};
 
 	AEVec2Zero(&cards);
-	for (int i = 0; i <= max_spells; i++) {
-		spellbook[i].coords = new AEVec2;
-		*spellbook[i].coords = cards;
+	for (int i = 0; i <= max_spells -1; i++) {
+		spellbook[i].spell_dragdrop->moveto(cards);
 	}
 	return spellbook;
 }
@@ -53,13 +52,14 @@ Spell* init_allspells()
 //destructor for the coordinates
 Spell::~Spell()
 {
-	delete coords;
+	delete spell_dragdrop;
 }
 
 //Function that will set coords to a spell when called
 void Spell::init_spells_draw(Spell& spell, AEVec2 coords)
 {
-	*spell.coords = coords;
+	spell.spell_dragdrop->moveto(coords);
+
 }
 
 

@@ -29,8 +29,8 @@ class Spell {
 public:
 	Spell(int id, int tier, int element, std::string spell_name, AEGfxTexture* texture, bool unlocked, int base_damage, int AOE_damage, int lingeringDamage) :
 		id(id), tier(tier), element(element), spell_name(spell_name), texture(texture), unlocked(unlocked), base_damage(base_damage), AOE_damage(AOE_damage), lingeringDamage(lingeringDamage) {
-		AEVec2* new_coords = new AEVec2;
-		coords = new_coords;
+		dragdrop* new_dragdrop = new dragdrop;
+		spell_dragdrop = new_dragdrop;
 	};
 	~Spell();
 	// Tags
@@ -45,8 +45,10 @@ public:
 	int lingeringDamage = 0;
 	//Draw Info
 	AEGfxTexture* texture;
-	AEVec2* coords{};
-
+	dragdrop* spell_dragdrop{};
+	// card size
+	const float			card_width = 100.0f;
+	const float			card_length = 100.0f;		
 	void init_spells_draw(Spell& spell, AEVec2 coord);
 };
 

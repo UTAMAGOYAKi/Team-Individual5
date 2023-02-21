@@ -28,7 +28,7 @@ float position = 1000.0;
 //---------------------------------------------------------------------------------
 // Card Details 
 //---------------------------------------------------------------------------------
-const float			card_size = 100.0f;		// card size
+
 //Contains all spells in a dynamically allocated array
 Spell* spellbook;
 //Coords for active cards
@@ -137,7 +137,7 @@ void GameStateAlchemiceUpdate() {
 
 	for (int i = 0; i <= max_spells; i++) {
 		if (spellbook[i].unlocked == true) {
-			if (spellbook[i].coords->x == 0 && spellbook[i].coords->y == 0) {
+			if (spellbook[i].spell_dragdrop->getcoord().mid.x == 0 && spellbook[i].spell_dragdrop->getcoord().mid.y == 0) {
 				spellbook[i].init_spells_draw(spellbook[i], cards);
 				cards.x += 100;
 			}
@@ -216,9 +216,9 @@ void GameStateAlchemiceDraw() {
 	for (int i = 0; i <= max_spells; i++) {
 		if (spellbook[i].unlocked == true) {
 			AEGfxTextureSet(spellbook[i].texture, 0, 0);
-			AEMtx33Trans(&translate, spellbook[i].coords->x, spellbook[i].coords->y);
+			AEMtx33Trans(&translate, spellbook[i].spell_dragdrop->getcoord().mid.x, spellbook[i].spell_dragdrop->getcoord().mid.y);
 			AEMtx33Rot(&rotate, PI);
-			AEMtx33Scale(&scale, card_size, card_size);
+			AEMtx33Scale(&scale, spellbook[i].card_width, spellbook[i].card_length);
 			AEMtx33Concat(&transform, &rotate, &scale);
 			AEMtx33Concat(&transform, &translate, &transform);
 			AEGfxSetTransform(transform.m);

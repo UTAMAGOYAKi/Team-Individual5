@@ -42,8 +42,6 @@ public:
 	bool& flagchange(bool change); //bot.flagchange(true);
 
 
-
-
 	//These functions use the middlepoint as the point it will move to
 	dragdrop& moveto(AEVec2 refer);	// move the box to be on a point, mainly for the mouse	
 	dragdrop& moveto(aabb refer);	//for centering a box on another box mainly
