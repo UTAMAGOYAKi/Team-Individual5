@@ -104,12 +104,7 @@ void GameStateAlchemiceInit() {
 	//Draw all spells that are active at beginning
 	AEVec2Zero(&cards);
 	AEVec2Set(&cards, -(AEGetWindowWidth() / 2) + 100, -(AEGetWindowHeight() / 2) + 100);
-	for (int i = 0; i <= max_spells; i++) {
-		if (spellbook[i].unlocked == true) {
-			spellbook[i].init_spells_draw(spellbook[i], cards);
-			cards.x += 100;
-		}
-	}
+
 
 	//Just for for testing; to be changed when we have a level system. 
 	for (int i = 0; i < 3; i++) {
@@ -134,24 +129,26 @@ void GameStateAlchemiceUpdate() {
 	//Check for mouse click
 	if (AEInputCheckTriggered(AEVK_LBUTTON))
 	{
-		
+
 	}
 
 	//Draw spells player unlocks / combines
-// TO BE IMPLEMENTED
-/*AEVec2Set(&cards, 20, AEGetWindowHeight() - 200);
-for (int i = 0; i <= max_spells; i++) {
-	if (spellbook[i].unlocked == true) {
-		spellbook[i].init_spells_draw(spellbook[i], cards);
-		cards.x += 20;
+//TO BE IMPLEMENTED
+
+	for (int i = 0; i <= max_spells; i++) {
+		if (spellbook[i].unlocked == true) {
+			if (spellbook[i].coords->x == 0 && spellbook[i].coords->y == 0) {
+				spellbook[i].init_spells_draw(spellbook[i], cards);
+				cards.x += 100;
+			}
+		}
 	}
-}*/
 
 	if (AEInputCheckTriggered(AEVK_W))
 	{
 		sub_menu = !sub_menu;
 	}
-	
+
 
 
 	if (AEInputCheckTriggered(AEVK_ESCAPE)) {
@@ -205,7 +202,7 @@ void GameStateAlchemiceDraw() {
 	if (alchemice->hp)
 	{
 		player_hp += std::to_string(alchemice->hp);
-		player_hp_bar(*alchemice,  player_position, pMesh);
+		player_hp_bar(*alchemice, player_position, pMesh);
 	}
 	else
 	{

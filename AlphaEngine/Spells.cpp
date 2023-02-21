@@ -8,6 +8,7 @@ AEGfxTexture* toxic_deluge{}, * inferno_blast{}, * umbral_tendrils{}, * maelstro
 
 Spell* init_allspells()
 {
+	AEVec2 cards;
 
 	//Currently Textures are used as placeholder, ignore the meaning
 	umbral_tendrils = AEGfxTextureLoad("Assets/spell_glyph.png");
@@ -36,7 +37,16 @@ Spell* init_allspells()
 		Spell(BUBONIC_BLAZE, 1, FIRE, "Bubonic Blaze",umbral_tendrils,false, 5, 1, 5),
 		// Invalid Spell
 		Spell(INVALID_SPELL, 0, INVALID_ELEMENT, "",umbral_tendrils,false, 0, 0, 0),
+
+
+
 	};
+
+	AEVec2Zero(&cards);
+	for (int i = 0; i <= max_spells; i++) {
+		spellbook[i].coords = new AEVec2;
+		*spellbook[i].coords = cards;
+	}
 	return spellbook;
 }
 
