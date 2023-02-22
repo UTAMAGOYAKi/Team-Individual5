@@ -1,6 +1,6 @@
 #ifndef map_h
 #define map_h
-
+#include "Buttons.h"
 
 // to be drawn after victory, but before unloading and freeing?
 //fake it till you make it
@@ -18,6 +18,10 @@ void transistion_boss();
 //map?
 
 
+
+
+
+int map_movement(int current);
 
 
 #endif // !map_h

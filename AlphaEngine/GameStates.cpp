@@ -51,8 +51,8 @@ aabb* Enemy_pos_2;
 /// <summary>
 s8 font = AEGfxCreateFont("\Assets\Roboto-Regular.ttf", 1);
 
-s32 pX{};
-s32 pY{};
+s32* pX{};
+s32* pY{};
 
 //Modes
 bool alchemy_mode = 0;
@@ -140,6 +140,14 @@ for (int i = 0; i <= max_spells; i++) {
 		cards.x += 20;
 	}
 }*/
+
+	if (AEInputCheckTriggered(AEVK_E))
+	{
+		AEInputGetCursorPosition(pX, pY);
+		printf("x is %d\n", *pX);
+		printf("y is %d\n", *pY);
+	}
+
 
 	if (AEInputCheckTriggered(AEVK_W))
 	{
