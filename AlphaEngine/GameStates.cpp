@@ -145,6 +145,12 @@ void GameStateAlchemiceUpdate() {
 		}
 	}
 
+	if (AEInputCheckTriggered(AEVK_E))
+	{
+		printf("mouse x is %f\n", mouse_pos.x);
+		printf("mouse y is %f\n", mouse_pos.y);
+	}
+
 	//Draw spells player unlocks / combines
 //TO BE IMPLEMENTED
 
