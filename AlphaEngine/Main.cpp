@@ -33,7 +33,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	// Changing the window title
 	AESysSetWindowTitle("Alchemy Main");
 
-	GSMInit(GS_ALCHEMICE);
+	GSMInit(GS_LOAD);
 
 	// Game Loop
 	while (gGameStateCurr != GS_QUIT)

@@ -43,14 +43,14 @@ AEVec2 cards;
 //int gGameRunning = 1;
 
 //Loading of Mesh and Texture
-AEGfxVertexList* pMesh{};
-AEGfxTexture* chara{}, * rat{}, * spell_g{}, * box{}, * sub{};
+AEGfxVertexList* pMesh{}, *pLoad{};
+AEGfxTexture* chara{}, * rat{}, * spell_g{}, * box{}, * sub{}, *load_screen{};
 
 aabb* chara_pos;
 aabb* Enemy_pos_1;
 aabb* Enemy_pos_2;
 /// <summary>
-s8 font = AEGfxCreateFont("\Assets\Roboto-Regular.ttf", 1);
+s8 font{};
 
 s32 pX{};
 s32 pY{};
@@ -86,8 +86,6 @@ void GameStateAlchemiceLoad() {
 	// Saving the mesh (list of triangles) in pMesh
 	pMesh = AEGfxMeshEnd();
 
-	//font
-	font = AEGfxCreateFont("Assets/Roboto-Regular.ttf", 26);
 	chara = AEGfxTextureLoad("Assets/character.png");
 	rat = AEGfxTextureLoad("Assets/rat_Piskel.png");
 	sub = AEGfxTextureLoad("Assets/submenu.png");
@@ -293,7 +291,6 @@ void GameStateAlchemiceDraw() {
 			AEGfxMeshDraw(pMesh, AE_GFX_MDM_TRIANGLES);
 			AEGfxPrint(font, (s8*)mytex[i], middle, textY, 1, 0, 0, 0);
 		}
-		AEGfxPrint(font, (s8*)mytex[1], ((float)300 / 640), 0, 1, 0, 0, 0);
 	}
 	//if (alchemy_mode)
 	//{
@@ -337,4 +334,80 @@ void GameStateAlchemiceUnload() {
 	AEGfxTextureUnload(chara);
 	AEGfxTextureUnload(rat);
 	unload_spells(spellbook);
+}
+
+float load_screen_time{};
+
+void LoadScreenLoad() {
+	pLoad = 0;
+	// Informing the library that we're about to start adding triangles
+	AEGfxMeshStart();
+	// This shape has 2 triangles that makes up a square
+	// Color parameters represent colours as ARGB
+	// UV coordinates to read from loaded textures
+	AEGfxTriAdd(
+		-0.5f, -0.5f, 0x00000000, 0.0f, 1.0f,
+		-0.5f, 0.5f, 0x00000000, 0.0f, 0.0f,
+		0.5f, 0.5f, 0x00000000, 1.0f, 0.0f);
+	AEGfxTriAdd(
+		-0.5f, -0.5f, 0x00000000, 0.0f, 1.0f,
+		0.5f, 0.5f, 0x00000000, 1.0f, 0.0f,
+		0.5f, -0.5f, 0x00000000, 1.0f, 1.0f);
+	// Saving the mesh (list of triangles) in pMesh
+	pLoad = AEGfxMeshEnd();
+
+
+	font = AEGfxCreateFont("Assets/Roboto-Regular.ttf", 26);
+	load_screen = AEGfxTextureLoad("Assets/digilogo.png");
+}
+
+void LoadScreenInit() {
+	load_screen_time = 3;
+}
+
+void LoadScreenUpdate() {
+	if (load_screen_time > 0) {
+		load_screen_time -= (f32)AEFrameRateControllerGetFrameTime();
+	}
+	else {
+		gGameStateNext = GS_ALCHEMICE;
+	}
+}
+
+void LoadScreenDraw() {
+	// Your own rendering logic goes here
+	// Set the background to black.
+	AEGfxSetBackgroundColor(.0f, .0f, .0f);
+	// Tell the engine to get ready to draw something with texture.
+	AEGfxSetRenderMode(AE_GFX_RM_TEXTURE);
+	// Set the tint to white, so that the sprite can 
+	// display the full range of colors (default is black).
+	AEGfxSetTintColor(1.0f, 1.0f, 1.0f, 1.0f);
+	// Set blend mode to AE_GFX_BM_BLEND
+	// This will allow transparency.
+	AEGfxSetBlendMode(AE_GFX_BM_BLEND);
+	AEGfxSetTransparency(1.0f);
+
+	AEMtx33 scale{ 0 };
+	AEMtx33 rotate{ 0 };
+	AEMtx33 translate{ 0 };
+	AEMtx33 transform{ 0 };
+
+	AEGfxTextureSet(load_screen, 0, 0);
+	AEMtx33Trans(&translate, 0, 0);
+	AEMtx33Rot(&rotate, 0);
+	AEMtx33Scale(&scale, 915, 287); //hardcoded values from the pixels in .png file, 3x value 
+	AEMtx33Concat(&transform, &rotate, &scale);
+	AEMtx33Concat(&transform, &translate, &transform);
+	/*AEMtx33Identity(&transform);*/
+	AEGfxSetTransform(transform.m);
+	AEGfxMeshDraw(pLoad, AE_GFX_MDM_TRIANGLES);
+}
+
+void LoadScreenFree() {
+	AEGfxMeshFree(pLoad);
+}
+
+void LoadScreenUnload() {
+	AEGfxTextureUnload(load_screen);
 }
