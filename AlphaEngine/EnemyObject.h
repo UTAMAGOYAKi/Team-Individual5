@@ -58,51 +58,19 @@ public:
     //Member functions
 
     //Used to retrieve data from class
-    std::string get_name() {
-        return name;
-    }
-
-    int get_max_hp() {
-        return max_hp;
-    }
-
-    int get_hp() {
-        return hp;
-    }
-
-    int get_atk() {
-        return atk;
-    }
-
-    Enemy& set_position(AEVec2 input_pos) {
-        pos.x = input_pos.x;
-        pos.y = input_pos.y;
-        return *this;
-    }
-
-    AEVec2 get_pos() {
-        return pos;
-    }
-
-    AEGfxTexture* get_texture() {
-        return texture;
-    }
-
-    bool is_alive() {
-        return alive;
-    }
+    std::string get_name();
+    int get_max_hp();
+    int get_hp();
+    int get_atk();
+    AEVec2 get_pos();
+    AEGfxTexture* get_texture();
+    bool is_alive();
 
     //Actions 
-    //for getting healed or damage
-    void take_damage(int val) {
-        if (alive) { //if alive
-            hp -= val;
-            if (hp <= 0) {
-                hp = 0;
-                alive = false;
-            }
-        }
-    }
+    //Setting position
+    void set_position(AEVec2 input_pos);
+    //Take Damage
+    void take_damage(int val);
 
 };
 

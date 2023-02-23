@@ -1,36 +1,47 @@
 #include "EnemyObject.h"
 #include "Buttons.h"
 
-//Unused currently
-//enemy* create_enemy(enemy_types type, AEGfxTexture* texture) {
-//    enemy* new_enemy{ new enemy };
-//    new_enemy->name;
-//
-//    switch (type)
-//    {
-//    case base_rat:
-//        new_enemy->name = "Rat";
-//        new_enemy->atk = 10;
-//        new_enemy->max_hp = 10;
-//        new_enemy->hp = new_enemy->max_hp; //Initialized hp will be same as max_hp;
-//        new_enemy->texture = texture;
-//        break;
-//
-//    case big_rat:
-//        new_enemy->name = "Big Rat";
-//        new_enemy->atk = 15;
-//        new_enemy->max_hp = 15;
-//        new_enemy->hp = new_enemy->max_hp;
-//        new_enemy->texture = texture;
-//        break;
-//
-//    default:
-//        break;
-//    }
-//    return new_enemy;
-//}
-//
-//void delete_enemy(enemy* enemy_ptr) {
-//    //AEGfxTextureUnload(enemy_ptr->texture);
-//    delete enemy_ptr;
-//}
+std::string Enemy::get_name() {
+    return name;
+}
+
+int Enemy::get_max_hp() {
+    return max_hp;
+}
+
+int Enemy::get_hp() {
+    return hp;
+}
+
+int Enemy::get_atk() {
+    return atk;
+}
+
+AEVec2 Enemy::get_pos() {
+    return pos;
+}
+
+AEGfxTexture* Enemy::get_texture() {
+    return texture;
+}
+
+bool Enemy::is_alive() {
+    return alive;
+}
+
+//Actions
+void Enemy::set_position(AEVec2 input_pos) {
+    pos.x = input_pos.x;
+    pos.y = input_pos.y;
+}
+
+//for getting healed or damage
+void Enemy::take_damage(int val) {
+    if (alive) { //if alive
+        hp -= val;
+        if (hp <= 0) {
+            hp = 0;
+            alive = false;
+        }
+    }
+}
