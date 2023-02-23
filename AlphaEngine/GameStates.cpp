@@ -76,13 +76,13 @@ void GameStateAlchemiceLoad() {
 	// Color parameters represent colours as ARGB
 	// UV coordinates to read from loaded textures
 	AEGfxTriAdd(
-		-0.5f, -0.5f, 0xFFFFFFFF, 0.0f, 0.0f,
-		0.5f, -0.5f, 0xFFFFFFFF, 1.0f, 0.0f,
-		-0.5f, 0.5f, 0xFFFFFFFF, 0.0f, 1.0f);
+		-0.5f, -0.5f, 0xFFFFFFFF, 0.0f, 1.0f,
+		-0.5f, 0.5f, 0xFFFFFFFF, 0.0f, 0.0f,
+		0.5f, 0.5f, 0xFFFFFFFF, 1.0f, 0.0f);
 	AEGfxTriAdd(
-		0.5f, -0.5f, 0xFFFFFFFF, 1.0f, 0.0f,
-		0.5f, 0.5f, 0xFFFFFFFF, 1.0f, 1.0f,
-		-0.5f, 0.5f, 0xFFFFFFFF, 0.0f, 1.0f);
+		-0.5f, -0.5f, 0xFFFFFFFF, 0.0f, 1.0f,
+		0.5f, -0.5f, 0xFFFFFFFF, 1.0f, 1.0f,
+		0.5f, 0.5f, 0xFFFFFFFF, 1.0f, 0.0f);
 	// Saving the mesh (list of triangles) in pMesh
 	pMesh = AEGfxMeshEnd();
 
@@ -202,8 +202,8 @@ void GameStateAlchemiceDraw() {
 	//Character drawing
 	AEGfxTextureSet(chara, 0, 0);
 	AEMtx33Trans(&translate, (f32)player_position.x, (f32)player_position.y);
-	AEMtx33Rot(&rotate, PI);
-	AEMtx33Scale(&scale, -200.f, 200.f);
+	AEMtx33Rot(&rotate, 0);
+	AEMtx33Scale(&scale, 200.f, 200.f);
 	AEMtx33Concat(&transform, &rotate, &scale);
 	AEMtx33Concat(&transform, &translate, &transform);
 	AEGfxSetTransform(transform.m);
@@ -227,7 +227,7 @@ void GameStateAlchemiceDraw() {
 		if (spellbook[i].unlocked == true) {
 			AEGfxTextureSet(spellbook[i].texture, 0, 0);
 			AEMtx33Trans(&translate, spellbook[i].spell_dragdrop->getcoord().mid.x, spellbook[i].spell_dragdrop->getcoord().mid.y);
-			AEMtx33Rot(&rotate, PI);
+			AEMtx33Rot(&rotate, 0);
 			AEMtx33Scale(&scale, spellbook[i].card_width, spellbook[i].card_height);
 			AEMtx33Concat(&transform, &rotate, &scale);
 			AEMtx33Concat(&transform, &translate, &transform);
@@ -239,7 +239,7 @@ void GameStateAlchemiceDraw() {
 	for (int i = 0; i < 3; ++i) {
 		AEGfxTextureSet(enemies[i].get_texture(), 0, 0);
 		AEMtx33Trans(&translate, (f32)(enemies[i].get_pos().x), (f32)(enemies[i].get_pos().y));
-		AEMtx33Rot(&rotate, PI);
+		AEMtx33Rot(&rotate, 0);
 		AEMtx33Scale(&scale, 100.f, 100.f);
 		AEMtx33Concat(&transform, &rotate, &scale);
 		AEMtx33Concat(&transform, &translate, &transform);
