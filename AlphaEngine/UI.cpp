@@ -92,7 +92,7 @@ void name_bar(std::string name, AEVec2 place,s8 font)
 
 void name_bar(Spell* refer, s8 font)
 {
-	AEGfxPrint(font, (s8*)refer->spell_name.c_str(), refer->coords->x/AEGetWindowWidth(), refer->coords->y/AEGetWindowHeight(), 1.0f, 1.0f, 1.0f, 1.0f);
+	AEGfxPrint(font, (s8*)refer->spell_name.c_str(), refer->spell_dragdrop->getcoord().mid.x/AEGetWindowWidth(), refer->spell_dragdrop->getcoord().mid.y /AEGetWindowHeight(), 1.0f, 1.0f, 1.0f, 1.0f);
 }
 
 

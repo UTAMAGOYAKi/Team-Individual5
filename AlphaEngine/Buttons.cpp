@@ -187,6 +187,35 @@ double distance_diagonal(AEVec2 first, AEVec2 second)
 	return sqrt(d);
 }
 
+int hoverover(AEVec2 coord, AEVec2 mouse, double radi)
+{
+	if(distance_diagonal(coord,mouse)<  radi
+	&& distance_diagonal(coord,mouse)> -radi
+	)
+	{
+		return 1;
+	}
+	else
+	{
+		return -1;
+	}
+}
+
+int hoverover(Spell* box, AEVec2 mouse)
+{
+	if (distance_diagonal(box->spell_dragdrop->getcoord().mid, mouse) <  (distance_diagonal(box->spell_dragdrop->getcoord().tr, box->spell_dragdrop->getcoord().bl)/2)
+	 && distance_diagonal(box->spell_dragdrop->getcoord().mid, mouse) > -(distance_diagonal(box->spell_dragdrop->getcoord().tr, box->spell_dragdrop->getcoord().bl)/2)
+		)
+	{
+		return box->id;
+	}
+	else
+	{
+		return -1;
+	}
+}
+
+
 
 #include "Main.h"
 

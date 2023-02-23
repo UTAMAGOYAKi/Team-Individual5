@@ -5,12 +5,8 @@
 #include <float.h>
 #include <AEVec2.h>
 #include <cmath>
+#include "Spells.h"
 
-
-//struct coord {
-//	double x;	//the x-axis coordinate. Don't be funny on this part please
-//	double y;	//the y-axis coordinate
-//};
 
 struct aabb {
 	
@@ -86,6 +82,9 @@ double distance_diagonal(AEVec2 first, AEVec2 second);
 int aabbbutton(dragdrop* box, AEVec2 mouse);
 int aabbbutton(dragdrop* box, dragdrop* spell);
 int aabbbutton(dragdrop* spell, aabb box);
+
+int hoverover(AEVec2 coord, AEVec2 mouse, double radi);
+int hoverover(Spell* box, AEVec2 mouse);
 
 //std::istream& operator>> (std::istream is, dragdrop& box);
 
