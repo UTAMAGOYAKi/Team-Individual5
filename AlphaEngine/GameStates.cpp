@@ -59,6 +59,7 @@ s32 pY{};
 bool alchemy_mode = 0;
 bool pause_mode = false;
 bool sub_menu = false;
+Turn turn = player_turn;
 
 player* alchemice{};
 
@@ -131,7 +132,17 @@ void GameStateAlchemiceUpdate() {
 	mouse_pos.y = -((f32)y - AEGetWindowHeight()/2);
 
 	//std::cout << "mouse x:" << mouse_pos.x << "mouse y:" << mouse_pos.y << std::endl;
-	std::cout << mouse_pos.x << " " << mouse_pos.y << std::endl;
+	//std::cout << mouse_pos.x << " " << mouse_pos.y << std::endl;
+
+	//Actions that can be done anytime
+	if (AEInputCheckTriggered(AEVK_ESCAPE)) {
+		pause_mode = !pause_mode;
+	}
+
+	if (AEInputCheckTriggered(AEVK_W))
+	{
+		sub_menu = !sub_menu;
+	}
 
 	//Check for mouse click
 	if (AEInputCheckTriggered(AEVK_LBUTTON))
@@ -161,6 +172,61 @@ void GameStateAlchemiceUpdate() {
 				}
 			}
 		}
+	}//Check for Lbutton click
+
+	//Have to check if the player or enemies are all dead
+	bool enemies_alive = false;
+	for (int i{}; i < TOTAL_ENEMY; i++) {
+		if (enemies[i].is_alive()) {
+			enemies_alive = true;
+		}
+	}
+
+	//Check if players or enemies or all enemies are all dead.
+	if (alchemice->hp > 0 && enemies_alive) {
+		//Checking for turns
+		if (turn == player_turn) {
+
+			if (AEInputCheckTriggered(AEVK_LBUTTON))
+			{
+				for (int i = 0; i <= max_spells - 1; i++) {
+					if (aabbbutton(spellbook[i].spell_dragdrop, mouse_pos)) {
+						std::cout << "Clicking " << spellbook[i].spell_name << std::endl;
+					}
+				}
+			}
+
+			if (AEInputCheckTriggered(AEVK_W))
+			{
+				sub_menu = !sub_menu;
+			}
+
+			if (AEInputCheckTriggered(AEVK_Q))
+			{
+				enemies[rand() % TOTAL_ENEMY].take_damage(1);
+			}
+
+			//End Turn
+			if (AEInputCheckTriggered(AEVK_SPACE)) {
+				turn = enemy_turn;
+				std::cout << "enemy turn" << std::endl;
+			}
+		}
+
+		//Enemy turn; runs all the enemy functions and animations
+		if (turn == enemy_turn) {
+			for (int i = 0; i < TOTAL_ENEMY; i++) {
+				alchemice->hp -= enemies[i].get_atk();
+			}
+			//change to player turn after it ends
+			turn = player_turn;
+			std::cout << "player turn" << std::endl;
+		}
+	}
+	//When player hp 0 or all enemies dead. Game over or change state
+	else
+	{
+		std::cout << "Game Over";
 	}
 
 	//Draw spells player unlocks / combines
@@ -175,28 +241,27 @@ void GameStateAlchemiceUpdate() {
 		}
 	}
 
-	if (AEInputCheckTriggered(AEVK_W))
-	{
-		sub_menu = !sub_menu;
-	}
+	//BLOCKING OUT THESE FIRST NOT SURE IF WE STILL NEED
+	//if (AEInputCheckTriggered(AEVK_W))
+	//{
+	//	sub_menu = !sub_menu;
+	//}
 
+	//if (AEInputCheckTriggered(AEVK_ESCAPE)) {
+	//	pause_mode = !pause_mode;
+	//}
 
+	//if (!pause_mode) {
+	//	//if pause_game and !pause_game, to prevent overlapping of checking for aabb or what not
+	//	if (alchemy_mode)
+	//	{
 
-	if (AEInputCheckTriggered(AEVK_ESCAPE)) {
-		pause_mode = !pause_mode;
-	}
-
-	if (!pause_mode) {
-		//if pause_game and !pause_game, to prevent overlapping of checking for aabb or what not
-		if (alchemy_mode)
-		{
-
-		}
-		if (AEInputCheckTriggered(AEVK_Q))
-		{
-			enemies[rand() % 3].change_hp(-1);
-		}
-	}
+	//	}
+	//	if (AEInputCheckTriggered(AEVK_Q))
+	//	{
+	//		enemies[rand() % 3].change_hp(-1);
+	//	}
+	//}
 }
 
 void GameStateAlchemiceDraw() {
@@ -257,18 +322,22 @@ void GameStateAlchemiceDraw() {
 		}
 	}
 
-	for (int i = 0; i < 3; ++i) {
-		AEGfxTextureSet(enemies[i].get_texture(), 0, 0);
-		AEMtx33Trans(&translate, (f32)(enemies[i].get_pos().x), (f32)(enemies[i].get_pos().y));
-		AEMtx33Rot(&rotate, 0);
-		AEMtx33Scale(&scale, 100.f, 100.f);
-		AEMtx33Concat(&transform, &rotate, &scale);
-		AEMtx33Concat(&transform, &translate, &transform);
-		AEGfxSetTransform(transform.m);
-		AEGfxMeshDraw(pMesh, AE_GFX_MDM_TRIANGLES);
+	for (int i = 0; i < TOTAL_ENEMY; ++i) {
+		if (enemies[i].is_alive()) 
+		{
+			AEGfxTextureSet(enemies[i].get_texture(), 0, 0);
+			AEMtx33Trans(&translate, (f32)(enemies[i].get_pos().x), (f32)(enemies[i].get_pos().y));
+			AEMtx33Rot(&rotate, 0);
+			AEMtx33Scale(&scale, 100.f, 100.f);
+			AEMtx33Concat(&transform, &rotate, &scale);
+			AEMtx33Concat(&transform, &translate, &transform);
+			AEGfxSetTransform(transform.m);
+			AEGfxMeshDraw(pMesh, AE_GFX_MDM_TRIANGLES);
 
-		enemy_info(enemies[i], font, pMesh);
+			enemy_info(enemies[i], font, pMesh);
+		}
 	}
+
 
 	AEGfxSetRenderMode(AE_GFX_RM_TEXTURE);
 	// Set the tint to white, so that the sprite can 

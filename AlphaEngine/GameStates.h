@@ -1,5 +1,9 @@
 #pragma once
 
+enum Turn {
+	player_turn,
+	enemy_turn
+};
 extern s8 font;
 
 void GameStateAlchemiceLoad();
