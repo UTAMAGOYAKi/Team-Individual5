@@ -1,5 +1,7 @@
 #pragma once
 
+extern s8 font;
+
 void GameStateAlchemiceLoad();
 void GameStateAlchemiceInit();
 void GameStateAlchemiceUpdate();

@@ -35,6 +35,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
 	GSMInit(GS_LOAD);
 
+	font = AEGfxCreateFont("Assets/Roboto-Regular.ttf", 26);
+
 	// Game Loop
 	while (gGameStateCurr != GS_QUIT)
 	{
@@ -76,6 +78,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 		gGameStatePrev = gGameStateCurr;
 		gGameStateCurr = gGameStateNext;
 	}
+
+	AEGfxDestroyFont(font);
 
 	AESysExit();
 }

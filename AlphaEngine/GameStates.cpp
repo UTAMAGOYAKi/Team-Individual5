@@ -50,7 +50,7 @@ aabb* chara_pos;
 aabb* Enemy_pos_1;
 aabb* Enemy_pos_2;
 /// <summary>
-s8 font{};
+s8 font;
 
 s32 pX{};
 s32 pY{};
@@ -116,29 +116,29 @@ void GameStateAlchemiceInit() {
 		pause_buttons[i].mid.x = 0;
 		pause_buttons[i].mid.y = (f32)(190 - i * 180);
 
-		pause_buttons[i].s1.x = 300;
-		pause_buttons[i].s1.y = (f32)(190 - i * 180) + 80;
-		pause_buttons[i].s2.x = -300;
-		pause_buttons[i].s2.y = (f32)(190 - i * 180) - 80;
+		pause_buttons[i].s1.x = 150;
+		pause_buttons[i].s1.y = (f32)(190 - i * 180) + 40;
+		pause_buttons[i].s2.x = -150;
+		pause_buttons[i].s2.y = (f32)(190 - i * 180) - 40;
 	}
 }
 
 void GameStateAlchemiceUpdate() {
-
 	// Updates global mouse pos
 	int x , y;
 	AEInputGetCursorPosition(&x, &y);
 	mouse_pos.x = (f32)x - AEGetWindowWidth()/2;
-	mouse_pos.y = (f32)y - AEGetWindowHeight()/2;
+	mouse_pos.y = -((f32)y - AEGetWindowHeight()/2);
 
 	//std::cout << "mouse x:" << mouse_pos.x << "mouse y:" << mouse_pos.y << std::endl;
+	std::cout << mouse_pos.x << " " << mouse_pos.y << std::endl;
 
 	//Check for mouse click
 	if (AEInputCheckTriggered(AEVK_LBUTTON))
 	{
 		for (int i = 0; i <= max_spells-1; i++) {
 			if (aabbbutton(spellbook[i].spell_dragdrop, mouse_pos)) {
-				std::cout<< "Clicking "<< spellbook[i].spell_name<<std::endl;
+				std::cout << "Clicking "<< spellbook[i].spell_name<<std::endl;
 			}
 		}
 
@@ -148,13 +148,13 @@ void GameStateAlchemiceUpdate() {
 					mouse_pos.y >= pause_buttons[i].s2.y && mouse_pos.y <= pause_buttons[i].s1.y) {
 					std::cout << "button clicked " << i << std::endl;
 					switch (i) {
-					case 2:
+					case 0:
 						pause_mode = !pause_mode;
 						break;
 					case 1:
 						//options menu
 						break;
-					case 0:
+					case 2:
 						gGameStateNext = GS_QUIT;
 						break;
 					}
@@ -377,8 +377,6 @@ void LoadScreenLoad() {
 	// Saving the mesh (list of triangles) in pMesh
 	pLoad = AEGfxMeshEnd();
 
-
-	font = AEGfxCreateFont("Assets/Roboto-Regular.ttf", 26);
 	load_screen = AEGfxTextureLoad("Assets/digilogo.png");
 }
 
