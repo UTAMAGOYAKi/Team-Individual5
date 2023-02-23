@@ -64,7 +64,7 @@ player* alchemice{};
 
 //GameObject creations
 std::string rat_hp{};
-enemy* enemies[3]{};
+Enemy enemies[3]{};
 
 aabb buttons[3];
 
@@ -107,11 +107,10 @@ void GameStateAlchemiceInit() {
 	AEVec2Set(&cards, (f32) - (AEGetWindowWidth() / 2) + 100,(f32) - (AEGetWindowHeight() / 2) + 100);
 
 
-	//Just for for testing; to be changed when we have a level system. 
+	//Creation of enemy
 	for (int i = 0; i < 3; i++) {
-		enemies[i] = create_enemy(base_rat, rat);
-		enemies[i]->pos.x = enemy_position[i].x;
-		enemies[i]->pos.y = enemy_position[i].y;
+		enemies[i] = Enemy(base_rat, rat);
+		enemies[i].set_position(enemy_position[i]);
 	}
 
 	for (int i = 0; i < sizeof(buttons) / sizeof(buttons[0]); ++i) {
@@ -176,7 +175,7 @@ void GameStateAlchemiceUpdate() {
 		}
 		if (AEInputCheckTriggered(AEVK_Q))
 		{
-			enemies[rand() % 3]->hp--;
+			enemies[rand() % 3].change_hp(-1);
 		}
 	}
 }
@@ -240,8 +239,8 @@ void GameStateAlchemiceDraw() {
 	}
 
 	for (int i = 0; i < 3; ++i) {
-		AEGfxTextureSet(enemies[i]->texture, 0, 0);
-		AEMtx33Trans(&translate, (f32)(enemies[i]->pos.x), (f32)(enemies[i]->pos.y));
+		AEGfxTextureSet(enemies[i].get_texture(), 0, 0);
+		AEMtx33Trans(&translate, (f32)(enemies[i].get_pos().x), (f32)(enemies[i].get_pos().y));
 		AEMtx33Rot(&rotate, PI);
 		AEMtx33Scale(&scale, 100.f, 100.f);
 		AEMtx33Concat(&transform, &rotate, &scale);
@@ -327,10 +326,10 @@ void GameStateAlchemiceDraw() {
 }
 
 void GameStateAlchemiceFree() {
-	delete_player(alchemice);
+	/*delete_player(alchemice);
 	for (int i = 0; i < 3; ++i) {
 		delete_enemy(enemies[i]);
-	}
+	}*/
 	AEGfxMeshFree(pMesh);
 }
 
