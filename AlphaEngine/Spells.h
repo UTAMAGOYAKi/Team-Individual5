@@ -4,6 +4,7 @@
 #include "AEengine.h"
 #include <iostream>
 #include <string>
+#include <limits>
 
 enum Spells {
 	// Tier 3

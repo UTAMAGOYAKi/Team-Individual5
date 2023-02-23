@@ -40,11 +40,13 @@ Spell* init_allspells()
 	};
 
 	AEVec2Zero(&cards);
-	for (int i = 0; i <= max_spells-1; i++) {
-		//Set all midpoint coords to 0
-		spellbook[i].spell_dragdrop->moveto(cards);
-		//Set all spell boundingboxes
-		spellbook[i].spell_dragdrop->changeaabb(spellbook[i].card_width, spellbook[i].card_height);
+	for (int i = 0; i <= max_spells - 1; i++) {
+		if (spellbook[i].unlocked == true) {
+			//Set all midpoint coords to 0
+			spellbook[i].spell_dragdrop->moveto(cards);
+			//Set all spell boundingboxes
+			spellbook[i].spell_dragdrop->changeaabb(spellbook[i].card_width, spellbook[i].card_height);
+		}
 	}
 	return spellbook;
 }
