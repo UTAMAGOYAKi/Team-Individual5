@@ -90,42 +90,10 @@ void name_bar(std::string name, AEVec2 place,s8 font)
 
 
 
-
-//void pause_menu_draw(AEGfxTexture* menu, AEGfxTexture* buttons, AEGfxVertexList* mesh, s8 font)
-//{
-//	//AEGfxGetWindowHeight(); doess not work, remember to bring up for the documentation
-//	float tmpx = AEGetWindowWidth(); // to ensure the pause menu is centred 
-//	float tmpy = AEGetWindowHeight();
-//
-//	std::string menu_words[]{ "Resume","Options","Exit" };
-//
-//	AEGfxTextureSet(menu, 0, 0);
-//	AEMtx33Trans(&transform, tmpx, tmpy);
-//	AEMtx33Rot(&rotate, PI);
-//	AEMtx33Scale(&scale, 1.0f, 1.0f);
-//	AEMtx33Concat(&transform, &rotate, &scale);
-//	AEMtx33Concat(&transform, &translate, &transform);
-//	AEGfxSetTransform(transform.m);
-//	AEGfxMeshDraw(mesh, AE_GFX_MDM_TRIANGLES);
-//
-//	tmpy = AEGfxGetWinMaxY();
-//
-//	for(int i =0; i < 3;i++)	//Resume, Options, Exit
-//	{
-//		AEGfxTextureSet(buttons, 0, 0);
-//		AEMtx33Trans(&transform, tmpx, tmpy - (150.f*(float)i));
-//		AEMtx33Rot(&rotate, PI);
-//		AEMtx33Scale(&scale, 1.0f, 1.0f);
-//		AEMtx33Concat(&transform, &rotate, &scale);
-//		AEMtx33Concat(&transform, &translate, &transform);
-//		AEGfxSetTransform(transform.m);
-//		AEGfxMeshDraw(mesh, AE_GFX_MDM_TRIANGLES);
-//
-//		AEGfxPrint(font, (s8*)menu_words[i].c_str(), tmpx, tmpy - (150.f * (float)i), 0.0f, 0.0f, 0.0f, 0.0f);
-//
-//	}
-//}
-
+void name_bar(Spell* refer, s8 font)
+{
+	AEGfxPrint(font, (s8*)refer->spell_name.c_str(), refer->coords->x/AEGetWindowWidth(), refer->coords->y/AEGetWindowHeight(), 1.0f, 1.0f, 1.0f, 1.0f);
+}
 
 
 void sub_menu_draw(AEGfxTexture* sub_menu, Spell spells[], AEGfxVertexList* mesh, s8 font)

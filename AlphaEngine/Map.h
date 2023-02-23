@@ -23,6 +23,8 @@ void transistion_boss();
 
 int map_movement(int current);
 
+void map_draw(AEGfxTexture* map, AEGfxVertexList* mesh, int current);
+
 
 #endif // !map_h
 
