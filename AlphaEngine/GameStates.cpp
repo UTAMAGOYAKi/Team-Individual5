@@ -23,12 +23,13 @@
 // main
 int i = 0;
 float position = 1000.0;
+AEVec2 mouse_pos{}; // Current mouse pos
 
 //Card Variables
 //---------------------------------------------------------------------------------
 // Card Details 
 //---------------------------------------------------------------------------------
-const float			card_size = 100.0f;		// card size
+
 //Contains all spells in a dynamically allocated array
 Spell* spellbook;
 //Coords for active cards
@@ -103,13 +104,8 @@ void GameStateAlchemiceInit() {
 
 	//Draw all spells that are active at beginning
 	AEVec2Zero(&cards);
-	AEVec2Set(&cards, -(AEGetWindowWidth() / 2) + 100, -(AEGetWindowHeight() / 2) + 100);
-	for (int i = 0; i <= max_spells; i++) {
-		if (spellbook[i].unlocked == true) {
-			spellbook[i].init_spells_draw(spellbook[i], cards);
-			cards.x += 100;
-		}
-	}
+	AEVec2Set(&cards, (f32) - (AEGetWindowWidth() / 2) + 100,(f32) - (AEGetWindowHeight() / 2) + 100);
+
 
 	//Just for for testing; to be changed when we have a level system. 
 	for (int i = 0; i < 3; i++) {
@@ -120,26 +116,52 @@ void GameStateAlchemiceInit() {
 
 	for (int i = 0; i < sizeof(buttons) / sizeof(buttons[0]); ++i) {
 		buttons[i].mid.x = 0;
-		buttons[i].mid.y = (190 - i * 180);
+		buttons[i].mid.y = (f32)(190 - i * 180);
 
 		buttons[i].s1.x = 300;
-		buttons[i].s1.y = (190 - i * 180) + 80;
+		buttons[i].s1.y = (f32)(190 - i * 180) + 80;
 		buttons[i].s2.x = -300;
-		buttons[i].s1.y = (190 - i * 180) - 80;
+		buttons[i].s1.y = (f32)(190 - i * 180) - 80;
 	}
 }
 
 void GameStateAlchemiceUpdate() {
 
-	//Draw spells player unlocks / combines
-// TO BE IMPLEMENTED
-/*AEVec2Set(&cards, 20, AEGetWindowHeight() - 200);
-for (int i = 0; i <= max_spells; i++) {
-	if (spellbook[i].unlocked == true) {
-		spellbook[i].init_spells_draw(spellbook[i], cards);
-		cards.x += 20;
+	// Updates global mouse pos
+	int x , y;
+	AEInputGetCursorPosition(&x, &y);
+	mouse_pos.x = (f32)x - AEGetWindowWidth()/2;
+	mouse_pos.y = (f32)y - AEGetWindowHeight()/2;
+
+	//std::cout << "mouse x:" << mouse_pos.x << "mouse y:" << mouse_pos.y << std::endl;
+
+	//Check for mouse click
+	if (AEInputCheckTriggered(AEVK_LBUTTON))
+	{
+		for (int i = 0; i <= max_spells-1; i++) {
+			if (aabbbutton(spellbook[i].spell_dragdrop, mouse_pos)) {
+				std::cout<< "Clicking "<< spellbook[i].spell_name<<std::endl;
+			}
+		}
 	}
-}*/
+
+	if (AEInputCheckTriggered(AEVK_E))
+	{
+		printf("mouse x is %f\n", mouse_pos.x);
+		printf("mouse y is %f\n", mouse_pos.y);
+	}
+
+	//Draw spells player unlocks / combines
+//TO BE IMPLEMENTED
+
+	for (int i = 0; i <= max_spells-1; i++) {
+		if (spellbook[i].unlocked == true) {
+			if (spellbook[i].spell_dragdrop->getcoord().mid.x == 0 && spellbook[i].spell_dragdrop->getcoord().mid.y == 0) {
+				spellbook[i].init_spells_draw(spellbook[i], cards);
+				cards.x += 100;
+			}
+		}
+	}
 
 	if (AEInputCheckTriggered(AEVK_E))
 	{
@@ -153,7 +175,7 @@ for (int i = 0; i <= max_spells; i++) {
 	{
 		sub_menu = !sub_menu;
 	}
-	
+
 
 
 	if (AEInputCheckTriggered(AEVK_ESCAPE)) {
@@ -207,7 +229,7 @@ void GameStateAlchemiceDraw() {
 	if (alchemice->hp)
 	{
 		player_hp += std::to_string(alchemice->hp);
-		player_hp_bar(*alchemice,  player_position, pMesh);
+		player_hp_bar(*alchemice, player_position, pMesh);
 	}
 	else
 	{
@@ -218,12 +240,12 @@ void GameStateAlchemiceDraw() {
 	name_bar(player_hp, player_position, font);
 
 	// Card Drawing
-	for (int i = 0; i <= max_spells; i++) {
+	for (int i = 0; i <= max_spells-1; i++) {
 		if (spellbook[i].unlocked == true) {
 			AEGfxTextureSet(spellbook[i].texture, 0, 0);
-			AEMtx33Trans(&translate, spellbook[i].coords->x, spellbook[i].coords->y);
+			AEMtx33Trans(&translate, spellbook[i].spell_dragdrop->getcoord().mid.x, spellbook[i].spell_dragdrop->getcoord().mid.y);
 			AEMtx33Rot(&rotate, PI);
-			AEMtx33Scale(&scale, card_size, card_size);
+			AEMtx33Scale(&scale, spellbook[i].card_width, spellbook[i].card_height);
 			AEMtx33Concat(&transform, &rotate, &scale);
 			AEMtx33Concat(&transform, &translate, &transform);
 			AEGfxSetTransform(transform.m);
@@ -284,7 +306,6 @@ void GameStateAlchemiceDraw() {
 			AEMtx33Concat(&transform, &translate, &transform);
 			AEGfxSetTransform(transform.m);
 			AEGfxMeshDraw(pMesh, AE_GFX_MDM_TRIANGLES);
-
 			AEGfxPrint(font, (s8*)mytex[i], middle, textY, 1, 0, 0, 0);
 		}
 		AEGfxPrint(font, (s8*)mytex[1], ((float)300 / 640), 0, 1, 0, 0, 0);

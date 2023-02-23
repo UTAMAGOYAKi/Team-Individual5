@@ -41,13 +41,12 @@ public:
 	//toggle the active flag, so it knows to check if it is currently active on screen 
 	bool& flagchange(bool change); //bot.flagchange(true);
 
-	dragdrop changeaabb(double width, double height);
-
 
 	//These functions use the middlepoint as the point it will move to
 	dragdrop& moveto(AEVec2 refer);	// move the box to be on a point, mainly for the mouse	
 	dragdrop& moveto(aabb refer);	//for centering a box on another box mainly
 	dragdrop& move(double x_ref, double y_ref);	// simple translation
+	dragdrop& changeaabb(double width, double height); // Add AABB bounding
 
 
 	/*

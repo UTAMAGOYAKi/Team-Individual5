@@ -40,7 +40,7 @@ bool& dragdrop::flagchange(bool change)
 	return active;
 }
 
-dragdrop dragdrop::changeaabb(double width, double height)
+dragdrop& dragdrop::changeaabb(double width, double height)
 {
 	bounding.s1.x += width / 2;
 	bounding.s1.y += height / 2;
@@ -70,10 +70,10 @@ dragdrop& dragdrop::move(double x, double y)
 
 dragdrop& dragdrop::moveto(AEVec2 refer)
 {
-	bounding.tr.x += distance(bounding.mid, refer).x;
+	bounding.tr.x -= distance(bounding.mid, refer).x;
 	bounding.tr.y += distance(bounding.mid, refer).y;
 
-	bounding.bl.x += distance(bounding.mid, refer).x;
+	bounding.bl.x -= distance(bounding.mid, refer).x;
 	bounding.bl.y += distance(bounding.mid, refer).y;
 
 	bounding.mid.x = refer.x;
