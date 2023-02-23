@@ -26,27 +26,24 @@ Spell* init_allspells()
 		// Tier 3 spells
 		Spell(TOXIC_DELUGE, 3, POISON, "Toxic Deluge",toxic_deluge,false, 2, 0, 1,0),
 		Spell(INFERNO_BLAST, 3, FIRE, "Inferno Blast",maelstrom_surge,true, 2, 0, 1,0),
-		Spell(UMBRAL_TENDRILS, 3, SHADOW, "Umbral Tendrils",inferno_blast,false, 2, 0, 1,0),
+		Spell(UMBRAL_TENDRILS, 3, SHADOW, "Umbral Tendrils",inferno_blast,true, 2, 0, 1,0),
 		Spell(MAELSTROM_SURGE, 3, WATER, "Maelstrom Surge",umbral_tendrils,true, 2, 0, 1,0),
 		// Tier 2 spells
 		Spell(VENOMOUS_BITE, 2, POISON, "Venomous Bite",umbral_tendrils,false, 5, 1, 5,2),
 		Spell(SHADOW_CLOAK, 2, SHADOW, "Shadow Cloak",umbral_tendrils,false, 5, 1, 5,0),
-		Spell(FLAME_BURST, 2, FIRE, "Flame Burst",umbral_tendrils,true, 5, 1, 5,0),
+		Spell(FLAME_BURST, 2, FIRE, "Flame Burst",umbral_tendrils,false, 5, 1, 5,0),
 		// Tier 1 spells
 		Spell(RAT_SWARM, 1, SHADOW, "Rat Swarm",umbral_tendrils,false, 5, 1, 5,1),
 		Spell(BUBONIC_BLAZE, 1, FIRE, "Bubonic Blaze",umbral_tendrils,false, 5, 1, 5,5),
 		// Invalid Spell
-		Spell(INVALID_SPELL, 0, INVALID_ELEMENT, "",umbral_tendrils,true, 0, 0, 0,0),
+		Spell(INVALID_SPELL, 0, INVALID_ELEMENT, "",umbral_tendrils,false, 0, 0, 0,0),
 	};
 
 	AEVec2Zero(&cards);
 	for (int i = 0; i <= max_spells - 1; i++) {
-		if (spellbook[i].unlocked == true) {
-			//Set all midpoint coords to 0
-			spellbook[i].spell_dragdrop->moveto(cards);
-			//Set all spell boundingboxes
-			spellbook[i].spell_dragdrop->changeaabb(spellbook[i].card_width, spellbook[i].card_height);
-		}
+		//Set all midpoint coords to 0
+		spellbook[i].spell_dragdrop->moveto(cards);
+		spellbook[i].spell_dragdrop->changeref(spellbook[i].id);
 	}
 	return spellbook;
 }
@@ -60,6 +57,9 @@ Spell::~Spell()
 //Function that will set coords to a spell when called
 void Spell::init_spells_draw(Spell& spell, AEVec2 coords)
 {
+	//Set spells boundingbo
+	spell.spell_dragdrop->changeaabb(spell.card_width, spell.card_height);
+	//Move spells to coords be drawn
 	spell.spell_dragdrop->moveto(coords);
 }
 

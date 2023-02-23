@@ -50,7 +50,7 @@ aabb* chara_pos;
 aabb* Enemy_pos_1;
 aabb* Enemy_pos_2;
 /// <summary>
-s8 font = AEGfxCreateFont("\Assets\Roboto-Regular.ttf", 1);
+s8 font = AEGfxCreateFont("/Assets/Roboto-Regular.ttf", 1);
 
 s32 pX{};
 s32 pY{};
@@ -104,7 +104,7 @@ void GameStateAlchemiceInit() {
 
 	//Draw all spells that are active at beginning
 	AEVec2Zero(&cards);
-	AEVec2Set(&cards, (f32) - (AEGetWindowWidth() / 2) + 100,(f32) - (AEGetWindowHeight() / 2) + 100);
+	AEVec2Set(&cards, (f32)-(AEGetWindowWidth() / 2) + 100, (f32)-(AEGetWindowHeight() / 2) + 100);
 
 
 	//Just for for testing; to be changed when we have a level system. 
@@ -128,22 +128,67 @@ void GameStateAlchemiceInit() {
 void GameStateAlchemiceUpdate() {
 
 	// Updates global mouse pos
-	int x , y;
+	int x, y;
 	AEInputGetCursorPosition(&x, &y);
-	mouse_pos.x = (f32)x - AEGetWindowWidth()/2;
-	mouse_pos.y = (f32)y - AEGetWindowHeight()/2;
+	mouse_pos.x = (f32)x - AEGetWindowWidth() / 2;
+	mouse_pos.y = (f32)y - AEGetWindowHeight() / 2;
 
 	//std::cout << "mouse x:" << mouse_pos.x << "mouse y:" << mouse_pos.y << std::endl;
 
-	//Check for mouse click
-	if (AEInputCheckTriggered(AEVK_LBUTTON))
-	{
-		for (int i = 0; i <= max_spells-1; i++) {
-			if (aabbbutton(spellbook[i].spell_dragdrop, mouse_pos)) {
-				std::cout<< "Clicking "<< spellbook[i].spell_name<<std::endl;
+	////Check for mouse click
+	//if (AEInputCheckTriggered(AEVK_LBUTTON))
+	//{
+	//	for (int i = 0; i <= max_spells - 1; i++) {
+	//		if (aabbbutton(spellbook[i].spell_dragdrop, mouse_pos)) {
+	//			std::cout << "Clicking " << spellbook[i].spell_name << std::endl;
+	//		}
+	//	}
+	//}
+
+	//Check for mouse click & hold
+	if (AEInputCheckCurr(AEVK_LBUTTON)) {
+		//Check if spells is being dragged
+		for (int i = 0; i <= max_spells - 1; i++) {
+			if (aabbbutton(spellbook[i].spell_dragdrop, mouse_pos) && spellbook[i].unlocked == true) {
+				AEVec2 temp;
+				temp = mouse_pos;
+				temp.y = -mouse_pos.y;
+				spellbook[i].spell_dragdrop->moveto(temp);
+				spellbook[i].spell_dragdrop->mousechange(true);
+			}
+			if (spellbook[i].spell_dragdrop->getmouse() == true) {
+				for (int j = 0; j <= max_spells - 1; j++) {
+					if (aabbbutton(spellbook[i].spell_dragdrop, spellbook[j].spell_dragdrop) != -1) {
+						std::cout << spellbook[i].spell_name << "is being combined with" << spellbook[j].spell_name << std::endl;
+					}
+				}
+				//std::cout << spellbook[i].spell_name << "is being dragged" << std::endl;
 			}
 		}
 	}
+	else {
+		for (int i = 0; i <= max_spells - 1; i++) {
+			if (spellbook[i].spell_dragdrop->getmouse() == true) {
+				spellbook[i].spell_dragdrop->mousechange(false);
+			}
+		}
+	}
+
+	//Draw spells player unlocks / combines
+	for (int i = 0; i <= max_spells - 1; i++) {
+		if (spellbook[i].unlocked == true) {
+			if (spellbook[i].spell_dragdrop->getcoord().mid.x == 0 && spellbook[i].spell_dragdrop->getcoord().mid.y == 0) {
+				spellbook[i].init_spells_draw(spellbook[i], cards);
+				cards.x += 100;
+			}
+			//Checks if 2 spells are colliding for combination
+			if (spellbook[i].spell_dragdrop->getcoord().mid.x == 0 && spellbook[i].spell_dragdrop->getcoord().mid.y == 0) {
+				spellbook[i].init_spells_draw(spellbook[i], cards);
+				cards.x += 100;
+			}
+		}
+	}
+
 
 	if (AEInputCheckTriggered(AEVK_E))
 	{
@@ -151,17 +196,7 @@ void GameStateAlchemiceUpdate() {
 		printf("mouse y is %f\n", mouse_pos.y);
 	}
 
-	//Draw spells player unlocks / combines
-//TO BE IMPLEMENTED
 
-	for (int i = 0; i <= max_spells-1; i++) {
-		if (spellbook[i].unlocked == true) {
-			if (spellbook[i].spell_dragdrop->getcoord().mid.x == 0 && spellbook[i].spell_dragdrop->getcoord().mid.y == 0) {
-				spellbook[i].init_spells_draw(spellbook[i], cards);
-				cards.x += 100;
-			}
-		}
-	}
 
 	if (AEInputCheckTriggered(AEVK_W))
 	{
@@ -232,11 +267,11 @@ void GameStateAlchemiceDraw() {
 	name_bar(player_hp, player_position, font);
 
 	// Card Drawing
-	for (int i = 0; i <= max_spells-1; i++) {
+	for (int i = 0; i <= max_spells - 1; i++) {
 		if (spellbook[i].unlocked == true) {
 			AEGfxTextureSet(spellbook[i].texture, 0, 0);
 			AEMtx33Trans(&translate, spellbook[i].spell_dragdrop->getcoord().mid.x, spellbook[i].spell_dragdrop->getcoord().mid.y);
-			AEMtx33Rot(&rotate, PI);
+			AEMtx33Rot(&rotate, 0);
 			AEMtx33Scale(&scale, spellbook[i].card_width, spellbook[i].card_height);
 			AEMtx33Concat(&transform, &rotate, &scale);
 			AEMtx33Concat(&transform, &translate, &transform);

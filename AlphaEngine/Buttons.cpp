@@ -33,12 +33,30 @@ bool dragdrop::getflag() const
 	return active;
 }
 
+bool dragdrop::getmouse() const
+{
+	return mouse;
+}
+
 bool& dragdrop::flagchange(bool change)
 {
 	active = change;
 	bounding.flag = change;
 	return active;
 }
+
+bool& dragdrop::mousechange(bool change)
+{
+	mouse = change;
+	return active;
+}
+
+dragdrop& dragdrop::changeref(int num)
+{
+	ref = num;
+	return *this;
+}
+
 
 dragdrop& dragdrop::changeaabb(double width, double height)
 {
@@ -129,8 +147,8 @@ int aabbbutton(dragdrop* box, dragdrop* spell)
 {
 	aabb tmp = box->getcoord();
 	aabb spl = spell->getcoord();
-	if ((tmp.tr.x < spl.bl.x || tmp.bl.x > spl.tr.x)
-		|| (tmp.tr.y < spl.bl.y || tmp.bl.y > spl.tr.y))
+	if ((tmp.tr.x <= spl.bl.x && tmp.bl.x >= spl.tr.x)
+		|| (tmp.tr.y <= spl.bl.y && tmp.bl.y >= spl.tr.y))
 	{
 		return spell->getref();
 	}

@@ -37,9 +37,11 @@ public:
 	aabb getcoord()const;
 	int getref() const;
 	bool getflag() const;
+	bool getmouse() const;
 
 	//toggle the active flag, so it knows to check if it is currently active on screen 
 	bool& flagchange(bool change); //bot.flagchange(true);
+	bool& mousechange(bool change);
 
 
 	//These functions use the middlepoint as the point it will move to
@@ -47,8 +49,7 @@ public:
 	dragdrop& moveto(aabb refer);	//for centering a box on another box mainly
 	dragdrop& move(double x_ref, double y_ref);	// simple translation
 	dragdrop& changeaabb(double width, double height); // Add AABB bounding
-
-
+	dragdrop& changeref(int num);
 	/*
 	This function resets the position to main original position in the game
 	 i.e when doing spell combination, this will reset the location to where you
