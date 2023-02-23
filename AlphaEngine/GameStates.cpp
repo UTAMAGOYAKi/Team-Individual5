@@ -66,7 +66,7 @@ player* alchemice{};
 std::string rat_hp{};
 Enemy enemies[3]{};
 
-aabb buttons[3];
+aabb pause_buttons[3];
 
 void GameStateAlchemiceLoad() {
 	pMesh = 0;
@@ -111,14 +111,15 @@ void GameStateAlchemiceInit() {
 		enemies[i].set_position(enemy_position[i]);
 	}
 
-	for (int i = 0; i < sizeof(buttons) / sizeof(buttons[0]); ++i) {
-		buttons[i].mid.x = 0;
-		buttons[i].mid.y = (f32)(190 - i * 180);
+	//creates the button from top to bottom top most button [0]
+	for (int i = 0; i < sizeof(pause_buttons) / sizeof(pause_buttons[0]); ++i) {
+		pause_buttons[i].mid.x = 0;
+		pause_buttons[i].mid.y = (f32)(190 - i * 180);
 
-		buttons[i].s1.x = 300;
-		buttons[i].s1.y = (f32)(190 - i * 180) + 80;
-		buttons[i].s2.x = -300;
-		buttons[i].s1.y = (f32)(190 - i * 180) - 80;
+		pause_buttons[i].s1.x = 300;
+		pause_buttons[i].s1.y = (f32)(190 - i * 180) + 80;
+		pause_buttons[i].s2.x = -300;
+		pause_buttons[i].s2.y = (f32)(190 - i * 180) - 80;
 	}
 }
 
@@ -138,6 +139,26 @@ void GameStateAlchemiceUpdate() {
 		for (int i = 0; i <= max_spells-1; i++) {
 			if (aabbbutton(spellbook[i].spell_dragdrop, mouse_pos)) {
 				std::cout<< "Clicking "<< spellbook[i].spell_name<<std::endl;
+			}
+		}
+
+		if (pause_mode) {
+			for (int i{}; i < sizeof(pause_buttons) / sizeof(pause_buttons[0]); ++i) {
+				if (mouse_pos.x >= pause_buttons[i].s2.x && mouse_pos.x <= pause_buttons[i].s1.x &&
+					mouse_pos.y >= pause_buttons[i].s2.y && mouse_pos.y <= pause_buttons[i].s1.y) {
+					std::cout << "button clicked " << i << std::endl;
+					switch (i) {
+					case 2:
+						pause_mode = !pause_mode;
+						break;
+					case 1:
+						//options menu
+						break;
+					case 0:
+						gGameStateNext = GS_QUIT;
+						break;
+					}
+				}
 			}
 		}
 	}

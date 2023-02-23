@@ -1,7 +1,3 @@
-
-
-
-
 #ifndef UI_h
 #define UI_h
 #include "Buttons.h"
