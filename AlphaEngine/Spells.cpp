@@ -64,7 +64,7 @@ void Spell::init_spells_draw(Spell& spell, AEVec2 coords)
 }
 
 
-// Returns true if spell can be unlocked (Not Implemented)
+// Returns true if spell can be unlocked
 bool combineSpells(Spell* spellbook, int id1, int id2) {
 	if (spellbook[id1].tier == 3 && spellbook[id2].tier == 3) {
 		// combine tier 3 spells

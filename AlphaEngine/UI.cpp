@@ -151,7 +151,7 @@ void sub_menu_draw(AEGfxTexture* sub_menu, Spell spells[], AEGfxVertexList* mesh
 		if (spells[i].unlocked == true) 
 		{
 			AEGfxTextureSet(spells[i].texture, 0, 0);
-			AEMtx33Trans(&translate, -590,300-i*50);
+			AEMtx33Trans(&translate,(f32) - 590, (f32)300 - i * 50);
 			AEMtx33Rot(&rotate, PI);
 			AEMtx33Scale(&scale, 50, 50);
 			AEMtx33Concat(&transform, &rotate, &scale);
