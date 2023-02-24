@@ -149,16 +149,17 @@ void GameStateAlchemiceUpdate() {
 	if (AEInputCheckCurr(AEVK_LBUTTON)) {
 		//Check if spells is being dragged
 		for (int i = 0; i <= max_spells - 1; i++) {
-			if (aabbbutton(spellbook[i].spell_dragdrop, mouse_pos) && spellbook[i].unlocked == true) {
+			if (aabbbutton(spellbook[i].spell_dragdrop, mouse_pos) && (spellbook[i].id == 3)) {
 				AEVec2 temp;
 				temp = mouse_pos;
 				temp.y = -mouse_pos.y;
 				spellbook[i].spell_dragdrop->moveto(temp);
 				spellbook[i].spell_dragdrop->mousechange(true);
 			}
+			//Check for cards collision
 			if (spellbook[i].spell_dragdrop->getmouse() == true) {
-				for (int j = 0; j <= max_spells - 1; j++) {
-					if (aabbbutton(spellbook[i].spell_dragdrop, spellbook[j].spell_dragdrop) != -1) {
+				for (int j = 0; (j <= max_spells - 1) && j != i; j++) {
+					if (aabbbutton(spellbook[i].spell_dragdrop, spellbook[j].spell_dragdrop) != -1 && (spellbook[i].id != spellbook[j].id)) {
 						std::cout << spellbook[i].spell_name << "is being combined with" << spellbook[j].spell_name << std::endl;
 					}
 				}
@@ -179,13 +180,9 @@ void GameStateAlchemiceUpdate() {
 		if (spellbook[i].unlocked == true) {
 			if (spellbook[i].spell_dragdrop->getcoord().mid.x == 0 && spellbook[i].spell_dragdrop->getcoord().mid.y == 0) {
 				spellbook[i].init_spells_draw(spellbook[i], cards);
-				cards.x += 100;
+				cards.x += 300;
 			}
 			//Checks if 2 spells are colliding for combination
-			if (spellbook[i].spell_dragdrop->getcoord().mid.x == 0 && spellbook[i].spell_dragdrop->getcoord().mid.y == 0) {
-				spellbook[i].init_spells_draw(spellbook[i], cards);
-				cards.x += 100;
-			}
 		}
 	}
 

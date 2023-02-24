@@ -24,7 +24,7 @@ Spell* init_allspells()
 	std::cout << "Creating All " << max_spells << " Spells" << std::endl;
 	Spell* spellbook = new Spell[max_spells]{
 		// Tier 3 spells
-		Spell(TOXIC_DELUGE, 3, POISON, "Toxic Deluge",toxic_deluge,false, 2, 0, 1,0),
+		Spell(TOXIC_DELUGE, 3, POISON, "Toxic Deluge",toxic_deluge,true, 2, 0, 1,0),
 		Spell(INFERNO_BLAST, 3, FIRE, "Inferno Blast",maelstrom_surge,true, 2, 0, 1,0),
 		Spell(UMBRAL_TENDRILS, 3, SHADOW, "Umbral Tendrils",inferno_blast,true, 2, 0, 1,0),
 		Spell(MAELSTROM_SURGE, 3, WATER, "Maelstrom Surge",umbral_tendrils,true, 2, 0, 1,0),
