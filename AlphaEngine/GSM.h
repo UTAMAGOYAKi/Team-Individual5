@@ -3,8 +3,9 @@
 //#include "GameStateList.h"
 enum
 {
-	// list of all game states 
-	GS_ALCHEMICE = 0,
+	// list of all game states
+	GS_LOAD = 0,
+	GS_ALCHEMICE,
 
 	// special game state. Do not change
 	GS_RESTART,

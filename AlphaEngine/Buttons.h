@@ -19,7 +19,7 @@ struct aabb {
 	AEVec2 mid;// middle of aabb
 	AEVec2 tr; //active top right
 	AEVec2 bl; //active bottom left
-	bool flag;//usage flag, to check if current aabb is in use. 
+	bool flag; //usage flag, to check if current aabb is in use. 
 };
 class dragdrop {
 

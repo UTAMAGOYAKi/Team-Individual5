@@ -1,7 +1,3 @@
-
-
-
-
 #ifndef UI_h
 #define UI_h
 #include "Buttons.h"
@@ -20,7 +16,7 @@ void player_hp_bar(player ref, AEVec2 pos, AEGfxVertexList* mesh);
 void name_bar(std::string name, AEVec2 place, s8 font);
 void name_bar(std::string name, aabb place, s8 font);
 
-void enemy_info(enemy* ref, s8 font, AEGfxVertexList* mesh);
+void enemy_info(Enemy enemy, s8 font, AEGfxVertexList* mesh);
 
 //void name_bar(int hp, aabb place);
 
