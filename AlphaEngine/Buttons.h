@@ -17,6 +17,9 @@ struct aabb {
 	AEVec2 bl; //active bottom left
 	bool flag; //usage flag, to check if current aabb is in use. 
 };
+
+aabb CreateAABB(AEVec2 midpoint, double length, double width);
+
 class dragdrop {
 
 public:

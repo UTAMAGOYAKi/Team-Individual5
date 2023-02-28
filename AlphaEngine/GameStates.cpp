@@ -114,13 +114,14 @@ void GameStateAlchemiceInit() {
 
 	//creates the button from top to bottom top most button [0]
 	for (int i = 0; i < sizeof(pause_buttons) / sizeof(pause_buttons[0]); ++i) {
-		pause_buttons[i].mid.x = 0;
+		/*pause_buttons[i].mid.x = 0;
 		pause_buttons[i].mid.y = (f32)(190 - i * 180);
 
 		pause_buttons[i].s1.x = 150;
 		pause_buttons[i].s1.y = (f32)(190 - i * 180) + 40;
 		pause_buttons[i].s2.x = -150;
-		pause_buttons[i].s2.y = (f32)(190 - i * 180) - 40;
+		pause_buttons[i].s2.y = (f32)(190 - i * 180) - 40;*/
+		pause_buttons[i] = CreateAABB({ 0,(f32)190 - i * 180 }, 300, 80);
 	}
 }
 
@@ -136,28 +137,11 @@ void GameStateAlchemiceUpdate() {
 		pause_mode = !pause_mode;
 	}
 
-	if (AEInputCheckTriggered(AEVK_W))
-	{
-		sub_menu = !sub_menu;
-	}
-	//std::cout << "mouse x:" << mouse_pos.x << "mouse y:" << mouse_pos.y << std::endl;
-	//std::cout << mouse_pos.x << " " << mouse_pos.y << std::endl;
-
-	////Check for mouse click
-	//if (AEInputCheckTriggered(AEVK_LBUTTON))
-	//{
-	//	for (int i = 0; i <= max_spells - 1; i++) {
-	//		if (aabbbutton(spellbook[i].spell_dragdrop, mouse_pos)) {
-	//			std::cout << "Clicking " << spellbook[i].spell_name << std::endl;
-	//		}
-	//	}
-	//}
-
 	//Check for mouse click & hold
 	if (AEInputCheckCurr(AEVK_LBUTTON)) {
 		//Check if spells is being dragged
 		for (int i = 0; i <= max_spells - 1; i++) {
-			if (aabbbutton(spellbook[i].spell_dragdrop, mouse_pos) && (spellbook[i].id == 3)) {
+			if (aabbbutton(spellbook[i].spell_dragdrop, mouse_pos) ) {
 				AEVec2 temp;
 				temp = mouse_pos;
 				temp.y = -mouse_pos.y;
@@ -173,7 +157,6 @@ void GameStateAlchemiceUpdate() {
 						}
 					}
 				}
-				//std::cout << spellbook[i].spell_name << "is being dragged" << std::endl;
 			}
 		}
 	}
@@ -197,7 +180,7 @@ void GameStateAlchemiceUpdate() {
 		if (pause_mode) {
 			for (int i{}; i < sizeof(pause_buttons) / sizeof(pause_buttons[0]); ++i) {
 				if (mouse_pos.x >= pause_buttons[i].s2.x && mouse_pos.x <= pause_buttons[i].s1.x &&
-					mouse_pos.y >= pause_buttons[i].s2.y && mouse_pos.y <= pause_buttons[i].s1.y) {
+					-mouse_pos.y >= pause_buttons[i].s2.y && -mouse_pos.y <= pause_buttons[i].s1.y) {
 					std::cout << "button clicked " << i << std::endl;
 					switch (i) {
 					case 0:
@@ -220,7 +203,7 @@ void GameStateAlchemiceUpdate() {
 		if (spellbook[i].unlocked == true) {
 			if (spellbook[i].spell_dragdrop->getcoord().mid.x == 0 && spellbook[i].spell_dragdrop->getcoord().mid.y == 0) {
 				spellbook[i].init_spells_draw(spellbook[i], cards);
-				cards.x += 200;
+				cards.x += 110;
 			}
 			//Checks if 2 spells are colliding for combination
 		}

@@ -253,4 +253,15 @@ void PositionInit() {
 	enemy_position[2].y = 0;
 }
 
+aabb CreateAABB(AEVec2 midpoint, double length, double width) {
+	aabb tmp{
+		{midpoint.x + length / 2, midpoint.y + width / 2},
+		{midpoint.x - length / 2, midpoint.y - width / 2},
+		{midpoint.x, midpoint.y},
+		{tmp.s1},
+		{tmp.s2},
+		false };
+	return tmp;
+}
+
 
