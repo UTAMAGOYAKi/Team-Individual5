@@ -6,7 +6,7 @@ const int max_spells = 10;
 //Textures for spells
 AEGfxTexture* toxic_deluge{}, * inferno_blast{}, * umbral_tendrils{}, * maelstrom_surge{};
 
-Spell* init_allspells()
+Spell* init_all_spells()
 {
 	AEVec2 cards;
 
@@ -65,7 +65,7 @@ void Spell::init_spells_draw(Spell& spell, AEVec2 coords)
 
 
 // Returns true if spell can be unlocked
-bool combineSpells(Spell* spellbook, int id1, int id2) {
+bool combine_spells(Spell* spellbook, int id1, int id2) {
 	if (spellbook[id1].tier == 3 && spellbook[id2].tier == 3) {
 		// combine tier 3 spells
 		if (spellbook[id1].element == FIRE && spellbook[id2].element == SHADOW ||

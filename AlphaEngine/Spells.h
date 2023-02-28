@@ -59,11 +59,11 @@ public:
 
 
 // Create array of all spells
-Spell* init_allspells();
+Spell* init_all_spells();
 
 
-// Returns true if spell can be unlocked (Not Implemented)
-bool combineSpells(Spell* spellbook, int id1, int id2);
+// Returns true if spell can be unlocked 
+bool combine_spells(Spell* spellbook, int id1, int id2);
 
 // Called when level ends etc.
 void unload_spells(Spell* spellbook);
