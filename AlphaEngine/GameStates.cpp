@@ -157,7 +157,7 @@ void GameStateAlchemiceUpdate() {
 	if (AEInputCheckCurr(AEVK_LBUTTON)) {
 		//Check if spells is being dragged
 		for (int i = 0; i <= max_spells - 1; i++) {
-			if (aabbbutton(spellbook[i].spell_dragdrop, mouse_pos) && (spellbook[i].id == 3)) {
+			if (aabbbutton(spellbook[i].spell_dragdrop, mouse_pos) ) {
 				AEVec2 temp;
 				temp = mouse_pos;
 				temp.y = -mouse_pos.y;
