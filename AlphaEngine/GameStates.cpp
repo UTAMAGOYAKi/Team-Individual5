@@ -141,7 +141,7 @@ void GameStateAlchemiceUpdate() {
 	if (AEInputCheckCurr(AEVK_LBUTTON)) {
 		//Check if spells is being dragged
 		for (int i = 0; i <= max_spells - 1; i++) {
-			if (aabbbutton(spellbook[i].spell_dragdrop, mouse_pos) && (spellbook[i].id == 3)) {
+			if (aabbbutton(spellbook[i].spell_dragdrop, mouse_pos) ) {
 				AEVec2 temp;
 				temp = mouse_pos;
 				temp.y = -mouse_pos.y;
@@ -203,7 +203,7 @@ void GameStateAlchemiceUpdate() {
 		if (spellbook[i].unlocked == true) {
 			if (spellbook[i].spell_dragdrop->getcoord().mid.x == 0 && spellbook[i].spell_dragdrop->getcoord().mid.y == 0) {
 				spellbook[i].init_spells_draw(spellbook[i], cards);
-				cards.x += 200;
+				cards.x += 110;
 			}
 			//Checks if 2 spells are colliding for combination
 		}

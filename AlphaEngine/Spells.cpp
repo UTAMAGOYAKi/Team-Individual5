@@ -30,13 +30,13 @@ Spell* init_allspells()
 		Spell(MAELSTROM_SURGE, 3, WATER, "Maelstrom Surge",umbral_tendrils,true, 2, 0, 1,0),
 		// Tier 2 spells
 		Spell(VENOMOUS_BITE, 2, POISON, "Venomous Bite",umbral_tendrils,false, 5, 1, 5,2),
-		Spell(SHADOW_CLOAK, 2, SHADOW, "Shadow Cloak",umbral_tendrils,false, 5, 1, 5,0),
-		Spell(FLAME_BURST, 2, FIRE, "Flame Burst",umbral_tendrils,false, 5, 1, 5,0),
+		Spell(SHADOW_CLOAK, 2, SHADOW, "Shadow Cloak",maelstrom_surge,false, 5, 1, 5,0),
+		Spell(FLAME_BURST, 2, FIRE, "Flame Burst",toxic_deluge,false, 5, 1, 5,0),
 		// Tier 1 spells
-		Spell(RAT_SWARM, 1, SHADOW, "Rat Swarm",umbral_tendrils,false, 5, 1, 5,1),
+		Spell(RAT_SWARM, 1, SHADOW, "Rat Swarm",inferno_blast,false, 5, 1, 5,1),
 		Spell(BUBONIC_BLAZE, 1, FIRE, "Bubonic Blaze",umbral_tendrils,false, 5, 1, 5,5),
 		// Invalid Spell
-		Spell(INVALID_SPELL, 0, INVALID_ELEMENT, "",umbral_tendrils,false, 0, 0, 0,0),
+		Spell(INVALID_SPELL, 0, INVALID_ELEMENT, "",nullptr,false, 0, 0, 0,0),
 	};
 
 	AEVec2Zero(&cards);
