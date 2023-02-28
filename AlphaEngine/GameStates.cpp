@@ -220,7 +220,7 @@ void GameStateAlchemiceUpdate() {
 		if (spellbook[i].unlocked == true) {
 			if (spellbook[i].spell_dragdrop->getcoord().mid.x == 0 && spellbook[i].spell_dragdrop->getcoord().mid.y == 0) {
 				spellbook[i].init_spells_draw(spellbook[i], cards);
-				cards.x += 200;
+				cards.x += 110;
 			}
 			//Checks if 2 spells are colliding for combination
 		}
