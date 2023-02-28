@@ -99,7 +99,7 @@ void GameStateAlchemiceInit() {
 	alchemice = create_player();
 
 	//Init All Spells
-	spellbook = init_allspells();
+	spellbook = init_all_spells();
 
 	//Draw all spells that are active at beginning
 	AEVec2Zero(&cards);
@@ -152,7 +152,7 @@ void GameStateAlchemiceUpdate() {
 			if (spellbook[i].spell_dragdrop->getmouse() == true) {
 				for (int j = 0; (j <= max_spells - 1) && j != i; j++) {
 					if (aabbbutton(spellbook[i].spell_dragdrop, spellbook[j].spell_dragdrop) != -1 && (spellbook[i].id != spellbook[j].id)) {
-						if (combineSpells(spellbook, i, j) == true) {
+						if (combine_spells(spellbook, i, j) == true) {
 							std::cout << spellbook[i].spell_name << "is being combined with" << spellbook[j].spell_name << std::endl;
 						}
 					}
