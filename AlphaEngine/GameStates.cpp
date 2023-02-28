@@ -123,6 +123,17 @@ void GameStateAlchemiceInit() {
 		pause_buttons[i].s2.y = (f32)(190 - i * 180) - 40;*/
 		pause_buttons[i] = CreateAABB({ 0,(f32)190 - i * 180 }, 300, 80);
 	}
+
+	for (int i = 0; i <= max_spells - 1; i++) {
+		if (spellbook[i].unlocked == true) {
+			if (spellbook[i].spell_dragdrop->getcoord().mid.x == 0 && spellbook[i].spell_dragdrop->getcoord().mid.y == 0) {
+				spellbook[i].init_spells_draw(spellbook[i], cards);
+				cards.x += 100;
+				spellbook[i].spell_dragdrop->set_origin();
+			}
+		}
+	}
+	cards.x = 0;
 }
 
 void GameStateAlchemiceUpdate() {
@@ -132,41 +143,98 @@ void GameStateAlchemiceUpdate() {
 	mouse_pos.x = (f32)x - AEGetWindowWidth() / 2;
 	mouse_pos.y = (f32)y - AEGetWindowHeight() / 2;
 
+	AEVec2 temp;
+		   temp = mouse_pos;
+		   temp.y = -mouse_pos.y;
+
+	bool drag;
+
+	drag = true;
 	//Actions that can be done anytime
 	if (AEInputCheckTriggered(AEVK_ESCAPE)) {
 		pause_mode = !pause_mode;
 	}
 
 	//Check for mouse click & hold
-	if (AEInputCheckCurr(AEVK_LBUTTON)) {
-		//Check if spells is being dragged
-		for (int i = 0; i <= max_spells - 1; i++) {
-			if (aabbbutton(spellbook[i].spell_dragdrop, mouse_pos) ) {
-				AEVec2 temp;
-				temp = mouse_pos;
-				temp.y = -mouse_pos.y;
-				spellbook[i].spell_dragdrop->moveto(temp);
-				spellbook[i].spell_dragdrop->mousechange(true);
-			}
-			//Check for cards collision
-			if (spellbook[i].spell_dragdrop->getmouse() == true) {
-				for (int j = 0; (j <= max_spells - 1) && j != i; j++) {
-					if (aabbbutton(spellbook[i].spell_dragdrop, spellbook[j].spell_dragdrop) != -1 && (spellbook[i].id != spellbook[j].id)) {
-						if (combine_spells(spellbook, i, j) == true) {
-							std::cout << spellbook[i].spell_name << "is being combined with" << spellbook[j].spell_name << std::endl;
-						}
+	//if (AEInputCheckCurr(AEVK_LBUTTON)) {
+	//	//Check if spells is being dragged
+	//	for (int i = 0; i <= max_spells - 1; i++) {
+	//		if (aabbbutton(spellbook[i].spell_dragdrop, mouse_pos) ) {
+	//			AEVec2 temp;
+	//			temp = mouse_pos;
+	//			temp.y = -mouse_pos.y;
+	//			spellbook[i].spell_dragdrop->moveto(temp);
+	//			spellbook[i].spell_dragdrop->mousechange(true);
+	//		}
+	//		//Check for cards collision
+	//		if (spellbook[i].spell_dragdrop->getmouse() == true) {
+	//			for (int j = 0; (j <= max_spells - 1) && j != i; j++) {
+	//				if (aabbbutton(spellbook[i].spell_dragdrop, spellbook[j].spell_dragdrop) != -1 && (spellbook[i].id != spellbook[j].id)) {
+	//					if (combine_spells(spellbook, i, j) == true) {
+	//						std::cout << spellbook[i].spell_name << "is being combined with" << spellbook[j].spell_name << std::endl;
+	//					}
+	//				}
+	//			}
+	//		}
+	//	}
+	//}
+	//else {
+	//	for (int i = 0; i <= max_spells - 1; i++) {
+	//		if (spellbook[i].spell_dragdrop->getmouse() == true) {
+	//			spellbook[i].spell_dragdrop->mousechange(false);
+	//			spellbook[i].spell_dragdrop->resetaabb();
+	//		}
+	//	}
+	//}
+	if (AEInputCheckCurr(AEVK_LBUTTON))
+	{
+		for (int i = 0; i <= max_spells - 1; i++) 
+		{
+			if (aabbbutton(spellbook[i].spell_dragdrop, mouse_pos)) 
+			{
+				for (int i = 0; i <= max_spells - 1; i++)
+				{
+					if (spellbook[i].spell_dragdrop->getmouse())
+					{
+						drag = false;
 					}
+				}
+				if (drag)
+				{
+					spellbook[i].spell_dragdrop->mousechange(true);
 				}
 			}
 		}
 	}
-	else {
-		for (int i = 0; i <= max_spells - 1; i++) {
-			if (spellbook[i].spell_dragdrop->getmouse() == true) {
-				spellbook[i].spell_dragdrop->mousechange(false);
+
+	for (int i = 0; i <= max_spells - 1; i++)
+	{
+		if (spellbook[i].spell_dragdrop->getmouse())
+		{
+			spellbook[i].spell_dragdrop->moveto(temp);
+		}
+	}
+
+	if (AEInputCheckReleased(AEVK_LBUTTON))
+	{
+		for (int i = 0; i <= max_spells - 1; i++)
+		{
+			if (spellbook[i].spell_dragdrop->getmouse())
+			{
+				if (0)
+				{
+
+				}
+				else
+				{
+					spellbook[i].spell_dragdrop->resetaabb();
+					spellbook[i].spell_dragdrop->mousechange(false);
+
+				}
 			}
 		}
 	}
+
 
 	//Check for mouse click
 	if (AEInputCheckTriggered(AEVK_LBUTTON))
@@ -199,15 +267,15 @@ void GameStateAlchemiceUpdate() {
 	}//Check for Lbutton click
 
 	//Draw spells player unlocks / combines
-	for (int i = 0; i <= max_spells - 1; i++) {
-		if (spellbook[i].unlocked == true) {
-			if (spellbook[i].spell_dragdrop->getcoord().mid.x == 0 && spellbook[i].spell_dragdrop->getcoord().mid.y == 0) {
-				spellbook[i].init_spells_draw(spellbook[i], cards);
-				cards.x += 110;
-			}
-			//Checks if 2 spells are colliding for combination
-		}
-	}
+	//for (int i = 0; i <= max_spells - 1; i++) {
+	//	if (spellbook[i].unlocked == true) {
+	//		if (spellbook[i].spell_dragdrop->getcoord().mid.x == 0 && spellbook[i].spell_dragdrop->getcoord().mid.y == 0) {
+	//			spellbook[i].init_spells_draw(spellbook[i], cards);
+	//			cards.x += 110;
+	//		}
+	//		//Checks if 2 spells are colliding for combination
+	//	}
+	//}
 
 
 	if (AEInputCheckTriggered(AEVK_E))
@@ -274,14 +342,6 @@ void GameStateAlchemiceUpdate() {
 
 	//Draw spells player unlocks / combines
 
-	for (int i = 0; i <= max_spells - 1; i++) {
-		if (spellbook[i].unlocked == true) {
-			if (spellbook[i].spell_dragdrop->getcoord().mid.x == 0 && spellbook[i].spell_dragdrop->getcoord().mid.y == 0) {
-				spellbook[i].init_spells_draw(spellbook[i], cards);
-				cards.x += 100;
-			}
-		}
-	}
 
 	//BLOCKING OUT THESE FIRST NOT SURE IF WE STILL NEED
 	//if (AEInputCheckTriggered(AEVK_W))

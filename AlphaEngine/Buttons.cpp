@@ -123,6 +123,16 @@ aabb dragdrop::resetaabb()
 	return bounding;
 }
 
+dragdrop& dragdrop::set_origin()
+{
+	bounding.s1.x = bounding.tr.x;
+	bounding.s1.y = bounding.tr.y;
+	bounding.s2.x = bounding.bl.x;
+	bounding.s2.y = bounding.bl.y;
+	bounding.mid = midpoint(bounding.s1, bounding.s2);
+	return *this;
+}
+
 dragdrop::~dragdrop()
 {}
 
@@ -205,6 +215,9 @@ double distance_diagonal(AEVec2 first, AEVec2 second)
 	d += (first.y - second.y) * (first.y - second.y);
 	return sqrt(d);
 }
+
+
+
 
 
 #include "Main.h"
