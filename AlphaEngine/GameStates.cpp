@@ -209,7 +209,7 @@ void GameStateAlchemiceUpdate() {
 		}
 	}
 
-
+	//Mouse Debug
 	if (AEInputCheckTriggered(AEVK_E))
 	{
 		printf("mouse x is %f\n", mouse_pos.x);
@@ -223,8 +223,9 @@ void GameStateAlchemiceUpdate() {
 		}
 	}
 
-	//Check if players or enemies or all enemies are all dead.
-	if (alchemice->hp > 0 && enemies_alive) {
+	//MAIN GAMEPLAY LOOP
+	//Check if players or enemies or all enemies are all dead or if the game is pause.
+	if (alchemice->hp > 0 && enemies_alive && !pause_mode) {
 		//Checking for turns
 		if (turn == player_turn) {
 
@@ -236,20 +237,19 @@ void GameStateAlchemiceUpdate() {
 					}
 				}
 			}
-
-
-
+			//Opening sub menu
 			if (AEInputCheckTriggered(AEVK_W))
 			{
 				sub_menu = !sub_menu;
 			}
 
+			//Debug for dealing damage, (put the dragging of spell onto enemy here)
 			if (AEInputCheckTriggered(AEVK_Q))
 			{
 				enemies[rand() % TOTAL_ENEMY].take_damage(1);
 			}
 
-			//End Turn
+			//End Turn (When we have an end turn button)
 			if (AEInputCheckTriggered(AEVK_SPACE)) {
 				turn = enemy_turn;
 				std::cout << "enemy turn" << std::endl;
@@ -273,7 +273,6 @@ void GameStateAlchemiceUpdate() {
 	}
 
 	//Draw spells player unlocks / combines
-
 	for (int i = 0; i <= max_spells - 1; i++) {
 		if (spellbook[i].unlocked == true) {
 			if (spellbook[i].spell_dragdrop->getcoord().mid.x == 0 && spellbook[i].spell_dragdrop->getcoord().mid.y == 0) {
