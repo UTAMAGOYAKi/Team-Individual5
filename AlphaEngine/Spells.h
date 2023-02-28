@@ -25,6 +25,14 @@ enum Spells {
 
 extern const int max_spells;
 
+class craftingtable {
+public:
+	craftingtable();
+	~craftingtable();
+	//Spell 1 hold
+	
+	//Spell 2 hold
+};
 
 class Spell {
 public:
@@ -52,7 +60,7 @@ public:
 	dragdrop* spell_dragdrop{};
 	// card size
 	const float			card_width = 100.0f;
-	const float			card_height = 100.0f;		
+	const float			card_height = 100.0f;
 	void init_spells_draw(Spell& spell, AEVec2 coord);
 };
 
@@ -67,3 +75,6 @@ bool combine_spells(Spell* spellbook, int id1, int id2);
 
 // Called when level ends etc.
 void unload_spells(Spell* spellbook);
+
+//Crafting table CPP
+void crafting_table(dragdrop& spell1, dragdrop& spell2);

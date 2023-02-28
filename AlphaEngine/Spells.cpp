@@ -19,9 +19,8 @@ Spell* init_all_spells()
 	std::cout << "poison MemLoc: " << toxic_deluge << std::endl;
 	maelstrom_surge = AEGfxTextureLoad("Assets/not_burn.png");
 	std::cout << "shame MemLoc: " << maelstrom_surge << std::endl;
-
-
 	std::cout << "Creating All " << max_spells << " Spells" << std::endl;
+
 	Spell* spellbook = new Spell[max_spells]{
 		// Tier 3 spells
 		Spell(TOXIC_DELUGE, 3, POISON, "Toxic Deluge",toxic_deluge,true, 2, 0, 1,0),
@@ -125,4 +124,9 @@ void unload_spells(Spell* spellbook) {
 	AEGfxTextureUnload(umbral_tendrils);
 	AEGfxTextureUnload(maelstrom_surge);
 	delete[] spellbook;
+}
+
+void crafting_table(dragdrop& spell1, dragdrop& spell2)
+{
+	//if()
 }

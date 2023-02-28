@@ -44,7 +44,7 @@ AEVec2 cards;
 
 //Loading of Mesh and Texture
 AEGfxVertexList* pMesh{}, * pLoad{};
-AEGfxTexture* chara{}, * rat{}, * spell_g{}, * box{}, * sub{}, * load_screen{};
+AEGfxTexture* chara{}, * rat{}, * spell_g{}, * box{}, * sub{}, * load_screen{}, * crafting_test{};
 
 aabb* chara_pos;
 aabb* Enemy_pos_1;
@@ -91,13 +91,13 @@ void GameStateAlchemiceLoad() {
 	rat = AEGfxTextureLoad("Assets/rat_Piskel.png");
 	sub = AEGfxTextureLoad("Assets/submenu.png");
 	box = AEGfxTextureLoad("Assets/box.png");
+	crafting_test = AEGfxTextureLoad("Assets/copyright_table.png");
 }
 
 // Initialization of your own variables go here
 void GameStateAlchemiceInit() {
 	PositionInit();
 	alchemice = create_player();
-
 	//Init All Spells
 	spellbook = init_all_spells();
 
@@ -141,7 +141,7 @@ void GameStateAlchemiceUpdate() {
 	if (AEInputCheckCurr(AEVK_LBUTTON)) {
 		//Check if spells is being dragged
 		for (int i = 0; i <= max_spells - 1; i++) {
-			if (aabbbutton(spellbook[i].spell_dragdrop, mouse_pos) ) {
+			if (aabbbutton(spellbook[i].spell_dragdrop, mouse_pos)) {
 				AEVec2 temp;
 				temp = mouse_pos;
 				temp.y = -mouse_pos.y;
@@ -350,6 +350,9 @@ void GameStateAlchemiceDraw() {
 	player_hp += std::to_string(alchemice->max_hp);
 	name_bar(player_hp, player_position, font);
 
+	//crafting table
+	draw_crafting_table(pMesh, crafting_test);
+
 	// Card Drawing
 	for (int i = 0; i <= max_spells - 1; i++) {
 		if (spellbook[i].unlocked == true) {
@@ -505,6 +508,8 @@ void LoadScreenUpdate() {
 }
 
 void LoadScreenDraw() {
+
+
 	// Your own rendering logic goes here
 	// Set the background to black.
 	AEGfxSetBackgroundColor(.0f, .0f, .0f);

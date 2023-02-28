@@ -19,6 +19,9 @@ AEMtx33 rotate = { 0 };
 AEMtx33 translate = { 0 };
 AEMtx33 transform = { 0 };
 
+//Crafting Table 
+
+
 void name_bar(std::string name, aabb place, s8 font)
 {
 	//remeber to check for centering offset %
@@ -126,7 +129,17 @@ void name_bar(std::string name, AEVec2 place,s8 font)
 //	}
 //}
 
+void draw_crafting_table( AEGfxVertexList* mesh, AEGfxTexture* table = nullptr ) {
 
+	AEGfxTextureSet(table, 0, 0);
+	AEMtx33Trans(&translate, 0, 0);
+	AEMtx33Rot(&rotate, 0);
+	AEMtx33Scale(&scale, 128, 128);
+	AEMtx33Concat(&transform, &rotate, &scale);
+	AEMtx33Concat(&transform, &translate, &transform);
+	AEGfxSetTransform(transform.m);
+	AEGfxMeshDraw(mesh, AE_GFX_MDM_TRIANGLES);
+}
 
 void sub_menu_draw(AEGfxTexture* sub_menu, Spell spells[], AEGfxVertexList* mesh, s8 font)
 {
