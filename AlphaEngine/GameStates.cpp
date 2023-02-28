@@ -66,6 +66,7 @@ std::string rat_hp{};
 Enemy enemies[3]{};
 
 aabb pause_buttons[3];
+aabb end_turn_button;
 
 void GameStateAlchemiceLoad() {
 	pMesh = 0;
@@ -121,6 +122,7 @@ void GameStateAlchemiceInit() {
 		pause_buttons[i].s2.y = (f32)(190 - i * 180) - 40;*/
 		pause_buttons[i] = CreateAABB({ 0,(f32)190 - i * 180 }, 300, 80);
 	}
+	end_turn_button = CreateAABB({516,308}, 200,80);
 }
 
 void GameStateAlchemiceUpdate() {
@@ -234,6 +236,12 @@ void GameStateAlchemiceUpdate() {
 						std::cout << "Clicking " << spellbook[i].spell_name << std::endl;
 					}
 				}
+
+				if (mouse_pos.x >= end_turn_button.s2.x && mouse_pos.x <= end_turn_button.s1.x &&
+					-mouse_pos.y >= end_turn_button.s2.y && -mouse_pos.y <= end_turn_button.s1.y){
+					turn = enemy_turn;
+					std::cout << "enemy turn " << std::endl;
+				}
 			}
 			//Opening sub menu
 			if (AEInputCheckTriggered(AEVK_W))
@@ -248,10 +256,10 @@ void GameStateAlchemiceUpdate() {
 			}
 
 			//End Turn (When we have an end turn button)
-			if (AEInputCheckTriggered(AEVK_SPACE)) {
+			/*if (AEInputCheckTriggered(AEVK_SPACE)) {
 				turn = enemy_turn;
 				std::cout << "enemy turn" << std::endl;
-			}
+			}*/
 		}
 
 		//Enemy turn; runs all the enemy functions and animations
@@ -378,6 +386,23 @@ void GameStateAlchemiceDraw() {
 		}
 	}
 
+	// End turn button
+	// 113 characters on screen, start to end, 113/2 =  56.5(left and right for scaling)
+	// 1280W,720H, 640/HalfWidth, 360/HalfHeight
+	const char* mytext{"End Turn"};
+	f32 middle = (end_turn_button.mid.x / (AEGetWindowWidth() / 2));
+	f32 offset = -((float)strlen(mytext) / 2) / 56.5f;
+	AEGfxTextureSet(box, 0.f, 0.f);
+	AEMtx33Trans(&translate, end_turn_button.mid.x, end_turn_button.mid.y);
+	AEMtx33Rot(&rotate, 0);
+	AEMtx33Scale(&scale, 200, 60);
+	AEMtx33Concat(&transform, &rotate, &scale);
+	AEMtx33Concat(&transform, &translate, &transform);
+	AEGfxSetTransform(transform.m);
+	AEGfxMeshDraw(pMesh, AE_GFX_MDM_TRIANGLES);
+	AEGfxPrint(font, (s8*)mytext, middle + offset, (f32)(end_turn_button.mid.y / (AEGetWindowHeight() / 2)), 1, 0, 0, 0);
+
+
 
 	AEGfxSetRenderMode(AE_GFX_RM_TEXTURE);
 	// Set the tint to white, so that the sprite can 
@@ -405,6 +430,7 @@ void GameStateAlchemiceDraw() {
 
 		//const char* mytex{ "test font1test font2test font3test font4test font5test font6test font7test font8test font9test font0test font1test font2test" };
 		// 113 characters on screen, start to end, 113/2 =  56.5(left and right for scaling)
+		// 1280W,720H, 640/HalfWidth, 360/HalfHeight
 		const char* mytex[3]{ { "Continue" }, { "Options" }, {"Main Menu"} };
 
 		for (int i = 0; i < 3; ++i) {
