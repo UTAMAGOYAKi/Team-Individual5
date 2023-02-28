@@ -33,6 +33,14 @@ void GSMUpdate() {
 
 	switch (gGameStateCurr)
 	{
+		case GS_LOAD:
+			GSLoad = LoadScreenLoad;
+			GSInit = LoadScreenInit;
+			GSUpdate = LoadScreenUpdate;
+			GSDraw = LoadScreenDraw;
+			GSFree = LoadScreenFree;
+			GSUnload = LoadScreenUnload;
+		break;
 		case GS_ALCHEMICE:
 			GSLoad = GameStateAlchemiceLoad;
 			GSInit = GameStateAlchemiceInit;
@@ -40,6 +48,10 @@ void GSMUpdate() {
 			GSDraw = GameStateAlchemiceDraw;
 			GSFree = GameStateAlchemiceFree;
 			GSUnload = GameStateAlchemiceUnload;
+			break;
+		case GS_RESTART:
+			break;
+		case GS_QUIT:
 			break;
 		default:
 			//AE_FATAL_ERROR("invalid state!!");

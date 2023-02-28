@@ -2,10 +2,10 @@
 
 dragdrop::dragdrop(double s1x, double s1y, double s2x, double s2y, bool flag, int refer)
 {
-	bounding.s1.x = s1x;
-	bounding.s1.y = s1y;
-	bounding.s2.x = s2x;
-	bounding.s2.y = s2y;
+	bounding.s1.x = (f32)s1x;
+	bounding.s1.y = (f32)s1y;
+	bounding.s2.x = (f32)s2x;
+	bounding.s2.y = (f32)s2y;
 
 	bounding.tr = bounding.s1;
 	bounding.bl = bounding.s2;
@@ -33,6 +33,11 @@ bool dragdrop::getflag() const
 	return active;
 }
 
+bool dragdrop::getmouse() const
+{
+	return mouse;
+}
+
 bool& dragdrop::flagchange(bool change)
 {
 	active = change;
@@ -40,13 +45,26 @@ bool& dragdrop::flagchange(bool change)
 	return active;
 }
 
+bool& dragdrop::mousechange(bool change)
+{
+	mouse = change;
+	return active;
+}
+
+dragdrop& dragdrop::changeref(int num)
+{
+	ref = num;
+	return *this;
+}
+
+
 dragdrop& dragdrop::changeaabb(double width, double height)
 {
-	bounding.s1.x += width / 2;
-	bounding.s1.y += height / 2;
+	bounding.s1.x += (f32)(width / 2);
+	bounding.s1.y += (f32)(height / 2);
 
-	bounding.s2.x -= width / 2;
-	bounding.s2.y -= height / 2;
+	bounding.s2.x -= (f32)(width / 2);
+	bounding.s2.y -= (f32)(height / 2);
 
 	bounding.tr = bounding.s1;
 	bounding.bl = bounding.s2;
@@ -57,13 +75,13 @@ dragdrop& dragdrop::changeaabb(double width, double height)
 
 dragdrop& dragdrop::move(double x, double y)
 {
-	bounding.tr.x += x;
-	bounding.bl.x += x;
-	bounding.mid.x += x;
+	bounding.tr.x += (f32)x;
+	bounding.bl.x += (f32)x;
+	bounding.mid.x += (f32)x;
 
-	bounding.tr.y += y;
-	bounding.bl.y += y;
-	bounding.mid.y += y;
+	bounding.tr.y += (f32)y;
+	bounding.bl.y += (f32)y;
+	bounding.mid.y += (f32)y;
 	return *this;
 }
 
@@ -129,8 +147,9 @@ int aabbbutton(dragdrop* box, dragdrop* spell)
 {
 	aabb tmp = box->getcoord();
 	aabb spl = spell->getcoord();
-	if ((tmp.tr.x < spl.bl.x || tmp.bl.x > spl.tr.x)
-		|| (tmp.tr.y < spl.bl.y || tmp.bl.y > spl.tr.y))
+
+	if (tmp.tr.x >= spl.bl.x && tmp.bl.x <= spl.tr.x 
+		&& tmp.tr.y >= spl.bl.y && tmp.bl.y <= spl.tr.y)
 	{
 		return spell->getref();
 	}
@@ -158,16 +177,16 @@ int aabbbutton(dragdrop* spell, aabb box)
 AEVec2 midpoint(aabb box)
 {
 	AEVec2 tmp;
-	tmp.x = (box.tr.x + box.bl.x) / 2.0;
-	tmp.y = (box.tr.y + box.bl.y) / 2.0;
+	tmp.x = (f32)((box.tr.x + box.bl.x) / 2.0);
+	tmp.y = (f32)((box.tr.y + box.bl.y) / 2.0);
 	return tmp;
 }
 
 AEVec2 midpoint(AEVec2 first, AEVec2 second)
 {
 	AEVec2 tmp;
-	tmp.x = (first.x + second.x) / 2.0;
-	tmp.y = (first.y + second.y) / 2.0;
+	tmp.x = (f32)((first.x + second.x) / 2.0);
+	tmp.y = (f32)((first.y + second.y) / 2.0);
 	return tmp;
 }
 
