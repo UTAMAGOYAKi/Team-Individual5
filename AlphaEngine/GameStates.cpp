@@ -364,6 +364,7 @@ void GameStateAlchemiceDraw() {
 		}
 	}
 
+	//Enemy drawing
 	for (int i = 0; i < TOTAL_ENEMY; ++i) {
 		if (enemies[i].is_alive())
 		{
