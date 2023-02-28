@@ -4,10 +4,10 @@
 
 #include "Battle_system.h"
 #include "Buttons.h"
+#include "Elements.h"
 #include "EnemyObject.h"
 #include "GameStates.h"
 #include "GSM.h"
-#include "Elements.h"
 #include "LevelManager.h"
 #include "Mesh.h"
 #include "Player.h"

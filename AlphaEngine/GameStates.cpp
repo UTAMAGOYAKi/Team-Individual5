@@ -4,8 +4,6 @@
 #include "Main.h"
 #include <iostream>
 #include <fstream>
-#include "Buttons.h"
-#include "Battle_system.h"
 #include "UI.h"
 
 
