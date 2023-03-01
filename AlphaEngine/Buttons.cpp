@@ -238,9 +238,9 @@ void PositionInit() {
 
 aabb CreateAABB(AEVec2 midpoint, double length, double width) {
 	aabb tmp{
-		{midpoint.x + length / 2, midpoint.y + width / 2},
-		{midpoint.x - length / 2, midpoint.y - width / 2},
-		{midpoint.x, midpoint.y},
+		{(f32)(midpoint.x + length / 2), (f32)(midpoint.y + width / 2)},
+		{(f32)(midpoint.x - length / 2), (f32)(midpoint.y - width / 2)},
+		{(f32)(midpoint.x), (f32)(midpoint.y)},
 		{tmp.s1},
 		{tmp.s2},
 		false };

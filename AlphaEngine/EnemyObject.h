@@ -23,10 +23,12 @@ private:
     AEVec2 pos;
     AEGfxTexture* texture;
     bool alive; //Dead = 0; Alive = 1;
+    int size; //pixel size
+    aabb enemy_aabb;
 
 public:
     Enemy() :name{ "" }, max_hp{ 0 }, hp{ 0 }, atk{ 0 }, pos{ 0.f,0.f }, texture{ nullptr } {};
-    Enemy(enemy_types type, AEGfxTexture* input_texture) :name{ "" }, max_hp{ 0 }, hp{ 0 }, atk{ 0 }, pos{ 0.f,0.f }, texture{ input_texture }, alive{ true } {
+    Enemy(enemy_types type, AEGfxTexture* input_texture) :name{ "" }, max_hp{ 0 }, hp{ 0 }, atk{ 0 }, pos{ 0.f,0.f }, texture{ input_texture }, alive{ true }, size{ 128 } {
         switch (type)
         {
         case base_rat:
@@ -67,7 +69,7 @@ public:
     bool is_alive();
 
     //Actions 
-    //Setting position
+    //Setting position and sets aabb
     void set_position(AEVec2 input_pos);
     //Take Damage
     void take_damage(int val);
