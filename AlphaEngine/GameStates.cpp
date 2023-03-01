@@ -147,7 +147,7 @@ void GameStateAlchemiceUpdate() {
 
 	AEVec2 temp;
 		   temp = mouse_pos;
-		   temp.y = -mouse_pos.y;
+		   temp.y = mouse_pos.y;
 
 	bool drag;
 
@@ -419,7 +419,7 @@ void GameStateAlchemiceDraw() {
 	for (int i = 0; i <= max_spells - 1; i++) {
 		if (spellbook[i].unlocked == true) {
 			AEGfxTextureSet(spellbook[i].texture, 0, 0);
-			AEMtx33Trans(&translate, spellbook[i].spell_dragdrop->getcoord().mid.x, spellbook[i].spell_dragdrop->getcoord().mid.y);
+			AEMtx33Trans(&translate, spellbook[i].spell_dragdrop->getcoord().mid.x, -(spellbook[i].spell_dragdrop->getcoord().mid.y));
 			AEMtx33Rot(&rotate, 0);
 			AEMtx33Scale(&scale, spellbook[i].card_width, spellbook[i].card_height);
 			AEMtx33Concat(&transform, &rotate, &scale);
