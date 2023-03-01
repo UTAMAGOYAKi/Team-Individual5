@@ -104,8 +104,17 @@ void GameStateAlchemiceInit() {
 
 	//Draw all spells that are active at beginning
 	AEVec2Zero(&cards);
-	AEVec2Set(&cards, (f32)-(AEGetWindowWidth() / 2) + 100, (f32)-(AEGetWindowHeight() / 2) + 100);
+	AEVec2Set(&cards, (f32)-(AEGetWindowWidth() / 2) + 100, -((f32)-(AEGetWindowHeight() / 2) + 100));
 
+	for (int i = 0; i <= max_spells - 1; i++) {
+		if (spellbook[i].unlocked == true) {
+			if (spellbook[i].spell_dragdrop->getcoord().mid.x == 0 && spellbook[i].spell_dragdrop->getcoord().mid.y == 0) {
+				spellbook[i].init_spells_draw(spellbook[i], cards);
+				cards.x += 100;
+				spellbook[i].spell_dragdrop->set_origin();
+			}
+		}
+	}
 
 	//Creation of enemy
 	for (int i = 0; i < 3; i++) {
@@ -125,16 +134,8 @@ void GameStateAlchemiceInit() {
 		pause_buttons[i] = CreateAABB({ 0,(f32)190 - i * 180 }, 300, 80);
 	}
 
-	for (int i = 0; i <= max_spells - 1; i++) {
-		if (spellbook[i].unlocked == true) {
-			if (spellbook[i].spell_dragdrop->getcoord().mid.x == 0 && spellbook[i].spell_dragdrop->getcoord().mid.y == 0) {
-				spellbook[i].init_spells_draw(spellbook[i], cards);
-				cards.x += 100;
-				spellbook[i].spell_dragdrop->set_origin();
-			}
-		}
-	}
-	cards.x = 0;
+
+	cards.x = -50;
 	end_turn_button = CreateAABB({ 516,308 }, 200, 80);
 
 }
@@ -190,18 +191,18 @@ void GameStateAlchemiceUpdate() {
 	//		}
 	//	}
 	//}
-	
+
 
 	//Draw spells player unlocks / combines
-	//for (int i = 0; i <= max_spells - 1; i++) {
-	//	if (spellbook[i].unlocked == true) {
-	//		if (spellbook[i].spell_dragdrop->getcoord().mid.x == 0 && spellbook[i].spell_dragdrop->getcoord().mid.y == 0) {
-	//			spellbook[i].init_spells_draw(spellbook[i], cards);
-	//			cards.x += 110;
-	//		}
-	//		//Checks if 2 spells are colliding for combination
-	//	}
-	//}
+	for (int i = 4; i <= max_spells - 1; i++) {
+		if (spellbook[i].unlocked == true) {
+			if (spellbook[i].spell_dragdrop->getcoord().mid.x == 0 && spellbook[i].spell_dragdrop->getcoord().mid.y == 0) {
+				spellbook[i].init_spells_draw(spellbook[i], cards);
+				cards.x += 110;
+			}
+			//Checks if 2 spells are colliding for combination
+		}
+	}
 
 	//Mouse Debug
 	if (AEInputCheckTriggered(AEVK_E))
@@ -241,15 +242,8 @@ void GameStateAlchemiceUpdate() {
 							spellbook[i].spell_dragdrop->mousechange(true);
 						}
 
-						if (aabbbutton(spellbook[i].spell_dragdrop, &crafting_table.table_dragdrop) != -1) {
-							//Check if player has put 2 spells in
-							//if (crafting_table_update(spellbook[i].id, crafting_table, spellbook) == 1) {
-								//spellbook[i].spell_dragdrop->moveto(crafting_table.table_dragdrop.getcoord());
-							//}
-
-						}
-						//std::cout << "Crafting X"<< crafting_table.table_dragdrop.bounding.tr.x << std::endl;
-						//std::cout << "Crafting Y" << crafting_table.table_dragdrop.bounding.tr.y << std::endl;
+						/*std::cout << "Crafting X tr"<< crafting_table.table_dragdrop.getcoord().tr.x << std::endl;
+						std::cout << "Crafting Y tr" << crafting_table.table_dragdrop.getcoord().tr.y << std::endl;*/
 
 					}
 				}
@@ -262,17 +256,16 @@ void GameStateAlchemiceUpdate() {
 				{
 					spellbook[i].spell_dragdrop->moveto(temp);
 
-					for(int i =0; i < TOTAL_ENEMY ; ++i)
-					if (aabbbutton(spellbook[i].spell_dragdrop, enemies[i].get_aabb()) != -1) {
-						std::cout << "ISTG ILL DIE" << std::endl;
-						//Check if player has put 2 spells in
-						//if (crafting_table_update(spellbook[i].id, crafting_table, spellbook) == 1) {
-							//spellbook[i].spell_dragdrop->moveto(crafting_table.table_dragdrop.getcoord());
-						//}
+					for (int i = 0; i < TOTAL_ENEMY; ++i)
+						if (aabbbutton(spellbook[i].spell_dragdrop, enemies[i].get_aabb()) != -1) {
+							std::cout << "ISTG ILL DIE" << std::endl;
+							//Check if player has put 2 spells in
+						}
+					//std::cout << "Spellbook[i] tr X" << spellbook[i].spell_dragdrop->getcoord().tr.x << std::endl;
+					//std::cout << "Spellbook[i] tr Y" << spellbook[i].spell_dragdrop->getcoord().tr.y << std::endl;
+					//std::cout << "Spellbook[i]bl X" << spellbook[i].spell_dragdrop->getcoord().bl.x << std::endl;
+					//std::cout << "Spellbook[i]bl Y" << spellbook[i].spell_dragdrop->getcoord().bl.y << std::endl;
 
-					}
-					//std::cout << "Spellbook[i] X" << spellbook[i].spell_dragdrop->bounding.tr.x << std::endl;
-					//std::cout << "Spellbook[i] Y" << spellbook[i].spell_dragdrop->bounding.tr.y << std::endl;
 				}
 			}
 
@@ -284,20 +277,16 @@ void GameStateAlchemiceUpdate() {
 				{
 					if (spellbook[i].spell_dragdrop->getmouse())
 					{
-
+						std::cout << "RELEASE" << std::endl;
+						if (aabbbutton(spellbook[i].spell_dragdrop, &crafting_table.table_dragdrop) == 1) {
+							//Check if player has put 2 spells in
+							crafting_table_update(spellbook[i].id, crafting_table, spellbook);
+						}
+						else {
+							spellbook[i].spell_dragdrop->resetaabb();
+							spellbook[i].spell_dragdrop->mousechange(false);
+						}
 					}
-
-					if (aabbbutton(spellbook[i].spell_dragdrop, &crafting_table.table_dragdrop) != -1) {
-						//Check if player has put 2 spells in
-						//if (crafting_table_update(spellbook[i].id, crafting_table, spellbook) == 1) {
-							//spellbook[i].spell_dragdrop->moveto(crafting_table.table_dragdrop.getcoord());
-						//}
-					}
-
-					spellbook[i].spell_dragdrop->resetaabb();
-					spellbook[i].spell_dragdrop->mousechange(false);
-
-
 				}
 			}
 
@@ -452,7 +441,8 @@ void GameStateAlchemiceDraw() {
 	for (int i = 0; i <= max_spells - 1; i++) {
 		if (spellbook[i].unlocked == true) {
 			AEGfxTextureSet(spellbook[i].texture, 0, 0);
-			AEMtx33Trans(&translate, spellbook[i].spell_dragdrop->getcoord().mid.x, -(spellbook[i].spell_dragdrop->getcoord().mid.y));
+			AEMtx33Trans(&translate, spellbook[i].spell_dragdrop->getcoord().mid.x, -spellbook[i].spell_dragdrop->getcoord().mid.y);
+			//std::cout << "drawing spell:" << spellbook[i].spell_name << "has" << spellbook[i].spell_dragdrop->getcoord().mid.x << spellbook[i].spell_dragdrop->getcoord().mid.y << std::endl;
 			AEMtx33Rot(&rotate, 0);
 			AEMtx33Scale(&scale, spellbook[i].card_width, spellbook[i].card_height);
 			AEMtx33Concat(&transform, &rotate, &scale);
@@ -482,7 +472,7 @@ void GameStateAlchemiceDraw() {
 	// End turn button
 	// 113 characters on screen, start to end, 113/2 =  56.5(left and right for scaling)
 	// 1280W,720H, 640/HalfWidth, 360/HalfHeight
-	const char* mytext{"End Turn"};
+	const char* mytext{ "End Turn" };
 	f32 middle = (end_turn_button.mid.x / (AEGetWindowWidth() / 2));
 	f32 offset = -((float)strlen(mytext) / 2) / 56.5f;
 	AEGfxTextureSet(box, 0.f, 0.f);

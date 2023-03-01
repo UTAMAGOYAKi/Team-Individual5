@@ -136,16 +136,28 @@ void unload_spells(Spell* spellbook) {
 // State 3: When 2 spells has been input and spell is unloked
 int crafting_table_update(int spell_id, craftingtable& table, Spell* spellbook = nullptr)
 {
+	spellbook[spell_id].spell_dragdrop->mousechange(false);
+	spellbook[spell_id].spell_dragdrop->moveto(table.table_dragdrop.getcoord());
 	if (table.spell1_id == 0) {
-		table.spell1_id = spell_id;	
+		table.spell1_id = spell_id;
 		return 1;
 	}
-	else if(table.spell1_id == 0) {
+	else if (table.spell1_id != 0 && table.spell2_id == 0) {
 		table.spell2_id = spell_id;
-		if (combine_spells(spellbook, table.spell1_id, table.spell2_id)==true);
-		return 2; 
-
-		return 3;
+		if (combine_spells(spellbook, table.spell1_id, table.spell2_id) == true) {
+			spellbook[table.spell1_id].spell_dragdrop->resetaabb();
+			spellbook[table.spell2_id].spell_dragdrop->resetaabb();
+			table.spell1_id = 0;
+			table.spell2_id = 0;
+			return 2;
+		}
+		else {
+			spellbook[table.spell1_id].spell_dragdrop->resetaabb();
+			spellbook[table.spell2_id].spell_dragdrop->resetaabb();
+			table.spell1_id = 0;
+			table.spell2_id = 0;
+			return 3;
+		}
 	}
 }
 

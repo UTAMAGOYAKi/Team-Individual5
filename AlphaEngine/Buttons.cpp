@@ -61,10 +61,10 @@ dragdrop& dragdrop::changeref(int num)
 dragdrop& dragdrop::changeaabb(double width, double height)
 {
 	bounding.s1.x += (f32)(width / 2);
-	bounding.s1.y += (f32)(height / 2);
+	bounding.s1.y -= (f32)(height / 2);
 
 	bounding.s2.x -= (f32)(width / 2);
-	bounding.s2.y -= (f32)(height / 2);
+	bounding.s2.y += (f32)(height / 2);
 
 	bounding.tr = bounding.s1;
 	bounding.bl = bounding.s2;
@@ -89,10 +89,10 @@ dragdrop& dragdrop::move(double x, double y)
 dragdrop& dragdrop::moveto(AEVec2 refer)
 {
 	bounding.tr.x -= distance(bounding.mid, refer).x;
-	bounding.tr.y += distance(bounding.mid, refer).y;
+	bounding.tr.y -= distance(bounding.mid, refer).y;
 
 	bounding.bl.x -= distance(bounding.mid, refer).x;
-	bounding.bl.y += distance(bounding.mid, refer).y;
+	bounding.bl.y -= distance(bounding.mid, refer).y;
 
 	bounding.mid.x = refer.x;
 	bounding.mid.y = refer.y;
@@ -102,11 +102,11 @@ dragdrop& dragdrop::moveto(AEVec2 refer)
 
 dragdrop& dragdrop::moveto(aabb refer)
 {
-	bounding.tr.x += distance(bounding.mid, refer.mid).x;
-	bounding.tr.y += distance(bounding.mid, refer.mid).y;
+	bounding.tr.x -= distance(bounding.mid, refer.mid).x;
+	bounding.tr.y -= distance(bounding.mid, refer.mid).y;
 
-	bounding.bl.x += distance(bounding.mid, refer.mid).x;
-	bounding.bl.y += distance(bounding.mid, refer.mid).y;
+	bounding.bl.x -= distance(bounding.mid, refer.mid).x;
+	bounding.bl.y -= distance(bounding.mid, refer.mid).y;
 
 	bounding.mid.x = refer.mid.x;
 	bounding.mid.y = refer.mid.y;
@@ -141,7 +141,7 @@ int aabbbutton(dragdrop* box, AEVec2 mouse)
 	if (
 		(tmp.bl.x < mouse.x && mouse.x < tmp.tr.x)
 		&&
-		(tmp.bl.y < mouse.y && mouse.y < tmp.tr.y)
+		(tmp.bl.y > mouse.y && mouse.y > tmp.tr.y)
 		)
 	{
 		return box->getref();
@@ -158,9 +158,9 @@ int aabbbutton(dragdrop* box, dragdrop* spell)
 	aabb spl = spell->getcoord();
 
 	if (tmp.tr.x >= spl.bl.x && tmp.bl.x <= spl.tr.x
-		&& tmp.tr.y >= spl.bl.y && tmp.bl.y <= spl.tr.y)
+		&& tmp.tr.y <= spl.bl.y && tmp.bl.y >= spl.tr.y)
 	{
-		return spell->getref();
+		return 1;
 	}
 	else
 	{
@@ -172,7 +172,7 @@ int aabbbutton(dragdrop* spell, aabb box)
 {
 	aabb tmp = spell->getcoord();
 	if ((tmp.tr.x>=box.bl.x && tmp.bl.x<=box.tr.x)
-		&& (tmp.tr.y >= box.bl.y && tmp.bl.y<=box.tr.y))
+		&& (tmp.tr.y <= box.bl.y && tmp.bl.y>=box.tr.y))
 	{
 		return 1;
 	}
