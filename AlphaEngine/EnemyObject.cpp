@@ -29,6 +29,11 @@ bool Enemy::is_alive() {
     return alive;
 }
 
+aabb Enemy::get_aabb()
+{
+    return  enemy_aabb;
+}
+
 //Actions
 void Enemy::set_position(AEVec2 input_pos) {
     pos.x = input_pos.x;

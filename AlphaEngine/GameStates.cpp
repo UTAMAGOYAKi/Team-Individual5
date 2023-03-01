@@ -135,9 +135,10 @@ void GameStateAlchemiceInit() {
 		}
 	}
 	cards.x = 0;
+	end_turn_button = CreateAABB({ 516,308 }, 200, 80);
+
 }
-	end_turn_button = CreateAABB({516,308}, 200,80);
-}
+
 
 void GameStateAlchemiceUpdate() {
 	// Updates global mouse pos
@@ -189,98 +190,7 @@ void GameStateAlchemiceUpdate() {
 	//		}
 	//	}
 	//}
-	if (AEInputCheckCurr(AEVK_LBUTTON))
-	{
-		for (int i = 0; i <= max_spells - 1; i++)
-		{
-			if (aabbbutton(spellbook[i].spell_dragdrop, mouse_pos))
-			{
-				for (int i = 0; i <= max_spells - 1; i++)
-				{
-					if (spellbook[i].spell_dragdrop->getmouse())
-					{
-						drag = false;
-					}
-				}
-				if (drag)
-				{
-					spellbook[i].spell_dragdrop->mousechange(true);
-				}
-				std::cout << "Crafting X"<< crafting_table.table_dragdrop.bounding.tr.x << std::endl;
-				std::cout << "Crafting Y" << crafting_table.table_dragdrop.bounding.tr.y << std::endl;
-
-			}
-		}
-	}
-
-	for (int i = 0; i <= max_spells - 1; i++)
-	{
-
-		if (spellbook[i].spell_dragdrop->getmouse())
-		{
-			spellbook[i].spell_dragdrop->moveto(temp);
-			std::cout << "Spellbook[i] X" << spellbook[i].spell_dragdrop->bounding.tr.x << std::endl;
-			std::cout << "Spellbook[i] Y" << spellbook[i].spell_dragdrop->bounding.tr.y << std::endl;
-		}
-	}
-
-
-
-	if (AEInputCheckReleased(AEVK_LBUTTON))
-	{
-		for (int i = 0; i <= max_spells - 1; i++)
-		{
-			if (spellbook[i].spell_dragdrop->getmouse())
-			{
-
-			}
-
-			if (aabbbutton(spellbook[i].spell_dragdrop, &crafting_table.table_dragdrop) != -1) {
-				//Check if player has put 2 spells in
-				std::cout << "im beung nice" << std::endl;
-				//if (crafting_table_update(spellbook[i].id, crafting_table, spellbook) == 1) {
-					//spellbook[i].spell_dragdrop->moveto(crafting_table.table_dragdrop.getcoord());
-				//}
-			}
-
-			spellbook[i].spell_dragdrop->resetaabb();
-			spellbook[i].spell_dragdrop->mousechange(false);
-
-
-		}
-	}
-
-
-
-	//Check for mouse click
-	if (AEInputCheckTriggered(AEVK_LBUTTON))
-	{
-		for (int i = 0; i <= max_spells - 1; i++) {
-			if (aabbbutton(spellbook[i].spell_dragdrop, mouse_pos)) {
-				std::cout << "Clicking " << spellbook[i].spell_name << std::endl;
-			}
-		}
-
-		if (pause_mode) {
-			for (int i{}; i < sizeof(pause_buttons) / sizeof(pause_buttons[0]); ++i) {
-				if (mouse_pos.x >= pause_buttons[i].s2.x && mouse_pos.x <= pause_buttons[i].s1.x &&
-					-mouse_pos.y >= pause_buttons[i].s2.y && -mouse_pos.y <= pause_buttons[i].s1.y) {
-					std::cout << "button clicked " << i << std::endl;
-					switch (i) {
-					case 0:
-						pause_mode = !pause_mode;
-						break;
-					case 1:
-						//options menu
-						break;
-					case 2:
-						gGameStateNext = GS_QUIT;
-						break;
-					}
-				}
-			}
-		}
-	}//Check for Lbutton click
+	
 
 	//Draw spells player unlocks / combines
 	//for (int i = 0; i <= max_spells - 1; i++) {
@@ -313,6 +223,87 @@ void GameStateAlchemiceUpdate() {
 		//Checking for turns
 		if (turn == player_turn) {
 
+			if (AEInputCheckCurr(AEVK_LBUTTON))
+			{
+				for (int i = 0; i <= max_spells - 1; i++)
+				{
+					if (aabbbutton(spellbook[i].spell_dragdrop, mouse_pos))
+					{
+						for (int i = 0; i <= max_spells - 1; i++)
+						{
+							if (spellbook[i].spell_dragdrop->getmouse())
+							{
+								drag = false;
+							}
+						}
+						if (drag)
+						{
+							spellbook[i].spell_dragdrop->mousechange(true);
+						}
+
+						if (aabbbutton(spellbook[i].spell_dragdrop, &crafting_table.table_dragdrop) != -1) {
+							//Check if player has put 2 spells in
+							//if (crafting_table_update(spellbook[i].id, crafting_table, spellbook) == 1) {
+								//spellbook[i].spell_dragdrop->moveto(crafting_table.table_dragdrop.getcoord());
+							//}
+
+						}
+						//std::cout << "Crafting X"<< crafting_table.table_dragdrop.bounding.tr.x << std::endl;
+						//std::cout << "Crafting Y" << crafting_table.table_dragdrop.bounding.tr.y << std::endl;
+
+					}
+				}
+			}
+
+			for (int i = 0; i <= max_spells - 1; i++)
+			{
+
+				if (spellbook[i].spell_dragdrop->getmouse())
+				{
+					spellbook[i].spell_dragdrop->moveto(temp);
+
+					for(int i =0; i < TOTAL_ENEMY ; ++i)
+					if (aabbbutton(spellbook[i].spell_dragdrop, enemies[i].get_aabb()) != -1) {
+						std::cout << "ISTG ILL DIE" << std::endl;
+						//Check if player has put 2 spells in
+						//if (crafting_table_update(spellbook[i].id, crafting_table, spellbook) == 1) {
+							//spellbook[i].spell_dragdrop->moveto(crafting_table.table_dragdrop.getcoord());
+						//}
+
+					}
+					//std::cout << "Spellbook[i] X" << spellbook[i].spell_dragdrop->bounding.tr.x << std::endl;
+					//std::cout << "Spellbook[i] Y" << spellbook[i].spell_dragdrop->bounding.tr.y << std::endl;
+				}
+			}
+
+
+
+			if (AEInputCheckReleased(AEVK_LBUTTON))
+			{
+				for (int i = 0; i <= max_spells - 1; i++)
+				{
+					if (spellbook[i].spell_dragdrop->getmouse())
+					{
+
+					}
+
+					if (aabbbutton(spellbook[i].spell_dragdrop, &crafting_table.table_dragdrop) != -1) {
+						//Check if player has put 2 spells in
+						//if (crafting_table_update(spellbook[i].id, crafting_table, spellbook) == 1) {
+							//spellbook[i].spell_dragdrop->moveto(crafting_table.table_dragdrop.getcoord());
+						//}
+					}
+
+					spellbook[i].spell_dragdrop->resetaabb();
+					spellbook[i].spell_dragdrop->mousechange(false);
+
+
+				}
+			}
+
+
+
+			//Check for mouse click
 			if (AEInputCheckTriggered(AEVK_LBUTTON))
 			{
 				for (int i = 0; i <= max_spells - 1; i++) {
@@ -322,11 +313,32 @@ void GameStateAlchemiceUpdate() {
 				}
 
 				if (mouse_pos.x >= end_turn_button.s2.x && mouse_pos.x <= end_turn_button.s1.x &&
-					-mouse_pos.y >= end_turn_button.s2.y && -mouse_pos.y <= end_turn_button.s1.y){
+					-mouse_pos.y >= end_turn_button.s2.y && -mouse_pos.y <= end_turn_button.s1.y) {
 					turn = enemy_turn;
 					std::cout << "enemy turn " << std::endl;
 				}
-			}
+
+				if (pause_mode) {
+					for (int i{}; i < sizeof(pause_buttons) / sizeof(pause_buttons[0]); ++i) {
+						if (mouse_pos.x >= pause_buttons[i].s2.x && mouse_pos.x <= pause_buttons[i].s1.x &&
+							-mouse_pos.y >= pause_buttons[i].s2.y && -mouse_pos.y <= pause_buttons[i].s1.y) {
+							std::cout << "button clicked " << i << std::endl;
+							switch (i) {
+							case 0:
+								pause_mode = !pause_mode;
+								break;
+							case 1:
+								//options menu
+								break;
+							case 2:
+								gGameStateNext = GS_QUIT;
+								break;
+							}
+						}
+					}
+				}
+			}//Check for Lbutton click
+
 			//Opening sub menu
 			if (AEInputCheckTriggered(AEVK_W))
 			{
@@ -338,6 +350,7 @@ void GameStateAlchemiceUpdate() {
 			{
 				enemies[rand() % TOTAL_ENEMY].take_damage(1);
 			}
+
 
 			//End Turn (When we have an end turn button)
 			/*if (AEInputCheckTriggered(AEVK_SPACE)) {

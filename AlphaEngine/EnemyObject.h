@@ -68,6 +68,7 @@ public:
     AEGfxTexture* get_texture();
     bool is_alive();
 
+    aabb get_aabb();
     //Actions 
     //Setting position and sets aabb
     void set_position(AEVec2 input_pos);
