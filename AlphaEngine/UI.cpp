@@ -129,8 +129,8 @@ void name_bar(std::string name, AEVec2 place,s8 font)
 //	}
 //}
 
-void draw_crafting_table( AEGfxVertexList* mesh, AEGfxTexture* table = nullptr ) {
-
+void draw_crafting_table( AEGfxVertexList* mesh, craftingtable& crafting_table, AEGfxTexture* table = nullptr ) {
+	// Drawing textures
 	AEGfxTextureSet(table, 0, 0);
 	AEMtx33Trans(&translate, 0, 0);
 	AEMtx33Rot(&rotate, 0);

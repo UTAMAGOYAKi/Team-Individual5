@@ -29,7 +29,7 @@ void enemy_info(Enemy enemy, s8 font, AEGfxVertexList* mesh);
 
 void sub_menu_draw(AEGfxTexture* sub_menu, Spell spells[], AEGfxVertexList* mesh, s8 font);
 
-void draw_crafting_table( AEGfxVertexList* mesh,AEGfxTexture* table = nullptr );
+void draw_crafting_table( AEGfxVertexList* mesh, craftingtable& crafting_table, AEGfxTexture* table = nullptr );
 
 
 #endif //UI_h

@@ -34,6 +34,8 @@ AEVec2 mouse_pos{}; // Current mouse pos
 Spell* spellbook;
 //Coords for active cards
 AEVec2 cards;
+//Crafting table for magic
+craftingtable crafting_table;
 //---------------------------------------------------------------------------------
 
 
@@ -351,7 +353,7 @@ void GameStateAlchemiceDraw() {
 	name_bar(player_hp, player_position, font);
 
 	//crafting table
-	draw_crafting_table(pMesh, crafting_test);
+	draw_crafting_table(pMesh,crafting_table, crafting_test);
 
 	// Card Drawing
 	for (int i = 0; i <= max_spells - 1; i++) {

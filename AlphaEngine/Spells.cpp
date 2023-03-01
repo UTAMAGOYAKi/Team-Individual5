@@ -126,7 +126,24 @@ void unload_spells(Spell* spellbook) {
 	delete[] spellbook;
 }
 
-void crafting_table(dragdrop& spell1, dragdrop& spell2)
+void crafting_table_update(int spell_id, craftingtable& table, Spell* spellbook = nullptr)
 {
-	//if()
+	if (table.spell1_id == 0) {
+		table.spell1_id = spell_id;	
+	}
+	else if(table.spell1_id == 0) {
+		table.spell2_id = spell_id;
+	}
+	else {
+		combine_spells(spellbook, table.spell1_id, table.spell2_id);
+	}
+}
+
+craftingtable::craftingtable()
+{
+	//Set Table aabb
+	AEVec2 zero;
+	AEVec2Zero(&zero);
+	table_dragdrop.moveto(zero);
+	table_dragdrop.changeaabb(table_width, table_height);
 }

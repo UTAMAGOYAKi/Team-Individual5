@@ -27,11 +27,20 @@ extern const int max_spells;
 
 class craftingtable {
 public:
+
 	craftingtable();
-	~craftingtable();
+
+	const float table_width{ 128 };
+	const float table_height{ 128 };
+
 	//Spell 1 hold
-	
+	int spell1_id{};
+
 	//Spell 2 hold
+	int spell2_id{};
+
+	//Crafting table snap
+	dragdrop table_dragdrop{};
 };
 
 class Spell {
@@ -76,5 +85,5 @@ bool combine_spells(Spell* spellbook, int id1, int id2);
 // Called when level ends etc.
 void unload_spells(Spell* spellbook);
 
-//Crafting table CPP
-void crafting_table(dragdrop& spell1, dragdrop& spell2);
+//Crafting table 
+void crafting_table_update(int spell_id, craftingtable& table, Spell* spellbook);
