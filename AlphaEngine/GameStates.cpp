@@ -43,6 +43,8 @@ AEVec2 cards;
 //Loading of Mesh and Texture
 AEGfxVertexList* pMesh{}, * pLoad{};
 AEGfxTexture* chara{}, * rat{}, * spell_g{}, * box{}, * sub{}, * load_screen{};
+//Animation frames
+AEGfxTexture* blast1{}, * blast2{}, * blast3{};
 
 aabb* chara_pos;
 aabb* Enemy_pos_1;
@@ -65,6 +67,8 @@ player* alchemice{};
 //GameObject creations
 std::string rat_hp{};
 Enemy enemies[3]{};
+//Enemy Animations
+AEGfxTexture* blast[3];
 
 aabb pause_buttons[3];
 aabb end_turn_button;
@@ -91,6 +95,15 @@ void GameStateAlchemiceLoad() {
 	rat = AEGfxTextureLoad("Assets/rat_Piskel.png");
 	sub = AEGfxTextureLoad("Assets/submenu.png");
 	box = AEGfxTextureLoad("Assets/box.png");
+
+	//Animation frames
+	blast1 = AEGfxTextureLoad("Assets/blast1.png");
+	blast2 = AEGfxTextureLoad("Assets/blast2.png");
+	blast3 = AEGfxTextureLoad("Assets/blast3.png");
+	blast[0] = blast1;
+	blast[1] = blast2;
+	blast[2] = blast3;
+
 }
 
 // Initialization of your own variables go here
@@ -270,12 +283,10 @@ void GameStateAlchemiceUpdate() {
 		//Enemy turn; runs all the enemy functions and animations
 		if (turn == enemy_turn) {
 			for (int i = 0; i < TOTAL_ENEMY; i++) {
+				//blast_animation(pMesh, enemies[i], blast, 3);
 				alchemice->hp -= enemies[i].get_atk();
 			}
 			//change to player turn after it ends
-			turn = player_turn;
-			level.display_turn = "Player's Turn";
-			std::cout << "player turn" << std::endl;
 		}
 	}
 	//When player hp 0 or all enemies dead. Game over or change state
@@ -393,6 +404,37 @@ void GameStateAlchemiceDraw() {
 		}
 	}
 
+	//Enemy Animation
+	if (turn == enemy_turn) {
+		float frame_time{1};
+		float curr_time{ frame_time };
+
+		for (int i = 0; i < TOTAL_ENEMY; ++i) {
+			if (enemies[i].is_alive()) {
+				for (int i{}; i < 3; i++) { //currently 3 frames //change when need be
+					AEGfxTextureSet(blast[i], 0, 0);
+					AEMtx33Trans(&translate, (f32)(enemies[i].get_pos().x), (f32)(enemies[i].get_pos().y));
+					AEMtx33Rot(&rotate, 0);
+					AEMtx33Scale(&scale, 100.f, 100.f);
+					AEMtx33Concat(&transform, &rotate, &scale);
+					AEMtx33Concat(&transform, &translate, &transform);
+					AEGfxSetTransform(transform.m);
+					AEGfxMeshDraw(pMesh, AE_GFX_MDM_TRIANGLES);
+				}
+			}
+		}
+		//timer
+		while (0) {// Problem
+			curr_time -= (f32)AEFrameRateControllerGetFrameTime();
+		}
+		curr_time = frame_time;
+
+		//Change back only after animation
+		turn = player_turn;
+		level.display_turn = "Player's Turn";
+		std::cout << "player turn" << std::endl;
+	}
+
 	// End turn button
 	// 113 characters on screen, start to end, 113/2 =  56.5(left and right for scaling)
 	// 1280W,720H, 640/HalfWidth, 360/HalfHeight
@@ -483,6 +525,7 @@ void GameStateAlchemiceDraw() {
 	//	AEGfxPrint(test_font, (s8*)rat_hp.c_str(), 0.225f, 0.1f, 1, 0.0f, 0.0f, 0.0f);
 	//}
 	//AEGfxPrint(test_font, (s8*)rat_name_2, 0.625f, 0.2f, 1, 0.0f, 0.0f, 0.0f);
+
 }
 
 void GameStateAlchemiceFree() {
