@@ -63,6 +63,7 @@ public:
 	 */
 	aabb resetaabb();
 
+	dragdrop& set_origin();
 
 
 	//destructor
