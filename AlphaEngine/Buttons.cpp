@@ -97,7 +97,6 @@ dragdrop& dragdrop::moveto(AEVec2 refer)
 	bounding.mid.x = refer.x;
 	bounding.mid.y = refer.y;
 
-
 	return *this;
 }
 
@@ -158,7 +157,7 @@ int aabbbutton(dragdrop* box, dragdrop* spell)
 	aabb tmp = box->getcoord();
 	aabb spl = spell->getcoord();
 
-	if (tmp.tr.x >= spl.bl.x && tmp.bl.x <= spl.tr.x 
+	if (tmp.tr.x >= spl.bl.x && tmp.bl.x <= spl.tr.x
 		&& tmp.tr.y >= spl.bl.y && tmp.bl.y <= spl.tr.y)
 	{
 		return spell->getref();

@@ -85,5 +85,8 @@ bool combine_spells(Spell* spellbook, int id1, int id2);
 // Called when level ends etc.
 void unload_spells(Spell* spellbook);
 
-//Crafting table 
-void crafting_table_update(int spell_id, craftingtable& table, Spell* spellbook);
+//Returns state of the crafting table
+// State 1: When only 1 spell is input
+// State 2: When 2 spells has been input but invalid combo
+// State 3: When 2 spells has been input and spell is unloked
+int crafting_table_update(int spell_id, craftingtable& table, Spell* spellbook);

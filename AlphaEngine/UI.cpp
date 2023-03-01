@@ -131,8 +131,8 @@ void name_bar(std::string name, AEVec2 place,s8 font)
 
 void draw_crafting_table( AEGfxVertexList* mesh, craftingtable& crafting_table, AEGfxTexture* table = nullptr ) {
 	// Drawing textures
-	AEGfxTextureSet(table, 0, 0);
-	AEMtx33Trans(&translate, 0, 0);
+	AEGfxTextureSet(table, crafting_table.table_dragdrop.getcoord().mid.x, crafting_table.table_dragdrop.getcoord().mid.y);
+	AEMtx33Trans(&translate, crafting_table.table_dragdrop.getcoord().mid.x, crafting_table.table_dragdrop.getcoord().mid.y);
 	AEMtx33Rot(&rotate, 0);
 	AEMtx33Scale(&scale, 128, 128);
 	AEMtx33Concat(&transform, &rotate, &scale);

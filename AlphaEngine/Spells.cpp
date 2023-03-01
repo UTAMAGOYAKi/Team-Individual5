@@ -40,9 +40,13 @@ Spell* init_all_spells()
 
 	AEVec2Zero(&cards);
 	for (int i = 0; i <= max_spells - 1; i++) {
-		//Set all midpoint coords to 0
-		spellbook[i].spell_dragdrop->moveto(cards);
-		spellbook[i].spell_dragdrop->changeref(spellbook[i].id);
+		//
+
+		//Set >tier 3 midpoint coords to 0
+		if (spellbook[i].tier < 3) {
+			spellbook[i].spell_dragdrop->moveto(cards);
+			spellbook[i].spell_dragdrop->changeref(spellbook[i].id);\
+		}
 	}
 	return spellbook;
 }
@@ -126,16 +130,22 @@ void unload_spells(Spell* spellbook) {
 	delete[] spellbook;
 }
 
-void crafting_table_update(int spell_id, craftingtable& table, Spell* spellbook = nullptr)
+//Returns state of the crafting table
+// State 1: When only 1 spell is input
+// State 2: When 2 spells has been input but invalid combo
+// State 3: When 2 spells has been input and spell is unloked
+int crafting_table_update(int spell_id, craftingtable& table, Spell* spellbook = nullptr)
 {
 	if (table.spell1_id == 0) {
 		table.spell1_id = spell_id;	
+		return 1;
 	}
 	else if(table.spell1_id == 0) {
 		table.spell2_id = spell_id;
-	}
-	else {
-		combine_spells(spellbook, table.spell1_id, table.spell2_id);
+		if (combine_spells(spellbook, table.spell1_id, table.spell2_id)==true);
+		return 2; 
+
+		return 3;
 	}
 }
 

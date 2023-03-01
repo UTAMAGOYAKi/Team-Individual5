@@ -35,7 +35,7 @@ Spell* spellbook;
 //Coords for active cards
 AEVec2 cards;
 //Crafting table for magic
-craftingtable crafting_table;
+craftingtable crafting_table{};
 //---------------------------------------------------------------------------------
 
 
@@ -146,8 +146,8 @@ void GameStateAlchemiceUpdate() {
 	mouse_pos.y = (f32)y - AEGetWindowHeight() / 2;
 
 	AEVec2 temp;
-		   temp = mouse_pos;
-		   temp.y = mouse_pos.y;
+	temp = mouse_pos;
+	temp.y = mouse_pos.y;
 
 	bool drag;
 
@@ -190,9 +190,9 @@ void GameStateAlchemiceUpdate() {
 	//}
 	if (AEInputCheckCurr(AEVK_LBUTTON))
 	{
-		for (int i = 0; i <= max_spells - 1; i++) 
+		for (int i = 0; i <= max_spells - 1; i++)
 		{
-			if (aabbbutton(spellbook[i].spell_dragdrop, mouse_pos)) 
+			if (aabbbutton(spellbook[i].spell_dragdrop, mouse_pos))
 			{
 				for (int i = 0; i <= max_spells - 1; i++)
 				{
@@ -205,17 +205,25 @@ void GameStateAlchemiceUpdate() {
 				{
 					spellbook[i].spell_dragdrop->mousechange(true);
 				}
+				std::cout << "Crafting X"<< crafting_table.table_dragdrop.bounding.tr.x << std::endl;
+				std::cout << "Crafting Y" << crafting_table.table_dragdrop.bounding.tr.y << std::endl;
+
 			}
 		}
 	}
 
 	for (int i = 0; i <= max_spells - 1; i++)
 	{
+
 		if (spellbook[i].spell_dragdrop->getmouse())
 		{
 			spellbook[i].spell_dragdrop->moveto(temp);
+			std::cout << "Spellbook[i] X" << spellbook[i].spell_dragdrop->bounding.tr.x << std::endl;
+			std::cout << "Spellbook[i] Y" << spellbook[i].spell_dragdrop->bounding.tr.y << std::endl;
 		}
 	}
+
+
 
 	if (AEInputCheckReleased(AEVK_LBUTTON))
 	{
@@ -223,19 +231,24 @@ void GameStateAlchemiceUpdate() {
 		{
 			if (spellbook[i].spell_dragdrop->getmouse())
 			{
-				if (0)
-				{
 
-				}
-				else
-				{
-					spellbook[i].spell_dragdrop->resetaabb();
-					spellbook[i].spell_dragdrop->mousechange(false);
-
-				}
 			}
+
+			if (aabbbutton(spellbook[i].spell_dragdrop, &crafting_table.table_dragdrop) != -1) {
+				//Check if player has put 2 spells in
+				std::cout << "im beung nice" << std::endl;
+				//if (crafting_table_update(spellbook[i].id, crafting_table, spellbook) == 1) {
+					//spellbook[i].spell_dragdrop->moveto(crafting_table.table_dragdrop.getcoord());
+				//}
+			}
+
+			spellbook[i].spell_dragdrop->resetaabb();
+			spellbook[i].spell_dragdrop->mousechange(false);
+
+
 		}
 	}
+
 
 
 	//Check for mouse click
@@ -413,7 +426,7 @@ void GameStateAlchemiceDraw() {
 	name_bar(player_hp, player_position, font);
 
 	//crafting table
-	draw_crafting_table(pMesh,crafting_table, crafting_test);
+	draw_crafting_table(pMesh, crafting_table, crafting_test);
 
 	// Card Drawing
 	for (int i = 0; i <= max_spells - 1; i++) {
