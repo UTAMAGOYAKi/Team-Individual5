@@ -4,6 +4,10 @@ enum Turn {
 	player_turn,
 	enemy_turn
 };
+
+struct Level {
+	std::string display_turn = "Player's Turn";
+};
 extern s8 font;
 
 void GameStateAlchemiceLoad();
