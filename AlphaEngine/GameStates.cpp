@@ -59,7 +59,8 @@ s32 pY{};
 bool alchemy_mode = 0;
 bool pause_mode = false;
 bool sub_menu = false;
-Turn turn = player_turn;
+Turn turn;
+Level level;
 
 player* alchemice{};
 
@@ -101,6 +102,9 @@ void GameStateAlchemiceInit() {
 	alchemice = create_player();
 	//Init All Spells
 	spellbook = init_all_spells();
+
+	//
+	turn = player_turn;
 
 	//Draw all spells that are active at beginning
 	AEVec2Zero(&cards);
@@ -309,6 +313,7 @@ void GameStateAlchemiceUpdate() {
 				if (mouse_pos.x >= end_turn_button.s2.x && mouse_pos.x <= end_turn_button.s1.x &&
 					-mouse_pos.y >= end_turn_button.s2.y && -mouse_pos.y <= end_turn_button.s1.y) {
 					turn = enemy_turn;
+					level.display_turn = "Enemy's Turn";
 					std::cout << "enemy turn " << std::endl;
 				}
 
@@ -360,6 +365,7 @@ void GameStateAlchemiceUpdate() {
 			}
 			//change to player turn after it ends
 			turn = player_turn;
+			level.display_turn = "Player's Turn";
 			std::cout << "player turn" << std::endl;
 		}
 	}
@@ -414,7 +420,8 @@ void GameStateAlchemiceDraw() {
 	AEMtx33 translate{ 0 };
 	AEMtx33 transform{ 0 };
 
-
+	//UI Drawing
+	AEGfxPrint(font, (s8*)level.display_turn.c_str(), -.1f, .9f, 1.0f, 1.0f, 1.0f, 1.0f);
 
 	//Character drawing
 	AEGfxTextureSet(chara, 0, 0);
