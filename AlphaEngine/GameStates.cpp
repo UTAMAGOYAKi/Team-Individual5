@@ -276,7 +276,9 @@ void GameStateAlchemiceUpdate() {
 							if (enemies[j].is_alive())
 							{
 								enemies[j].take_damage(spellbook[i].base_damage);
-								spellbook[i].unlocked = false;
+								if (spellbook[i].id > 3) {
+									spellbook[i].unlocked = false;
+								}
 							}
 						}
 
@@ -290,7 +292,7 @@ void GameStateAlchemiceUpdate() {
 						std::cout << "RELEASE" << std::endl;
 						if (aabbbutton(spellbook[i].spell_dragdrop, &crafting_table.table_dragdrop) == 1) {
 							//Check if player has put 2 spells in
-							crafting_table_update(spellbook[i].id, crafting_table, spellbook);
+								crafting_table_update(spellbook[i].id, crafting_table, spellbook);
 						}
 						else {
 							spellbook[i].spell_dragdrop->resetaabb();
@@ -362,47 +364,47 @@ void GameStateAlchemiceUpdate() {
 		//Enemy turn; runs all the enemy functions and animations
 		if (turn == enemy_turn) {
 			for (int i = 0; i < TOTAL_ENEMY; i++) {
-				if(enemies[i].is_alive()){
-				alchemice->hp -= enemies[i].get_atk();
+				if (enemies[i].is_alive()) {
+					alchemice->hp -= enemies[i].get_atk();
+				}
+				//change to player turn after it ends
+				turn = player_turn;
+				level.display_turn = "Player's Turn";
+				std::cout << "player turn" << std::endl;
 			}
-			//change to player turn after it ends
-			turn = player_turn;
-			level.display_turn = "Player's Turn";
-			std::cout << "player turn" << std::endl;
 		}
+		//When player hp 0 or all enemies dead. Game over or change state
+		if(alchemice->hp == 0 || !enemies_alive)
+		{
+			std::cout << "Game Over";
+		}
+
+		//Draw spells player unlocks / combines
+
+
+		//BLOCKING OUT THESE FIRST NOT SURE IF WE STILL NEED
+		//if (AEInputCheckTriggered(AEVK_W))
+		//{
+		//	sub_menu = !sub_menu;
+		//}
+
+		//if (AEInputCheckTriggered(AEVK_ESCAPE)) {
+		//	pause_mode = !pause_mode;
+		//}
+
+		//if (!pause_mode) {
+		//	//if pause_game and !pause_game, to prevent overlapping of checking for aabb or what not
+		//	if (alchemy_mode)
+		//	{
+
+		//	}
+		//	if (AEInputCheckTriggered(AEVK_Q))
+		//	{
+		//		enemies[rand() % 3].change_hp(-1);
+		//	}
+		//}
 	}
-	//When player hp 0 or all enemies dead. Game over or change state
-	else
-	{
-		std::cout << "Game Over";
-	}
-
-	//Draw spells player unlocks / combines
-
-
-	//BLOCKING OUT THESE FIRST NOT SURE IF WE STILL NEED
-	//if (AEInputCheckTriggered(AEVK_W))
-	//{
-	//	sub_menu = !sub_menu;
-	//}
-
-	//if (AEInputCheckTriggered(AEVK_ESCAPE)) {
-	//	pause_mode = !pause_mode;
-	//}
-
-	//if (!pause_mode) {
-	//	//if pause_game and !pause_game, to prevent overlapping of checking for aabb or what not
-	//	if (alchemy_mode)
-	//	{
-
-	//	}
-	//	if (AEInputCheckTriggered(AEVK_Q))
-	//	{
-	//		enemies[rand() % 3].change_hp(-1);
-	//	}
-	//}
 }
-
 void GameStateAlchemiceDraw() {
 	// Your own rendering logic goes here
 	// Set the background to black.
