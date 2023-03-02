@@ -140,7 +140,7 @@ void GameStateAlchemiceInit() {
 
 
 	cards.x = -50;
-	end_turn_button = CreateAABB({ 516,308 }, 200, 80);
+	end_turn_button = CreateAABB({ 516,-308 }, 200, 80);
 
 }
 
@@ -271,6 +271,8 @@ void GameStateAlchemiceUpdate() {
 				{
 					for (int j = 0; j < TOTAL_ENEMY; ++j)
 					{
+
+
 						if (aabbbutton(spellbook[i].spell_dragdrop, enemies[j].get_aabb()) != -1)
 						{
 							if (enemies[j].is_alive())
@@ -307,6 +309,11 @@ void GameStateAlchemiceUpdate() {
 			//Check for mouse click
 			if (AEInputCheckTriggered(AEVK_LBUTTON))
 			{
+
+				std::cout << "Pause Buttons " << "TR.x is: " << end_turn_button.s1.x << std::endl;
+				std::cout << "Pause Buttons  " << "TR.y is: " << end_turn_button.s1.y << std::endl;
+				std::cout << "Pause Buttons  "  << "BL.x is: " << end_turn_button.s2.x << std::endl;
+				std::cout << "Pause Buttons  "<< "BL.y is: " << end_turn_button.s2.y << std::endl;
 				for (int i = 0; i <= max_spells - 1; i++) {
 					if (aabbbutton(spellbook[i].spell_dragdrop, mouse_pos)) {
 						std::cout << "Clicking " << spellbook[i].spell_name << std::endl;
@@ -314,7 +321,7 @@ void GameStateAlchemiceUpdate() {
 				}
 
 				if (mouse_pos.x >= end_turn_button.s2.x && mouse_pos.x <= end_turn_button.s1.x &&
-					-mouse_pos.y >= end_turn_button.s2.y && -mouse_pos.y <= end_turn_button.s1.y) {
+					mouse_pos.y <= end_turn_button.s2.y && mouse_pos.y >= end_turn_button.s1.y) {
 					turn = enemy_turn;
 					level.display_turn = "Enemy's Turn";
 					std::cout << "enemy turn " << std::endl;
@@ -323,7 +330,7 @@ void GameStateAlchemiceUpdate() {
 				if (pause_mode) {
 					for (int i{}; i < sizeof(pause_buttons) / sizeof(pause_buttons[0]); ++i) {
 						if (mouse_pos.x >= pause_buttons[i].s2.x && mouse_pos.x <= pause_buttons[i].s1.x &&
-							-mouse_pos.y >= pause_buttons[i].s2.y && -mouse_pos.y <= pause_buttons[i].s1.y) {
+							mouse_pos.y >= pause_buttons[i].s2.y && mouse_pos.y <= pause_buttons[i].s1.y) {
 							std::cout << "button clicked " << i << std::endl;
 							switch (i) {
 							case 0:
@@ -492,14 +499,14 @@ void GameStateAlchemiceDraw() {
 	f32 middle = (end_turn_button.mid.x / (AEGetWindowWidth() / 2));
 	f32 offset = -((float)strlen(mytext) / 2) / 56.5f;
 	AEGfxTextureSet(box, 0.f, 0.f);
-	AEMtx33Trans(&translate, end_turn_button.mid.x, end_turn_button.mid.y);
+	AEMtx33Trans(&translate, end_turn_button.mid.x, -end_turn_button.mid.y);
 	AEMtx33Rot(&rotate, 0);
 	AEMtx33Scale(&scale, 200, 60);
 	AEMtx33Concat(&transform, &rotate, &scale);
 	AEMtx33Concat(&transform, &translate, &transform);
 	AEGfxSetTransform(transform.m);
 	AEGfxMeshDraw(pMesh, AE_GFX_MDM_TRIANGLES);
-	AEGfxPrint(font, (s8*)mytext, middle + offset, (f32)(end_turn_button.mid.y / (AEGetWindowHeight() / 2)), 1, 0, 0, 0);
+	AEGfxPrint(font, (s8*)mytext, middle + offset, (f32)-(end_turn_button.mid.y / (AEGetWindowHeight() / 2)), 1, 0, 0, 0);
 
 
 

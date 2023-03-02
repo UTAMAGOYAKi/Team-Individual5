@@ -171,14 +171,14 @@ int aabbbutton(dragdrop* box, dragdrop* spell)
 int aabbbutton(dragdrop* spell, aabb box)
 {
 	aabb tmp = spell->getcoord();
-	if ((tmp.tr.x < box.bl.x || tmp.bl.x > box.tr.x)||
-		(tmp.tr.y < box.bl.y || tmp.bl.y > box.tr.y))
+	if (tmp.tr.x >= box.bl.x && tmp.bl.x <= box.tr.x
+		&& tmp.tr.y <= box.bl.y && tmp.bl.y >= box.tr.y)
 	{
-		return -1;
+		return 1;
 	}
 	else
 	{
-		return 1;
+		return -1;
 	}
 }
 
@@ -238,8 +238,8 @@ void PositionInit() {
 
 aabb CreateAABB(AEVec2 midpoint, double length, double width) {
 	aabb tmp{
-		{(f32)(midpoint.x + length / 2), (f32)(midpoint.y + width / 2)},
-		{(f32)(midpoint.x - length / 2), (f32)(midpoint.y - width / 2)},
+		{(f32)(midpoint.x + length / 2), (f32)(midpoint.y - width / 2)},
+		{(f32)(midpoint.x - length / 2), (f32)(midpoint.y + width / 2)},
 		{(f32)(midpoint.x), (f32)(midpoint.y)},
 		{tmp.s1},
 		{tmp.s2},
