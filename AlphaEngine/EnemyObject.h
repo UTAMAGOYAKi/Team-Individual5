@@ -30,7 +30,7 @@ private:
     float frame_timer = frame_timer;
 
 public:
-    Enemy() :name{ "" }, max_hp{ 0 }, hp{ 0 }, atk{ 0 }, pos{ 0.f,0.f }, texture{ nullptr } {};
+    Enemy() : name{ "" }, max_hp{ 0 }, hp{ 0 }, atk{ 0 }, pos{ 0.f,0.f }, texture{ nullptr }, alive{ 1 }, size{ 0 }, enemy_aabb{ CreateAABB() } {};
     Enemy(enemy_types type, AEGfxTexture* input_texture) :name{ "" }, max_hp{ 0 }, hp{ 0 }, atk{ 0 }, pos{ 0.f,0.f }, texture{ input_texture }, alive{ true }, size{ 128 } {
         switch (type)
         {

@@ -6,12 +6,6 @@
 #include <AEVec2.h>
 #include <cmath>
 
-
-//struct coord {
-//	double x;	//the x-axis coordinate. Don't be funny on this part please
-//	double y;	//the y-axis coordinate
-//};
-
 struct aabb {
 	
 	AEVec2 s1; //orignal top right
@@ -22,7 +16,7 @@ struct aabb {
 	bool flag; //usage flag, to check if current aabb is in use. 
 };
 
-aabb CreateAABB(AEVec2 midpoint, double length, double width);
+aabb CreateAABB(AEVec2 midpoint = AEVec2{ 0,0 }, double length = 0, double width = 0);
 
 class dragdrop {
 

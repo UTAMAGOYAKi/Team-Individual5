@@ -172,6 +172,7 @@ void GameStateAlchemiceUpdate() {
 				for (int j = 0; (j <= max_spells - 1) && j != i; j++) {
 					if (aabbbutton(spellbook[i].spell_dragdrop, spellbook[j].spell_dragdrop) != -1 && (spellbook[i].id != spellbook[j].id)) {
 						if (combine_spells(spellbook, i, j) == true) {
+							alchemice->mp--;
 							std::cout << spellbook[i].spell_name << "is being combined with" << spellbook[j].spell_name << std::endl;
 						}
 					}
@@ -292,6 +293,9 @@ void GameStateAlchemiceUpdate() {
 				level.display_turn = "Player's Turn";
 				is_enemy_turn = false;
 				curr_time = frame_time;
+
+				alchemice->max_mp = (alchemice->max_mp == 5) ? 5 : alchemice->max_mp + 1;
+				alchemice->mp = alchemice->max_mp;
 			}
 			else
 			{
@@ -362,6 +366,9 @@ void GameStateAlchemiceDraw() {
 	AEGfxSetTransform(transform.m);
 	AEGfxMeshDraw(pMesh, AE_GFX_MDM_TRIANGLES);
 	std::string player_hp;
+	std::string mana_text{ "Mana" };
+	std::string player_mp;
+	player_mp += (alchemice->mp) ? std::to_string(alchemice->mp) : "0"; player_mp += "/"; player_mp += std::to_string(alchemice->max_mp);
 	if (alchemice->hp)
 	{
 		player_hp += std::to_string(alchemice->hp);
@@ -374,6 +381,9 @@ void GameStateAlchemiceDraw() {
 	player_hp += "/";
 	player_hp += std::to_string(alchemice->max_hp);
 	name_bar(player_hp, player_position, font);
+	AEGfxPrint(font, (s8*)mana_text.c_str(), (player_position.x - 200) / 640, player_position.y / 360 - 0.4f, 1.0f, 1.0f, 1.0f, 1.0f);
+	AEGfxPrint(font, (s8*)player_mp.c_str(), (player_position.x - 200) / 640, player_position.y / 360 - 0.5f, 1.0f, 1.0f, 1.0f, 1.0f);
+	//name_bar(mana_text, player_position_mp, font);
 
 	// Card Drawing
 	for (int i = 0; i <= max_spells - 1; i++) {
