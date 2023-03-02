@@ -69,6 +69,9 @@ std::string rat_hp{};
 Enemy enemies[3]{};
 //Enemy Animations
 AEGfxTexture* blast[3];
+float frame_time{ 2 };
+float curr_time{ frame_time }; //Animations Timer
+bool is_enemy_turn = false;
 
 aabb pause_buttons[3];
 aabb end_turn_button;
@@ -103,7 +106,6 @@ void GameStateAlchemiceLoad() {
 	blast[0] = blast1;
 	blast[1] = blast2;
 	blast[2] = blast3;
-
 }
 
 // Initialization of your own variables go here
@@ -158,7 +160,7 @@ void GameStateAlchemiceUpdate() {
 	if (AEInputCheckCurr(AEVK_LBUTTON)) {
 		//Check if spells is being dragged
 		for (int i = 0; i <= max_spells - 1; i++) {
-			if (aabbbutton(spellbook[i].spell_dragdrop, mouse_pos) ) {
+			if (aabbbutton(spellbook[i].spell_dragdrop, mouse_pos)) {
 				AEVec2 temp;
 				temp = mouse_pos;
 				temp.y = -mouse_pos.y;
@@ -255,8 +257,9 @@ void GameStateAlchemiceUpdate() {
 				}
 
 				if (mouse_pos.x >= end_turn_button.s2.x && mouse_pos.x <= end_turn_button.s1.x &&
-					-mouse_pos.y >= end_turn_button.s2.y && -mouse_pos.y <= end_turn_button.s1.y){
+					-mouse_pos.y >= end_turn_button.s2.y && -mouse_pos.y <= end_turn_button.s1.y) {
 					turn = enemy_turn;
+					is_enemy_turn = true;
 					level.display_turn = "Enemy's Turn";
 					std::cout << "enemy turn " << std::endl;
 				}
@@ -281,51 +284,50 @@ void GameStateAlchemiceUpdate() {
 		}
 
 		//Enemy turn; runs all the enemy functions and animations
-		if (turn == enemy_turn) {
-			for (int i = 0; i < TOTAL_ENEMY; i++) {
-				//blast_animation(pMesh, enemies[i], blast, 3);
-				alchemice->hp -= enemies[i].get_atk();
+		else if (turn == enemy_turn) {
+
+			curr_time -= AEFrameRateControllerGetFrameTime();
+			if (curr_time <= 0.0f) {
+				turn = player_turn;
+				level.display_turn = "Player's Turn";
+				is_enemy_turn = false;
+				curr_time = frame_time;
 			}
-			//change to player turn after it ends
+			else
+			{
+				if (is_enemy_turn) {
+					std::cout << "Enemy actual turn\n";
+
+					for (int i = 0; i < TOTAL_ENEMY; i++) {
+						enemies[i].set_frame_num(0);
+						alchemice->hp -= enemies[i].get_atk();
+						std::cout << "Enemy Damage\n";
+					}
+					is_enemy_turn =false;
+				}
+				for (int i{}; i < TOTAL_ENEMY; i++) {
+					enemies[i].update_animation(AEFrameRateControllerGetFrameTime());
+				}
+
+			}
+		}
+		//When player hp 0 or all enemies dead. Game over or change state
+		
+
+		//Draw spells player unlocks / combines
+		for (int i = 0; i <= max_spells - 1; i++) {
+			if (spellbook[i].unlocked == true) {
+				if (spellbook[i].spell_dragdrop->getcoord().mid.x == 0 && spellbook[i].spell_dragdrop->getcoord().mid.y == 0) {
+					spellbook[i].init_spells_draw(spellbook[i], cards);
+					cards.x += 100;
+				}
+			}
 		}
 	}
-	//When player hp 0 or all enemies dead. Game over or change state
 	else
 	{
 		std::cout << "Game Over";
 	}
-
-	//Draw spells player unlocks / combines
-	for (int i = 0; i <= max_spells - 1; i++) {
-		if (spellbook[i].unlocked == true) {
-			if (spellbook[i].spell_dragdrop->getcoord().mid.x == 0 && spellbook[i].spell_dragdrop->getcoord().mid.y == 0) {
-				spellbook[i].init_spells_draw(spellbook[i], cards);
-				cards.x += 100;
-			}
-		}
-	}
-
-	//BLOCKING OUT THESE FIRST NOT SURE IF WE STILL NEED
-	//if (AEInputCheckTriggered(AEVK_W))
-	//{
-	//	sub_menu = !sub_menu;
-	//}
-
-	//if (AEInputCheckTriggered(AEVK_ESCAPE)) {
-	//	pause_mode = !pause_mode;
-	//}
-
-	//if (!pause_mode) {
-	//	//if pause_game and !pause_game, to prevent overlapping of checking for aabb or what not
-	//	if (alchemy_mode)
-	//	{
-
-	//	}
-	//	if (AEInputCheckTriggered(AEVK_Q))
-	//	{
-	//		enemies[rand() % 3].change_hp(-1);
-	//	}
-	//}
 }
 
 void GameStateAlchemiceDraw() {
@@ -404,36 +406,34 @@ void GameStateAlchemiceDraw() {
 		}
 	}
 
-	//Enemy Animation
+	//Enemy Attack Animation
 	if (turn == enemy_turn) {
-		float frame_time{1};
-		float curr_time{ frame_time };
 
-		for (int i = 0; i < TOTAL_ENEMY; ++i) {
-			if (enemies[i].is_alive()) {
-				for (int i{}; i < 3; i++) { //currently 3 frames //change when need be
-					AEGfxTextureSet(blast[i], 0, 0);
-					AEMtx33Trans(&translate, (f32)(enemies[i].get_pos().x), (f32)(enemies[i].get_pos().y));
-					AEMtx33Rot(&rotate, 0);
-					AEMtx33Scale(&scale, 100.f, 100.f);
-					AEMtx33Concat(&transform, &rotate, &scale);
-					AEMtx33Concat(&transform, &translate, &transform);
-					AEGfxSetTransform(transform.m);
-					AEGfxMeshDraw(pMesh, AE_GFX_MDM_TRIANGLES);
-				}
-			}
-		}
-		//timer
-		while (0) {// Problem
-			curr_time -= (f32)AEFrameRateControllerGetFrameTime();
-		}
-		curr_time = frame_time;
+		for (int i{}; i < TOTAL_ENEMY; i++) {
 
-		//Change back only after animation
-		turn = player_turn;
-		level.display_turn = "Player's Turn";
-		std::cout << "player turn" << std::endl;
+			AEGfxTextureSet(blast[enemies[i].get_frame_num()], 0, 0);
+			AEMtx33Trans(&translate, (f32)(enemies[i].get_pos().x), (f32)(enemies[i].get_pos().y));
+			AEMtx33Rot(&rotate, 0);
+			AEMtx33Scale(&scale, 100.f, 100.f);
+			AEMtx33Concat(&transform, &rotate, &scale);
+			AEMtx33Concat(&transform, &translate, &transform);
+			AEGfxSetTransform(transform.m);
+			AEGfxMeshDraw(pMesh, AE_GFX_MDM_TRIANGLES);
+		}
 	}
+		
+		////timer
+		//if (curr_time) {// Problem
+		//	curr_time -= (f32)AEFrameRateControllerGetFrameTime();
+		//}
+
+		////Resets when ends
+		//if (curr_time < 0)
+		//{
+		//	curr_time = frame_time;   
+		//}
+		////Change back only after animation
+
 
 	// End turn button
 	// 113 characters on screen, start to end, 113/2 =  56.5(left and right for scaling)

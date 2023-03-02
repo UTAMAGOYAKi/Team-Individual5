@@ -29,6 +29,10 @@ bool Enemy::is_alive() {
     return alive;
 }
 
+int Enemy::get_frame_num() {
+    return frame_num;
+}
+
 //Actions
 void Enemy::set_position(AEVec2 input_pos) {
     pos.x = input_pos.x;
@@ -44,6 +48,23 @@ void Enemy::take_damage(int val) {
         if (hp <= 0) {
             hp = 0;
             alive = false;
+        }
+    }
+}
+
+void Enemy::set_frame_num(int v){
+    frame_num = v;
+}
+
+void Enemy::update_animation(float dt) {
+    frame_timer -= dt;
+
+    if (frame_timer <= 0) {
+        frame_timer = frame_time;
+        frame_num++;
+
+        if (frame_num > 2) {
+            frame_num = 2;
         }
     }
 }

@@ -25,6 +25,9 @@ private:
     bool alive; //Dead = 0; Alive = 1;
     int size; //pixel size
     aabb enemy_aabb;
+    int frame_num = 0;
+    float frame_time = 0.6667;
+    float frame_timer = frame_timer;
 
 public:
     Enemy() :name{ "" }, max_hp{ 0 }, hp{ 0 }, atk{ 0 }, pos{ 0.f,0.f }, texture{ nullptr } {};
@@ -67,12 +70,17 @@ public:
     AEVec2 get_pos();
     AEGfxTexture* get_texture();
     bool is_alive();
+    int get_frame_num();
 
     //Actions 
     //Setting position and sets aabb
     void set_position(AEVec2 input_pos);
     //Take Damage
     void take_damage(int val);
+    void set_frame_num(int);
+
+    void update_animation(float dt);
+
 
 };
 
