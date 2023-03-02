@@ -276,6 +276,7 @@ void GameStateAlchemiceUpdate() {
 							if (enemies[j].is_alive())
 							{
 								enemies[j].take_damage(spellbook[i].base_damage);
+								spellbook[i].unlocked = false;
 							}
 						}
 
@@ -361,6 +362,7 @@ void GameStateAlchemiceUpdate() {
 		//Enemy turn; runs all the enemy functions and animations
 		if (turn == enemy_turn) {
 			for (int i = 0; i < TOTAL_ENEMY; i++) {
+				if(enemies[i].is_alive()){
 				alchemice->hp -= enemies[i].get_atk();
 			}
 			//change to player turn after it ends
