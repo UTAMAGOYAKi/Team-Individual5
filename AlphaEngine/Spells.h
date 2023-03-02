@@ -34,10 +34,10 @@ public:
 	const float table_height{ 128 };
 
 	//Spell 1 hold
-	int spell1_id{};
+	int spell1_id = INVALID_SPELL;
 
 	//Spell 2 hold
-	int spell2_id{};
+	int spell2_id = INVALID_SPELL;
 
 	//Crafting table snap
 	dragdrop table_dragdrop{};

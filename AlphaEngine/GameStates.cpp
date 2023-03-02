@@ -256,16 +256,6 @@ void GameStateAlchemiceUpdate() {
 				{
 					spellbook[i].spell_dragdrop->moveto(temp);
 
-					for (int i = 0; i < TOTAL_ENEMY; ++i)
-						if (aabbbutton(spellbook[i].spell_dragdrop, enemies[i].get_aabb()) != -1) {
-							std::cout << "ISTG ILL DIE" << std::endl;
-							//Check if player has put 2 spells in
-						}
-					//std::cout << "Spellbook[i] tr X" << spellbook[i].spell_dragdrop->getcoord().tr.x << std::endl;
-					//std::cout << "Spellbook[i] tr Y" << spellbook[i].spell_dragdrop->getcoord().tr.y << std::endl;
-					//std::cout << "Spellbook[i]bl X" << spellbook[i].spell_dragdrop->getcoord().bl.x << std::endl;
-					//std::cout << "Spellbook[i]bl Y" << spellbook[i].spell_dragdrop->getcoord().bl.y << std::endl;
-
 				}
 			}
 
@@ -273,6 +263,21 @@ void GameStateAlchemiceUpdate() {
 
 			if (AEInputCheckReleased(AEVK_LBUTTON))
 			{
+				for (int i = 0; i < max_spells; i++)
+				{
+					for (int j = 0; j < TOTAL_ENEMY; ++j)
+					{
+						if (aabbbutton(spellbook[i].spell_dragdrop, enemies[j].get_aabb()) != -1)
+						{
+							if (enemies[j].is_alive())
+							{
+								enemies[j].take_damage(spellbook[i].base_damage);
+							}
+						}
+
+					}
+				}
+
 				for (int i = 0; i <= max_spells - 1; i++)
 				{
 					if (spellbook[i].spell_dragdrop->getmouse())
