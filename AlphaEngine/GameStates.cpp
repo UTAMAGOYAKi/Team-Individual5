@@ -308,7 +308,6 @@ void GameStateAlchemiceUpdate() {
 					{
 						std::cout << "RELEASE" << std::endl;
 						if (aabbbutton(spellbook[i].spell_dragdrop, &crafting_table.table_dragdrop) == 1) {
-							//Check if player has put 2 spells in
 							crafting_table_update(spellbook[i].id, crafting_table, spellbook);
 						}
 						else {

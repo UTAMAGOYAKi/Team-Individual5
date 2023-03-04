@@ -137,7 +137,7 @@ void unload_spells(Spell* spellbook) {
 int crafting_table_update(int spell_id, craftingtable& table, Spell* spellbook = nullptr)
 {
 	spellbook[spell_id].spell_dragdrop->mousechange(false);
-	spellbook[spell_id].spell_dragdrop->moveto(table.table_dragdrop.getcoord());
+		spellbook[spell_id].spell_dragdrop->moveto(table.table_dragdrop.getcoord());
 	if (table.spell1_id == INVALID_SPELL) {
 		table.spell1_id = spell_id;
 		return 1;
@@ -166,7 +166,7 @@ craftingtable::craftingtable()
 	//Set Table aabb
 	AEVec2 zero;
 	AEVec2Zero(&zero);
-	//AEVec2Set(&zero, 100 , 100);
+	AEVec2Set(&zero, 1 , 1);
 	table_dragdrop.moveto(zero);
 	table_dragdrop.changeaabb(table_width, table_height);
 }
