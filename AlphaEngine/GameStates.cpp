@@ -402,9 +402,12 @@ void GameStateAlchemiceUpdate() {
 					std::cout << "Enemy actual turn\n";
 
 					for (int i = 0; i < TOTAL_ENEMY; i++) {
-						enemies[i].set_frame_num(0);
-						alchemice->hp -= enemies[i].get_atk();
-						std::cout << "Enemy Damage\n";
+						if (enemies[i].is_alive()) 
+						{
+							enemies[i].set_frame_num(0);
+							alchemice->hp -= enemies[i].get_atk();
+							std::cout << "Enemy Damage\n";
+						}
 					}
 					is_enemy_turn = false;
 				}
@@ -533,15 +536,17 @@ void GameStateAlchemiceDraw() {
 	if (turn == enemy_turn) {
 
 		for (int i{}; i < TOTAL_ENEMY; i++) {
-
-			AEGfxTextureSet(blast[enemies[i].get_frame_num()], 0, 0);
-			AEMtx33Trans(&translate, (f32)(enemies[i].get_pos().x), (f32)(enemies[i].get_pos().y));
-			AEMtx33Rot(&rotate, 0);
-			AEMtx33Scale(&scale, 100.f, 100.f);
-			AEMtx33Concat(&transform, &rotate, &scale);
-			AEMtx33Concat(&transform, &translate, &transform);
-			AEGfxSetTransform(transform.m);
-			AEGfxMeshDraw(pMesh, AE_GFX_MDM_TRIANGLES);
+			if (enemies[i].is_alive()) 
+			{
+				AEGfxTextureSet(blast[enemies[i].get_frame_num()], 0, 0);
+				AEMtx33Trans(&translate, (f32)(enemies[i].get_pos().x), (f32)(enemies[i].get_pos().y));
+				AEMtx33Rot(&rotate, 0);
+				AEMtx33Scale(&scale, 100.f, 100.f);
+				AEMtx33Concat(&transform, &rotate, &scale);
+				AEMtx33Concat(&transform, &translate, &transform);
+				AEGfxSetTransform(transform.m);
+				AEGfxMeshDraw(pMesh, AE_GFX_MDM_TRIANGLES);
+			}
 		}
 	}
 
