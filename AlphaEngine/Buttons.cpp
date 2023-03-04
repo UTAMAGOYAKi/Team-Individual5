@@ -185,7 +185,7 @@ int aabbbutton(dragdrop* spell, aabb box)
 //Extra functions for main functions
 AEVec2 midpoint(aabb box)
 {
-	AEVec2 tmp;
+	AEVec2 tmp{};
 	tmp.x = (f32)((box.tr.x + box.bl.x) / 2.0);
 	tmp.y = (f32)((box.tr.y + box.bl.y) / 2.0);
 	return tmp;
@@ -193,7 +193,7 @@ AEVec2 midpoint(aabb box)
 
 AEVec2 midpoint(AEVec2 first, AEVec2 second)
 {
-	AEVec2 tmp;
+	AEVec2 tmp{};
 	tmp.x = (f32)((first.x + second.x) / 2.0);
 	tmp.y = (f32)((first.y + second.y) / 2.0);
 	return tmp;
@@ -201,7 +201,7 @@ AEVec2 midpoint(AEVec2 first, AEVec2 second)
 
 AEVec2 distance(AEVec2 first, AEVec2 second)
 {
-	AEVec2 tmp;
+	AEVec2 tmp{};
 	tmp.x = first.x - second.x;
 	tmp.y = first.y - second.y;
 	return tmp;
@@ -228,11 +228,11 @@ void PositionInit() {
 
 	player_position.x = (float)(-(AEGetWindowWidth() / 4));
 	player_position.y = 0;// (float)-(AEGetWindowHeight() / 8);
-	enemy_position[0].x = (float)((9.0 / 16.0) * (AEGetWindowWidth() / 2));
+	enemy_position[0].x = (float)((9.0 / 16.0) * ((f32)AEGetWindowWidth() / 2));
 	enemy_position[0].y = 0;
-	enemy_position[1].x = (float)((6.0 / 16.0) * (AEGetWindowWidth() / 2));
+	enemy_position[1].x = (float)((6.0 / 16.0) * ((f32)AEGetWindowWidth() / 2));
 	enemy_position[1].y = 0;
-	enemy_position[2].x = (float)((12.0 / 16.0) * (AEGetWindowWidth() / 2));
+	enemy_position[2].x = (float)((12.0 / 16.0) * ((f32)AEGetWindowWidth() / 2));
 	enemy_position[2].y = 0;
 }
 

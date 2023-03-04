@@ -44,6 +44,9 @@ craftingtable crafting_table{};
 
 //Loading of Mesh and Texture
 AEGfxVertexList* pMesh{}, * pLoad{};
+AEGfxTexture* chara{}, * rat{}, * spell_g{}, * box{}, * sub{}, * load_screen{};
+//Animation frames
+AEGfxTexture* blast1{}, * blast2{}, * blast3{};
 AEGfxTexture* chara{}, * rat{}, * spell_g{}, * box{}, * sub{}, * load_screen{}, * crafting_test{};
 
 aabb* chara_pos;
@@ -67,6 +70,11 @@ player* alchemice{};
 //GameObject creations
 std::string rat_hp{};
 Enemy enemies[3]{};
+//Enemy Animations
+AEGfxTexture* blast[3];
+float frame_time{ 2 };
+float curr_time{ frame_time }; //Animations Timer
+bool is_enemy_turn = false;
 
 aabb pause_buttons[3];
 aabb end_turn_button;
@@ -94,6 +102,14 @@ void GameStateAlchemiceLoad() {
 	sub = AEGfxTextureLoad("Assets/submenu.png");
 	box = AEGfxTextureLoad("Assets/box.png");
 	crafting_test = AEGfxTextureLoad("Assets/copyright_table.png");
+
+	//Animation frames
+	blast1 = AEGfxTextureLoad("Assets/blast1.png");
+	blast2 = AEGfxTextureLoad("Assets/blast2.png");
+	blast3 = AEGfxTextureLoad("Assets/blast3.png");
+	blast[0] = blast1;
+	blast[1] = blast2;
+	blast[2] = blast3;
 }
 
 // Initialization of your own variables go here
@@ -323,6 +339,7 @@ void GameStateAlchemiceUpdate() {
 				if (mouse_pos.x >= end_turn_button.s2.x && mouse_pos.x <= end_turn_button.s1.x &&
 					mouse_pos.y <= end_turn_button.s2.y && mouse_pos.y >= end_turn_button.s1.y) {
 					turn = enemy_turn;
+					is_enemy_turn = true;
 					level.display_turn = "Enemy's Turn";
 					std::cout << "enemy turn " << std::endl;
 				}
@@ -369,22 +386,38 @@ void GameStateAlchemiceUpdate() {
 		}
 
 		//Enemy turn; runs all the enemy functions and animations
-		if (turn == enemy_turn) {
-			for (int i = 0; i < TOTAL_ENEMY; i++) {
-				if (enemies[i].is_alive()) {
-					alchemice->hp -= enemies[i].get_atk();
-				}
-				//change to player turn after it ends
+		else if (turn == enemy_turn) {
+
+			curr_time -= AEFrameRateControllerGetFrameTime();
+			if (curr_time <= 0.0f) {
 				turn = player_turn;
 				level.display_turn = "Player's Turn";
-				std::cout << "player turn" << std::endl;
+				is_enemy_turn = false;
+				curr_time = frame_time;
+
+				alchemice->max_mp = (alchemice->max_mp == 5) ? 5 : alchemice->max_mp + 1;
+				alchemice->mp = alchemice->max_mp;
+			}
+			else
+			{
+				if (is_enemy_turn) {
+					std::cout << "Enemy actual turn\n";
+
+					for (int i = 0; i < TOTAL_ENEMY; i++) {
+						enemies[i].set_frame_num(0);
+						alchemice->hp -= enemies[i].get_atk();
+						std::cout << "Enemy Damage\n";
+					}
+					is_enemy_turn =false;
+				}
+				for (int i{}; i < TOTAL_ENEMY; i++) {
+					enemies[i].update_animation(AEFrameRateControllerGetFrameTime());
+				}
+
 			}
 		}
 		//When player hp 0 or all enemies dead. Game over or change state
-		if(alchemice->hp == 0 || !enemies_alive)
-		{
-			std::cout << "Game Over";
-		}
+		
 
 		//Draw spells player unlocks / combines
 
@@ -444,6 +477,9 @@ void GameStateAlchemiceDraw() {
 	AEGfxSetTransform(transform.m);
 	AEGfxMeshDraw(pMesh, AE_GFX_MDM_TRIANGLES);
 	std::string player_hp;
+	std::string mana_text{ "Mana" };
+	std::string player_mp;
+	player_mp += (alchemice->mp) ? std::to_string(alchemice->mp) : "0"; player_mp += "/"; player_mp += std::to_string(alchemice->max_mp);
 	if (alchemice->hp)
 	{
 		player_hp += std::to_string(alchemice->hp);
@@ -456,6 +492,9 @@ void GameStateAlchemiceDraw() {
 	player_hp += "/";
 	player_hp += std::to_string(alchemice->max_hp);
 	name_bar(player_hp, player_position, font);
+	AEGfxPrint(font, (s8*)mana_text.c_str(), (player_position.x - 200) / 640, player_position.y / 360 - 0.4f, 1.0f, 1.0f, 1.0f, 1.0f);
+	AEGfxPrint(font, (s8*)player_mp.c_str(), (player_position.x - 200) / 640, player_position.y / 360 - 0.5f, 1.0f, 1.0f, 1.0f, 1.0f);
+	//name_bar(mana_text, player_position_mp, font);
 
 	//crafting table
 	draw_crafting_table(pMesh, crafting_table, crafting_test);
@@ -491,6 +530,35 @@ void GameStateAlchemiceDraw() {
 			enemy_info(enemies[i], font, pMesh);
 		}
 	}
+
+	//Enemy Attack Animation
+	if (turn == enemy_turn) {
+
+		for (int i{}; i < TOTAL_ENEMY; i++) {
+
+			AEGfxTextureSet(blast[enemies[i].get_frame_num()], 0, 0);
+			AEMtx33Trans(&translate, (f32)(enemies[i].get_pos().x), (f32)(enemies[i].get_pos().y));
+			AEMtx33Rot(&rotate, 0);
+			AEMtx33Scale(&scale, 100.f, 100.f);
+			AEMtx33Concat(&transform, &rotate, &scale);
+			AEMtx33Concat(&transform, &translate, &transform);
+			AEGfxSetTransform(transform.m);
+			AEGfxMeshDraw(pMesh, AE_GFX_MDM_TRIANGLES);
+		}
+	}
+		
+		////timer
+		//if (curr_time) {// Problem
+		//	curr_time -= (f32)AEFrameRateControllerGetFrameTime();
+		//}
+
+		////Resets when ends
+		//if (curr_time < 0)
+		//{
+		//	curr_time = frame_time;   
+		//}
+		////Change back only after animation
+
 
 	// End turn button
 	// 113 characters on screen, start to end, 113/2 =  56.5(left and right for scaling)
@@ -582,6 +650,7 @@ void GameStateAlchemiceDraw() {
 	//	AEGfxPrint(test_font, (s8*)rat_hp.c_str(), 0.225f, 0.1f, 1, 0.0f, 0.0f, 0.0f);
 	//}
 	//AEGfxPrint(test_font, (s8*)rat_name_2, 0.625f, 0.2f, 1, 0.0f, 0.0f, 0.0f);
+
 }
 
 void GameStateAlchemiceFree() {

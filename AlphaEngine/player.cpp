@@ -18,6 +18,8 @@ player* create_player() // add
 			alchemist->avail_ingre = 3;
 			alchemist->max_hp = 30;
 			alchemist->hp = 30;
+			alchemist->mp = 2;
+			alchemist->max_mp = 2;
 			std::cout << "New save created!\n";
 		}
 		else //no new save

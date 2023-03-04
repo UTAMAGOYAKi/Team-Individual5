@@ -7,6 +7,8 @@ struct player {
 	int hp;
 	int max_hp;
 	int avail_ingre;
+	int mp;
+	int max_mp;
 };
 
 player* create_player();

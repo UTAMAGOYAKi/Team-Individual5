@@ -87,7 +87,7 @@ void player_hp_bar(player ref, AEVec2 pos, AEGfxVertexList* mesh)
 
 void name_bar(std::string name, AEVec2 place,s8 font)
 {
-	AEGfxPrint(font, (s8*)name.c_str(), place.x / 640, place.y-.35f, 1.0f, 1.0f, 1.0f, 1.0f);
+	AEGfxPrint(font, (s8*)name.c_str(), place.x / 640, (place.y/360)-.35f, 1.0f, 1.0f, 1.0f, 1.0f);
 	//remeber to check for centering offset %
 }
 
