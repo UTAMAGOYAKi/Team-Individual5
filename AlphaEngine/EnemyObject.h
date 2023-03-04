@@ -26,8 +26,8 @@ private:
     int size; //pixel size
     aabb enemy_aabb;
     int frame_num = 0;
-    float frame_time = 0.6667;
-    float frame_timer = frame_timer;
+    double frame_time = 0.6667;
+    double frame_timer = frame_timer;
 
 public:
     Enemy() : name{ "" }, max_hp{ 0 }, hp{ 0 }, atk{ 0 }, pos{ 0.f,0.f }, texture{ nullptr }, alive{ 1 }, size{ 0 }, enemy_aabb{ CreateAABB() } {};
@@ -80,7 +80,7 @@ public:
     void take_damage(int val);
     void set_frame_num(int);
 
-    void update_animation(float dt);
+    void update_animation(f64 dt);
 
 
 };

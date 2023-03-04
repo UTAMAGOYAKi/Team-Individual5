@@ -61,7 +61,7 @@ void Enemy::set_frame_num(int v){
     frame_num = v;
 }
 
-void Enemy::update_animation(float dt) {
+void Enemy::update_animation(f64 dt) {
     frame_timer -= dt;
 
     if (frame_timer <= 0) {

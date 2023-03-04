@@ -44,10 +44,9 @@ craftingtable crafting_table{};
 
 //Loading of Mesh and Texture
 AEGfxVertexList* pMesh{}, * pLoad{};
-AEGfxTexture* chara{}, * rat{}, * spell_g{}, * box{}, * sub{}, * load_screen{};
+AEGfxTexture* chara{}, * rat{}, * spell_g{}, * box{}, * sub{}, * load_screen{}, * crafting_test{};;
 //Animation frames
 AEGfxTexture* blast1{}, * blast2{}, * blast3{};
-AEGfxTexture* chara{}, * rat{}, * spell_g{}, * box{}, * sub{}, * load_screen{}, * crafting_test{};
 
 aabb* chara_pos;
 aabb* Enemy_pos_1;
@@ -73,7 +72,7 @@ Enemy enemies[3]{};
 //Enemy Animations
 AEGfxTexture* blast[3];
 float frame_time{ 2 };
-float curr_time{ frame_time }; //Animations Timer
+f64 curr_time{ frame_time }; //Animations Timer
 bool is_enemy_turn = false;
 
 aabb pause_buttons[3];
@@ -310,7 +309,7 @@ void GameStateAlchemiceUpdate() {
 						std::cout << "RELEASE" << std::endl;
 						if (aabbbutton(spellbook[i].spell_dragdrop, &crafting_table.table_dragdrop) == 1) {
 							//Check if player has put 2 spells in
-								crafting_table_update(spellbook[i].id, crafting_table, spellbook);
+							crafting_table_update(spellbook[i].id, crafting_table, spellbook);
 						}
 						else {
 							spellbook[i].spell_dragdrop->resetaabb();
@@ -328,8 +327,8 @@ void GameStateAlchemiceUpdate() {
 
 				std::cout << "Pause Buttons " << "TR.x is: " << end_turn_button.s1.x << std::endl;
 				std::cout << "Pause Buttons  " << "TR.y is: " << end_turn_button.s1.y << std::endl;
-				std::cout << "Pause Buttons  "  << "BL.x is: " << end_turn_button.s2.x << std::endl;
-				std::cout << "Pause Buttons  "<< "BL.y is: " << end_turn_button.s2.y << std::endl;
+				std::cout << "Pause Buttons  " << "BL.x is: " << end_turn_button.s2.x << std::endl;
+				std::cout << "Pause Buttons  " << "BL.y is: " << end_turn_button.s2.y << std::endl;
 				for (int i = 0; i <= max_spells - 1; i++) {
 					if (aabbbutton(spellbook[i].spell_dragdrop, mouse_pos)) {
 						std::cout << "Clicking " << spellbook[i].spell_name << std::endl;
@@ -408,7 +407,7 @@ void GameStateAlchemiceUpdate() {
 						alchemice->hp -= enemies[i].get_atk();
 						std::cout << "Enemy Damage\n";
 					}
-					is_enemy_turn =false;
+					is_enemy_turn = false;
 				}
 				for (int i{}; i < TOTAL_ENEMY; i++) {
 					enemies[i].update_animation(AEFrameRateControllerGetFrameTime());
@@ -417,7 +416,7 @@ void GameStateAlchemiceUpdate() {
 			}
 		}
 		//When player hp 0 or all enemies dead. Game over or change state
-		
+
 
 		//Draw spells player unlocks / combines
 
@@ -546,23 +545,23 @@ void GameStateAlchemiceDraw() {
 			AEGfxMeshDraw(pMesh, AE_GFX_MDM_TRIANGLES);
 		}
 	}
-		
-		////timer
-		//if (curr_time) {// Problem
-		//	curr_time -= (f32)AEFrameRateControllerGetFrameTime();
-		//}
 
-		////Resets when ends
-		//if (curr_time < 0)
-		//{
-		//	curr_time = frame_time;   
-		//}
-		////Change back only after animation
+	////timer
+	//if (curr_time) {// Problem
+	//	curr_time -= (f32)AEFrameRateControllerGetFrameTime();
+	//}
+
+	////Resets when ends
+	//if (curr_time < 0)
+	//{
+	//	curr_time = frame_time;   
+	//}
+	////Change back only after animation
 
 
-	// End turn button
-	// 113 characters on screen, start to end, 113/2 =  56.5(left and right for scaling)
-	// 1280W,720H, 640/HalfWidth, 360/HalfHeight
+// End turn button
+// 113 characters on screen, start to end, 113/2 =  56.5(left and right for scaling)
+// 1280W,720H, 640/HalfWidth, 360/HalfHeight
 	const char* mytext{ "End Turn" };
 	f32 middle = (end_turn_button.mid.x / (AEGetWindowWidth() / 2));
 	f32 offset = -((float)strlen(mytext) / 2) / 56.5f;
