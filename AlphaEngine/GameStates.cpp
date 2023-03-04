@@ -44,7 +44,7 @@ craftingtable crafting_table{};
 
 //Loading of Mesh and Texture
 AEGfxVertexList* pMesh{}, * pLoad{};
-AEGfxTexture* chara{}, * rat{}, * spell_g{}, * box{}, * sub{}, * load_screen{}, * crafting_test{};;
+AEGfxTexture* chara{}, * rat{}, * spell_g{}, * box{}, * sub{}, * load_screen{}, * crafting_test{},* bg{};;
 //Animation frames
 AEGfxTexture* blast1{}, * blast2{}, * blast3{};
 
@@ -101,6 +101,7 @@ void GameStateAlchemiceLoad() {
 	sub = AEGfxTextureLoad("Assets/submenu.png");
 	box = AEGfxTextureLoad("Assets/box.png");
 	crafting_test = AEGfxTextureLoad("Assets/copyright_table.png");
+	bg = AEGfxTextureLoad("Assets/background.png");
 
 	//Animation frames
 	blast1 = AEGfxTextureLoad("Assets/blast1.png");
@@ -464,6 +465,15 @@ void GameStateAlchemiceDraw() {
 	AEMtx33 rotate{ 0 };
 	AEMtx33 translate{ 0 };
 	AEMtx33 transform{ 0 };
+
+	AEGfxTextureSet(bg, 0, 0);
+	AEMtx33Trans(&translate, 0, -50);
+	AEMtx33Rot(&rotate, 0);
+	AEMtx33Scale(&scale, 2000.f, 800.f);
+	AEMtx33Concat(&transform, &rotate, &scale);
+	AEMtx33Concat(&transform, &translate, &transform);
+	AEGfxSetTransform(transform.m);
+	AEGfxMeshDraw(pMesh, AE_GFX_MDM_TRIANGLES);
 
 	//UI Drawing
 	AEGfxPrint(font, (s8*)level.display_turn.c_str(), -.1f, .9f, 1.0f, 1.0f, 1.0f, 1.0f);
