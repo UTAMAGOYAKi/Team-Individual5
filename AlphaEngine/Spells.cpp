@@ -4,7 +4,8 @@
 const int max_spells = 10;
 
 //Textures for spells
-AEGfxTexture* toxic_deluge{}, * inferno_blast{}, * umbral_tendrils{}, * maelstrom_surge{};
+AEGfxTexture* toxic_deluge{}, * inferno_blast{}, * umbral_tendrils{}, * maelstrom_surge{}, * venemous_bite{},
+* shadow_cloak{}, * flame_burst{}, * rat_swarm{}, * bubonic_blaze{};
 
 Spell* init_all_spells()
 {
@@ -19,6 +20,16 @@ Spell* init_all_spells()
 	std::cout << "poison MemLoc: " << toxic_deluge << std::endl;
 	maelstrom_surge = AEGfxTextureLoad("Assets/not_burn.png");
 	std::cout << "shame MemLoc: " << maelstrom_surge << std::endl;
+	venemous_bite = AEGfxTextureLoad("Assets/venemous_bite.png");
+	std::cout << "venemous_bite MemLoc: " << venemous_bite << std::endl;
+	shadow_cloak = AEGfxTextureLoad("Assets/shadow_cloak.png");
+	std::cout << "shadow_cloak MemLoc: " << shadow_cloak << std::endl;
+	flame_burst = AEGfxTextureLoad("Assets/flame_burst.png");
+	std::cout << "shadow_cloak MemLoc: " << flame_burst << std::endl;
+	rat_swarm = AEGfxTextureLoad("Assets/rat_swarm.png");
+	std::cout << "shadow_cloak MemLoc: " << rat_swarm << std::endl;
+	bubonic_blaze = AEGfxTextureLoad("Assets/bubonic_blaze.png");
+	std::cout << "shadow_cloak MemLoc: " << bubonic_blaze << std::endl;
 	std::cout << "Creating All " << max_spells << " Spells" << std::endl;
 
 	Spell* spellbook = new Spell[max_spells]{
@@ -28,12 +39,12 @@ Spell* init_all_spells()
 		Spell(UMBRAL_TENDRILS, 3, SHADOW, "Umbral Tendrils",inferno_blast,true, 2, 0, 1,0),
 		Spell(MAELSTROM_SURGE, 3, WATER, "Maelstrom Surge",umbral_tendrils,true, 2, 0, 1,0),
 		// Tier 2 spells
-		Spell(VENOMOUS_BITE, 2, POISON, "Venomous Bite",umbral_tendrils,false, 3, 1, 5,2),
-		Spell(SHADOW_CLOAK, 2, SHADOW, "Shadow Cloak",maelstrom_surge,false, 3, 1, 5,0),
-		Spell(FLAME_BURST, 2, FIRE, "Flame Burst",toxic_deluge,false, 3, 1, 5,0),
+		Spell(VENOMOUS_BITE, 2, POISON, "Venomous Bite",venemous_bite,false, 3, 1, 5,2),
+		Spell(SHADOW_CLOAK, 2, SHADOW, "Shadow Cloak",shadow_cloak,false, 3, 1, 5,0),
+		Spell(FLAME_BURST, 2, FIRE, "Flame Burst",flame_burst,false, 3, 1, 5,0),
 		// Tier 1 spells
-		Spell(RAT_SWARM, 1, SHADOW, "Rat Swarm",inferno_blast,false, 5, 1, 5,1),
-		Spell(BUBONIC_BLAZE, 1, FIRE, "Bubonic Blaze",umbral_tendrils,false, 5, 1, 5,5),
+		Spell(RAT_SWARM, 1, SHADOW, "Rat Swarm",rat_swarm,false, 5, 1, 5,1),
+		Spell(BUBONIC_BLAZE, 1, FIRE, "Bubonic Blaze",bubonic_blaze,false, 5, 1, 5,5),
 		// Invalid Spell
 		Spell(INVALID_SPELL, 0, INVALID_ELEMENT, "",nullptr,false, 0, 0, 0,0),
 	};
@@ -137,7 +148,7 @@ void unload_spells(Spell* spellbook) {
 int crafting_table_update(int spell_id, craftingtable& table, Spell* spellbook = nullptr)
 {
 	spellbook[spell_id].spell_dragdrop->mousechange(false);
-		spellbook[spell_id].spell_dragdrop->moveto(table.table_dragdrop.getcoord());
+	spellbook[spell_id].spell_dragdrop->moveto(table.table_dragdrop.getcoord());
 	if (table.spell1_id == INVALID_SPELL) {
 		table.spell1_id = spell_id;
 		return 1;
@@ -166,7 +177,7 @@ craftingtable::craftingtable()
 	//Set Table aabb
 	AEVec2 zero;
 	AEVec2Zero(&zero);
-	AEVec2Set(&zero, 1 , 1);
+	AEVec2Set(&zero, 1, 1);
 	table_dragdrop.moveto(zero);
 	table_dragdrop.changeaabb(table_width, table_height);
 }
