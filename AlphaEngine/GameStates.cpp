@@ -294,6 +294,7 @@ void GameStateAlchemiceUpdate() {
 								enemies[j].take_damage(spellbook[i].base_damage);
 								if (spellbook[i].id > 3) {
 									spellbook[i].unlocked = false;
+									cards.x -= 110;
 								}
 							}
 						}
