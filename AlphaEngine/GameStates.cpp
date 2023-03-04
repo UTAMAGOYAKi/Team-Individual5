@@ -96,8 +96,8 @@ void GameStateAlchemiceLoad() {
 	// Saving the mesh (list of triangles) in pMesh
 	pMesh = AEGfxMeshEnd();
 
-	chara = AEGfxTextureLoad("Assets/character.png");
-	rat = AEGfxTextureLoad("Assets/rat_Piskel.png");
+	chara = AEGfxTextureLoad("Assets/char.png");
+	rat = AEGfxTextureLoad("Assets/Rat.png");
 	sub = AEGfxTextureLoad("Assets/submenu.png");
 	box = AEGfxTextureLoad("Assets/box.png");
 	crafting_test = AEGfxTextureLoad("Assets/copyright_table.png");
