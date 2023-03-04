@@ -218,6 +218,7 @@ void GameStateAlchemiceUpdate() {
 			if (spellbook[i].spell_dragdrop->getcoord().mid.x == 0 && spellbook[i].spell_dragdrop->getcoord().mid.y == 0) {
 				spellbook[i].init_spells_draw(spellbook[i], cards);
 				cards.x += 110;
+				spellbook[i].spell_dragdrop->set_origin();
 			}
 			//Checks if 2 spells are colliding for combination
 		}
@@ -286,8 +287,6 @@ void GameStateAlchemiceUpdate() {
 				{
 					for (int j = 0; j < TOTAL_ENEMY; ++j)
 					{
-
-
 						if (aabbbutton(spellbook[i].spell_dragdrop, enemies[j].get_aabb()) != -1)
 						{
 							if (enemies[j].is_alive())

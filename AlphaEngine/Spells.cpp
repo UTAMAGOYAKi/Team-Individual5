@@ -166,6 +166,7 @@ craftingtable::craftingtable()
 	//Set Table aabb
 	AEVec2 zero;
 	AEVec2Zero(&zero);
+	//AEVec2Set(&zero, 100 , 100);
 	table_dragdrop.moveto(zero);
 	table_dragdrop.changeaabb(table_width, table_height);
 }
