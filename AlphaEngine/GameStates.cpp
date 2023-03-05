@@ -324,11 +324,6 @@ void GameStateAlchemiceUpdate() {
 			//Check for mouse click
 			if (AEInputCheckTriggered(AEVK_LBUTTON))
 			{
-
-				std::cout << "Pause Buttons " << "TR.x is: " << end_turn_button.s1.x << std::endl;
-				std::cout << "Pause Buttons  " << "TR.y is: " << end_turn_button.s1.y << std::endl;
-				std::cout << "Pause Buttons  " << "BL.x is: " << end_turn_button.s2.x << std::endl;
-				std::cout << "Pause Buttons  " << "BL.y is: " << end_turn_button.s2.y << std::endl;
 				for (int i = 0; i <= max_spells - 1; i++) {
 					if (aabbbutton(spellbook[i].spell_dragdrop, mouse_pos)) {
 						std::cout << "Clicking " << spellbook[i].spell_name << std::endl;
