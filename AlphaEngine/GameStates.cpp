@@ -44,7 +44,7 @@ craftingtable crafting_table{};
 
 //Loading of Mesh and Texture
 AEGfxVertexList* pMesh{}, * pLoad{};
-AEGfxTexture* chara{}, * rat{}, * spell_g{}, * box{}, * sub{}, * load_screen{}, * crafting_test{},* bg{};;
+AEGfxTexture* chara{}, * rat{}, * spell_g{}, * pause_box{}, * sub{}, * load_screen{}, * crafting_test{}, * bg{}, * end_turn_box{};
 //Animation frames
 AEGfxTexture* blast1{}, * blast2{}, * blast3{};
 
@@ -99,7 +99,8 @@ void GameStateAlchemiceLoad() {
 	chara = AEGfxTextureLoad("Assets/char.png");
 	rat = AEGfxTextureLoad("Assets/Rat.png");
 	sub = AEGfxTextureLoad("Assets/submenu.png");
-	box = AEGfxTextureLoad("Assets/box.png");
+	pause_box = AEGfxTextureLoad("Assets/pause_button.png");
+	end_turn_box = AEGfxTextureLoad("Assets/end_button.png");
 	crafting_test = AEGfxTextureLoad("Assets/copyright_table.png");
 	bg = AEGfxTextureLoad("Assets/background.png");
 
@@ -144,20 +145,11 @@ void GameStateAlchemiceInit() {
 
 	//creates the button from top to bottom top most button [0]
 	for (int i = 0; i < sizeof(pause_buttons) / sizeof(pause_buttons[0]); ++i) {
-		/*pause_buttons[i].mid.x = 0;
-		pause_buttons[i].mid.y = (f32)(190 - i * 180);
-
-		pause_buttons[i].s1.x = 150;
-		pause_buttons[i].s1.y = (f32)(190 - i * 180) + 40;
-		pause_buttons[i].s2.x = -150;
-		pause_buttons[i].s2.y = (f32)(190 - i * 180) - 40;*/
-		pause_buttons[i] = CreateAABB({ 0,(f32)190 - i * 180 }, 300, 80);
+		pause_buttons[i] = CreateAABB({ 0,(f32)-190 + i * 180 }, 300, 80);
 	}
-
 
 	cards.x = -50;
 	end_turn_button = CreateAABB({ 516,-308 }, 200, 80);
-
 }
 
 
@@ -178,6 +170,37 @@ void GameStateAlchemiceUpdate() {
 	//Actions that can be done anytime
 	if (AEInputCheckTriggered(AEVK_ESCAPE)) {
 		pause_mode = !pause_mode;
+
+		for (int i = 0; i < sizeof(pause_buttons) / sizeof(pause_buttons[0]); ++i)
+			std::cout << pause_buttons[i].tr.x << "," << pause_buttons[i].tr.y << " | "
+			<< pause_buttons[i].bl.x << "," << pause_buttons[i].bl.y << std::endl;
+		std::cout << "mouse pos: " << mouse_pos.x << "," << mouse_pos.y << std::endl;
+	}
+
+	if (pause_mode) 
+	{
+		if (AEInputCheckTriggered(AEVK_LBUTTON)) 
+		{
+			for (int i{}; i < sizeof(pause_buttons) / sizeof(pause_buttons[0]); ++i) 
+			{
+				if (mouse_pos.x >= pause_buttons[i].s2.x && mouse_pos.x <= pause_buttons[i].s1.x &&
+					mouse_pos.y <= pause_buttons[i].s2.y && mouse_pos.y >= pause_buttons[i].s1.y) 
+				{
+					std::cout << "button clicked " << i << std::endl;
+					switch (i) {
+					case 0:
+						pause_mode = !pause_mode;
+						break;
+					case 1:
+						//options menu
+						break;
+					case 2:
+						gGameStateNext = GS_QUIT;
+						break;
+					}
+				}
+			}
+		}
 	}
 
 	//Check for mouse click & hold
@@ -338,25 +361,6 @@ void GameStateAlchemiceUpdate() {
 					std::cout << "enemy turn " << std::endl;
 				}
 
-				if (pause_mode) {
-					for (int i{}; i < sizeof(pause_buttons) / sizeof(pause_buttons[0]); ++i) {
-						if (mouse_pos.x >= pause_buttons[i].s2.x && mouse_pos.x <= pause_buttons[i].s1.x &&
-							mouse_pos.y >= pause_buttons[i].s2.y && mouse_pos.y <= pause_buttons[i].s1.y) {
-							std::cout << "button clicked " << i << std::endl;
-							switch (i) {
-							case 0:
-								pause_mode = !pause_mode;
-								break;
-							case 1:
-								//options menu
-								break;
-							case 2:
-								gGameStateNext = GS_QUIT;
-								break;
-							}
-						}
-					}
-				}
 			}//Check for Lbutton click
 
 			//Opening sub menu
@@ -370,13 +374,6 @@ void GameStateAlchemiceUpdate() {
 			{
 				enemies[rand() % TOTAL_ENEMY].take_damage(1);
 			}
-
-
-			//End Turn (When we have an end turn button)
-			/*if (AEInputCheckTriggered(AEVK_SPACE)) {
-				turn = enemy_turn;
-				std::cout << "enemy turn" << std::endl;
-			}*/
 		}
 
 		//Enemy turn; runs all the enemy functions and animations
@@ -541,7 +538,7 @@ void GameStateAlchemiceDraw() {
 	if (turn == enemy_turn) {
 
 		for (int i{}; i < TOTAL_ENEMY; i++) {
-			if (enemies[i].is_alive()) 
+			if (enemies[i].is_alive())
 			{
 				AEGfxTextureSet(blast[enemies[i].get_frame_num()], 0, 0);
 				AEMtx33Trans(&translate, (f32)(enemies[i].get_pos().x), (f32)(enemies[i].get_pos().y));
@@ -555,35 +552,22 @@ void GameStateAlchemiceDraw() {
 		}
 	}
 
-	////timer
-	//if (curr_time) {// Problem
-	//	curr_time -= (f32)AEFrameRateControllerGetFrameTime();
-	//}
 
-	////Resets when ends
-	//if (curr_time < 0)
-	//{
-	//	curr_time = frame_time;   
-	//}
-	////Change back only after animation
-
-
-// End turn button
-// 113 characters on screen, start to end, 113/2 =  56.5(left and right for scaling)
-// 1280W,720H, 640/HalfWidth, 360/HalfHeight
+	// End turn button
+	// 113 characters on screen, start to end, 113/2 =  56.5(left and right for scaling)
+	// 1280W,720H, 640/HalfWidth, 360/HalfHeight
 	const char* mytext{ "End Turn" };
 	f32 middle = (end_turn_button.mid.x / (AEGetWindowWidth() / 2));
 	f32 offset = -((float)strlen(mytext) / 2) / 56.5f;
-	AEGfxTextureSet(box, 0.f, 0.f);
+	AEGfxTextureSet(end_turn_box, 0.f, 0.f);
 	AEMtx33Trans(&translate, end_turn_button.mid.x, -end_turn_button.mid.y);
 	AEMtx33Rot(&rotate, 0);
-	AEMtx33Scale(&scale, 200, 60);
+	AEMtx33Scale(&scale, 180, 300);
 	AEMtx33Concat(&transform, &rotate, &scale);
 	AEMtx33Concat(&transform, &translate, &transform);
 	AEGfxSetTransform(transform.m);
 	AEGfxMeshDraw(pMesh, AE_GFX_MDM_TRIANGLES);
 	AEGfxPrint(font, (s8*)mytext, middle + offset, (f32)-(end_turn_button.mid.y / (AEGetWindowHeight() / 2)), 1, 0, 0, 0);
-
 
 
 	AEGfxSetRenderMode(AE_GFX_RM_TEXTURE);
@@ -601,7 +585,7 @@ void GameStateAlchemiceDraw() {
 	}
 
 	if (pause_mode) {
-		AEGfxTextureSet(box, 0, 0);
+		AEGfxTextureSet(pause_box, 0, 0);
 		AEMtx33Trans(&translate, 0, 0);
 		AEMtx33Rot(&rotate, 0);
 		AEMtx33Scale(&scale, 400, 600);
@@ -619,7 +603,7 @@ void GameStateAlchemiceDraw() {
 			f32 middle = -(((float)strlen(mytex[i]) / 2) / 56.5f);
 			f32 textY = ((float)(AEGetWindowHeight() - i * AEGetWindowHeight()) / 2) / AEGetWindowHeight();
 			f32 boxY = (float)(190 - i * 180);
-			AEGfxTextureSet(box, 0.f, 0.f);
+			AEGfxTextureSet(pause_box, 0.f, 0.f);
 			AEMtx33Trans(&translate, 0, boxY);
 			AEMtx33Rot(&rotate, 0);
 			AEMtx33Scale(&scale, 300, 80);
@@ -630,42 +614,9 @@ void GameStateAlchemiceDraw() {
 			AEGfxPrint(font, (s8*)mytex[i], middle, textY, 1, 0, 0, 0);
 		}
 	}
-	//if (alchemy_mode)
-	//{
-	//	AEGfxTextureSet(fire, 0, 0);
-	//	AEMtx33Trans(&translate, fire_x, -fire_y);
-	//	AEMtx33Rot(&rotate, PI);
-	//	AEMtx33Scale(&scale, 100.f, 100.f);
-	//	AEMtx33Concat(&transform, &rotate, &scale);
-	//	AEMtx33Concat(&transform, &translate, &transform);
-	//	AEGfxSetTransform(transform.m);
-	//	AEGfxMeshDraw(pMesh, AE_GFX_MDM_TRIANGLES);
-
-	//	AEGfxTextureSet(poison, 0, 0);
-	//	AEMtx33Trans(&translate, poison_x, -poison_y);
-	//	AEMtx33Rot(&rotate, PI);
-	//	AEMtx33Scale(&scale, 100.f, 100.f);
-	//	AEMtx33Concat(&transform, &rotate, &scale);
-	//	AEMtx33Concat(&transform, &translate, &transform);
-	//	AEGfxSetTransform(transform.m);
-	//	AEGfxMeshDraw(pMesh, AE_GFX_MDM_TRIANGLES);
-	//}
-
-	//AEGfxPrint(test_font, (s8*)test_str, -0.65f, 0.5f, 1, 0.0f, 0.0f, 0.0f);
-	//if (rat_hp_1 > 0)
-	//{
-	//	AEGfxPrint(test_font, (s8*)rat_name_1, 0.225f, 0.2f, 1, 0.0f, 0.0f, 0.0f);
-	//	AEGfxPrint(test_font, (s8*)rat_hp.c_str(), 0.225f, 0.1f, 1, 0.0f, 0.0f, 0.0f);
-	//}
-	//AEGfxPrint(test_font, (s8*)rat_name_2, 0.625f, 0.2f, 1, 0.0f, 0.0f, 0.0f);
-
 }
 
 void GameStateAlchemiceFree() {
-	/*delete_player(alchemice);
-	for (int i = 0; i < 3; ++i) {
-		delete_enemy(enemies[i]);
-	}*/
 	AEGfxMeshFree(pMesh);
 }
 
@@ -712,8 +663,6 @@ void LoadScreenUpdate() {
 }
 
 void LoadScreenDraw() {
-
-
 	// Your own rendering logic goes here
 	// Set the background to black.
 	AEGfxSetBackgroundColor(.0f, .0f, .0f);
@@ -738,7 +687,6 @@ void LoadScreenDraw() {
 	AEMtx33Scale(&scale, 915, 287); //hardcoded values from the pixels in .png file, 3x value 
 	AEMtx33Concat(&transform, &rotate, &scale);
 	AEMtx33Concat(&transform, &translate, &transform);
-	/*AEMtx33Identity(&transform);*/
 	AEGfxSetTransform(transform.m);
 	AEGfxMeshDraw(pLoad, AE_GFX_MDM_TRIANGLES);
 }

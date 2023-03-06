@@ -24,7 +24,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	//enum spell_slot {empty, fire_slot, poison_slot, lighting_slot};
 	//Elements spell_slot_one = NILL;
 	//Elements spell_slot_two = NILL;
-	int gGameRunning = 1;
+	//int gGameRunning = 1;
 
 	// Using custom window procedure
 	AESysInit(hInstance, nCmdShow, 1280, 720, 1, 60, true, NULL);
