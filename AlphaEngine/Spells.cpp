@@ -25,11 +25,11 @@ Spell* init_all_spells()
 	shadow_cloak = AEGfxTextureLoad("Assets/shadow_cloak.png");
 	std::cout << "shadow_cloak MemLoc: " << shadow_cloak << std::endl;
 	flame_burst = AEGfxTextureLoad("Assets/flame_burst.png");
-	std::cout << "shadow_cloak MemLoc: " << flame_burst << std::endl;
+	std::cout << "flame_burst MemLoc: " << flame_burst << std::endl;
 	rat_swarm = AEGfxTextureLoad("Assets/rat_swarm.png");
-	std::cout << "shadow_cloak MemLoc: " << rat_swarm << std::endl;
+	std::cout << "rat_swarm MemLoc: " << rat_swarm << std::endl;
 	bubonic_blaze = AEGfxTextureLoad("Assets/bubonic_blaze.png");
-	std::cout << "shadow_cloak MemLoc: " << bubonic_blaze << std::endl;
+	std::cout << "bubonic_blaze MemLoc: " << bubonic_blaze << std::endl;
 	std::cout << "Creating All " << max_spells << " Spells" << std::endl;
 
 	Spell* spellbook = new Spell[max_spells]{
@@ -51,8 +51,6 @@ Spell* init_all_spells()
 
 	AEVec2Zero(&cards);
 	for (int i = 0; i <= max_spells - 1; i++) {
-		//
-
 		//Set >tier 3 midpoint coords to 0
 		if (spellbook[i].tier < 3) {
 			spellbook[i].spell_dragdrop->moveto(cards);
@@ -150,7 +148,7 @@ void unload_spells(Spell* spellbook) {
 // State 1: When only 1 spell is input
 // State 2: When 2 spells has been input but invalid combo
 // State 3: When 2 spells has been input and spell is unloked
-int crafting_table_update(int spell_id, craftingtable& table, Spell* spellbook = nullptr)
+int crafting_table_update(Spell* spellbook, craftingtable& table, int spell_id)
 {
 	spellbook[spell_id].spell_dragdrop->mousechange(false);
 	spellbook[spell_id].spell_dragdrop->moveto(table.table_dragdrop.getcoord());
@@ -175,6 +173,11 @@ int crafting_table_update(int spell_id, craftingtable& table, Spell* spellbook =
 			return 3;
 		}
 	}
+	//spellbook[table.spell1_id].spell_dragdrop->resetaabb();
+	//spellbook[table.spell2_id].spell_dragdrop->resetaabb();
+	//table.spell1_id = INVALID_SPELL;
+	//table.spell2_id = INVALID_SPELL;
+	return 2;
 }
 
 craftingtable::craftingtable()

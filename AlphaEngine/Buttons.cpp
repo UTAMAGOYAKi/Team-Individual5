@@ -144,7 +144,7 @@ int aabbbutton(dragdrop* box, AEVec2 mouse)
 		(tmp.bl.y > mouse.y && mouse.y > tmp.tr.y)
 		)
 	{
-		return box->getref();
+		return 1;
 	}
 	else
 	{

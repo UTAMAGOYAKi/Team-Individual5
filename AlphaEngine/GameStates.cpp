@@ -29,7 +29,7 @@ AEVec2 mouse_pos{}; // Current mouse pos
 //---------------------------------------------------------------------------------
 
 //Contains all spells in a dynamically allocated array
-Spell* spellbook;
+Spell* spellbook{};
 //Coords for active cards
 AEVec2 cards;
 //Crafting table for magic
@@ -253,7 +253,6 @@ void GameStateAlchemiceUpdate() {
 
 			for (int i = 0; i <= max_spells - 1; i++)
 			{
-
 				if (spellbook[i].spell_dragdrop->getmouse())
 				{
 					spellbook[i].spell_dragdrop->moveto(temp);
@@ -282,6 +281,10 @@ void GameStateAlchemiceUpdate() {
 						}
 
 					}
+					std::cout << spellbook[i].id << "TR X is" << spellbook[i].spell_dragdrop->getcoord().tr.x << std::endl;
+					std::cout << spellbook[i].id << "TR Y is" << spellbook[i].spell_dragdrop->getcoord().tr.y << std::endl;
+					std::cout << spellbook[i].id << "mid X is" << spellbook[i].spell_dragdrop->getcoord().mid.x << std::endl;
+					std::cout << spellbook[i].id << "mid Y is" << spellbook[i].spell_dragdrop->getcoord().mid.y << std::endl;
 				}
 
 				for (int i = 0; i <= max_spells - 1; i++)
@@ -290,7 +293,7 @@ void GameStateAlchemiceUpdate() {
 					{
 						std::cout << "RELEASE" << std::endl;
 						if (aabbbutton(spellbook[i].spell_dragdrop, &crafting_table.table_dragdrop) == 1) {
-							crafting_table_update(spellbook[i].id, crafting_table, spellbook);
+							crafting_table_update(spellbook, crafting_table, spellbook[i].id  );
 						}
 						else {
 							spellbook[i].spell_dragdrop->resetaabb();

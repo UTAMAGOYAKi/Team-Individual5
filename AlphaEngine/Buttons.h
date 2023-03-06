@@ -7,7 +7,7 @@
 #include <cmath>
 
 struct aabb {
-	
+
 	AEVec2 s1; //orignal top right
 	AEVec2 s2; //original bot left
 	AEVec2 mid;// middle of aabb

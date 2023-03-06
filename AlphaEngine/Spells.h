@@ -71,6 +71,8 @@ public:
 	const float			card_width = 100.0f;
 	const float			card_height = 100.0f;
 	void init_spells_draw(Spell& spell, AEVec2 coord);
+private:
+
 };
 
 
@@ -89,4 +91,4 @@ void unload_spells(Spell* spellbook);
 // State 1: When only 1 spell is input
 // State 2: When 2 spells has been input but invalid combo
 // State 3: When 2 spells has been input and spell is unloked
-int crafting_table_update(int spell_id, craftingtable& table, Spell* spellbook);
+int crafting_table_update(Spell* spellbook, craftingtable& table, int spell_id);
