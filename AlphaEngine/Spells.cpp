@@ -134,10 +134,15 @@ bool combine_spells(Spell* spellbook, int id1, int id2) {
 
 // Called when level ends etc.
 void unload_spells(Spell* spellbook) {
-	AEGfxTextureUnload(toxic_deluge);
-	AEGfxTextureUnload(inferno_blast);
 	AEGfxTextureUnload(umbral_tendrils);
+	AEGfxTextureUnload(inferno_blast);
+	AEGfxTextureUnload(toxic_deluge);
 	AEGfxTextureUnload(maelstrom_surge);
+	AEGfxTextureUnload(venemous_bite);
+	AEGfxTextureUnload(shadow_cloak);
+	AEGfxTextureUnload(flame_burst);
+	AEGfxTextureUnload(rat_swarm);
+	AEGfxTextureUnload(bubonic_blaze);
 	delete[] spellbook;
 }
 

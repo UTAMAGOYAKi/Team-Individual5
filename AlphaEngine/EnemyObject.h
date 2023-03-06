@@ -58,7 +58,8 @@ public:
         }
     };//two argument constructor
 
-    ~Enemy() {}; //deconstructor
+    ~Enemy() { //deconstructor
+    }
 
     //Member functions
 

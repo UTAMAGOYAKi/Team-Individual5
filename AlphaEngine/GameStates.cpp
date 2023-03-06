@@ -170,71 +170,29 @@ void GameStateAlchemiceUpdate() {
 	//Actions that can be done anytime
 	if (AEInputCheckTriggered(AEVK_ESCAPE)) {
 		pause_mode = !pause_mode;
-
-		for (int i = 0; i < sizeof(pause_buttons) / sizeof(pause_buttons[0]); ++i)
-			std::cout << pause_buttons[i].tr.x << "," << pause_buttons[i].tr.y << " | "
-			<< pause_buttons[i].bl.x << "," << pause_buttons[i].bl.y << std::endl;
-		std::cout << "mouse pos: " << mouse_pos.x << "," << mouse_pos.y << std::endl;
 	}
-
-	if (pause_mode) 
+	
+	for (int i{}; i < sizeof(pause_buttons) / sizeof(pause_buttons[0]); ++i) //for every iteration of pause menu buttons
 	{
-		if (AEInputCheckTriggered(AEVK_LBUTTON)) 
+		if ((mouse_pos.x >= pause_buttons[i].s2.x && mouse_pos.x <= pause_buttons[i].s1.x && //check mouse inside of button's aabb
+			mouse_pos.y <= pause_buttons[i].s2.y && mouse_pos.y >= pause_buttons[i].s1.y) && 
+			AEInputCheckTriggered(AEVK_LBUTTON) && //check if left button is clicked
+			pause_mode == true) //only runs during pause mode
 		{
-			for (int i{}; i < sizeof(pause_buttons) / sizeof(pause_buttons[0]); ++i) 
-			{
-				if (mouse_pos.x >= pause_buttons[i].s2.x && mouse_pos.x <= pause_buttons[i].s1.x &&
-					mouse_pos.y <= pause_buttons[i].s2.y && mouse_pos.y >= pause_buttons[i].s1.y) 
-				{
-					std::cout << "button clicked " << i << std::endl;
-					switch (i) {
-					case 0:
-						pause_mode = !pause_mode;
-						break;
-					case 1:
-						//options menu
-						break;
-					case 2:
-						gGameStateNext = GS_QUIT;
-						break;
-					}
-				}
+			std::cout << "button clicked " << i << std::endl;
+			switch (i) {
+			case 0:
+				pause_mode = !pause_mode;
+				break;
+			case 1:
+				//options menu
+				break;
+			case 2:
+				gGameStateNext = GS_QUIT;
+				break;
 			}
 		}
 	}
-
-	//Check for mouse click & hold
-	//if (AEInputCheckCurr(AEVK_LBUTTON)) {
-	//	//Check if spells is being dragged
-	//	for (int i = 0; i <= max_spells - 1; i++) {
-	//		if (aabbbutton(spellbook[i].spell_dragdrop, mouse_pos) ) {
-	//			AEVec2 temp;
-	//			temp = mouse_pos;
-	//			temp.y = -mouse_pos.y;
-	//			spellbook[i].spell_dragdrop->moveto(temp);
-	//			spellbook[i].spell_dragdrop->mousechange(true);
-	//		}
-	//		//Check for cards collision
-	//		if (spellbook[i].spell_dragdrop->getmouse() == true) {
-	//			for (int j = 0; (j <= max_spells - 1) && j != i; j++) {
-	//				if (aabbbutton(spellbook[i].spell_dragdrop, spellbook[j].spell_dragdrop) != -1 && (spellbook[i].id != spellbook[j].id)) {
-	//					if (combine_spells(spellbook, i, j) == true) {
-	//						std::cout << spellbook[i].spell_name << "is being combined with" << spellbook[j].spell_name << std::endl;
-	//					}
-	//				}
-	//			}
-	//		}
-	//	}
-	//}
-	//else {
-	//	for (int i = 0; i <= max_spells - 1; i++) {
-	//		if (spellbook[i].spell_dragdrop->getmouse() == true) {
-	//			spellbook[i].spell_dragdrop->mousechange(false);
-	//			spellbook[i].spell_dragdrop->resetaabb();
-	//		}
-	//	}
-	//}
-
 
 	//Draw spells player unlocks / combines
 	for (int i = 4; i <= max_spells - 1; i++) {
@@ -410,33 +368,6 @@ void GameStateAlchemiceUpdate() {
 
 			}
 		}
-		//When player hp 0 or all enemies dead. Game over or change state
-
-
-		//Draw spells player unlocks / combines
-
-
-		//BLOCKING OUT THESE FIRST NOT SURE IF WE STILL NEED
-		//if (AEInputCheckTriggered(AEVK_W))
-		//{
-		//	sub_menu = !sub_menu;
-		//}
-
-		//if (AEInputCheckTriggered(AEVK_ESCAPE)) {
-		//	pause_mode = !pause_mode;
-		//}
-
-		//if (!pause_mode) {
-		//	//if pause_game and !pause_game, to prevent overlapping of checking for aabb or what not
-		//	if (alchemy_mode)
-		//	{
-
-		//	}
-		//	if (AEInputCheckTriggered(AEVK_Q))
-		//	{
-		//		enemies[rand() % 3].change_hp(-1);
-		//	}
-		//}
 	}
 }
 void GameStateAlchemiceDraw() {
@@ -554,11 +485,12 @@ void GameStateAlchemiceDraw() {
 
 
 	// End turn button
-	// 113 characters on screen, start to end, 113/2 =  56.5(left and right for scaling)
+	// 113 characters on screen, start to end, 113/2 =  56.5(left and right for scaling) Roboto
+	// 85 characters, 85/2 = 42.5 Gothic
 	// 1280W,720H, 640/HalfWidth, 360/HalfHeight
 	const char* mytext{ "End Turn" };
 	f32 middle = (end_turn_button.mid.x / (AEGetWindowWidth() / 2));
-	f32 offset = -((float)strlen(mytext) / 2) / 56.5f;
+	f32 offset = -((float)strlen(mytext) / 2) / (AEGetWindowWidth() / FONT_SIZE);
 	AEGfxTextureSet(end_turn_box, 0.f, 0.f);
 	AEMtx33Trans(&translate, end_turn_button.mid.x, -end_turn_button.mid.y);
 	AEMtx33Rot(&rotate, 0);
@@ -594,13 +526,13 @@ void GameStateAlchemiceDraw() {
 		AEGfxSetTransform(transform.m);
 		AEGfxMeshDraw(pMesh, AE_GFX_MDM_TRIANGLES);
 
-		//const char* mytex{ "test font1test font2test font3test font4test font5test font6test font7test font8test font9test font0test font1test font2test" };
-		// 113 characters on screen, start to end, 113/2 =  56.5(left and right for scaling)
+		// 113 characters on screen, start to end, 113/2 =  56.5(left and right for scaling) Roboto
+		// 85 characters, 85/2 = 42.5 Gothic
 		// 1280W,720H, 640/HalfWidth, 360/HalfHeight
 		const char* mytex[3]{ { "Continue" }, { "Options" }, {"Main Menu"} };
 
 		for (int i = 0; i < 3; ++i) {
-			f32 middle = -(((float)strlen(mytex[i]) / 2) / 56.5f);
+			f32 middle = -(((float)strlen(mytex[i]) / 2) / (AEGetWindowWidth()/FONT_SIZE));
 			f32 textY = ((float)(AEGetWindowHeight() - i * AEGetWindowHeight()) / 2) / AEGetWindowHeight();
 			f32 boxY = (float)(190 - i * 180);
 			AEGfxTextureSet(pause_box, 0.f, 0.f);
@@ -614,6 +546,9 @@ void GameStateAlchemiceDraw() {
 			AEGfxPrint(font, (s8*)mytex[i], middle, textY, 1, 0, 0, 0);
 		}
 	}
+	// DONT DELETE, THIS IS FONT SCALING TEST
+	//const char* mytext1{ "test font1test font2test font3test font4test font5test font6test font7test font8test font9test font0test font1test font2test" };
+	//AEGfxPrint(font, (s8*)mytext1, -1, 0, 1, 1, 1, 1);
 }
 
 void GameStateAlchemiceFree() {
@@ -623,6 +558,14 @@ void GameStateAlchemiceFree() {
 void GameStateAlchemiceUnload() {
 	AEGfxTextureUnload(chara);
 	AEGfxTextureUnload(rat);
+	AEGfxTextureUnload(sub);
+	AEGfxTextureUnload(pause_box);
+	AEGfxTextureUnload(end_turn_box);
+	AEGfxTextureUnload(crafting_test);
+	AEGfxTextureUnload(bg);
+	AEGfxTextureUnload(blast1);
+	AEGfxTextureUnload(blast2);
+	AEGfxTextureUnload(blast3);
 	unload_spells(spellbook);
 }
 

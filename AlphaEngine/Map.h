@@ -6,14 +6,14 @@
 //fake it till you make it
 
 //entering stage "animation"
-void transistion_enter();
+void transition_enter();
 
 // To be drawn till after loading and init?
 // exiting stage "animation"
-void transistion_exit();
+void transition_exit();
 
 //entering boss stage
-void transistion_boss();
+void transition_boss();
 
 //map?
 

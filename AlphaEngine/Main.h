@@ -7,7 +7,7 @@
 #include "Elements.h"
 #include "EnemyObject.h"
 #include "GameStates.h"
-#include "GSM.h"
+#include "GameStateManager.h"
 #include "LevelManager.h"
 #include "Mesh.h"
 #include "Player.h"
@@ -17,3 +17,5 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+
+extern int FONT_SIZE;

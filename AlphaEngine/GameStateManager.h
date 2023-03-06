@@ -18,12 +18,12 @@ extern unsigned int gGameStateCurr;
 extern unsigned int gGameStatePrev;
 extern unsigned int gGameStateNext;
 
-extern void (*GSLoad)();
-extern void (*GSInit)();
-extern void (*GSUpdate)();
-extern void (*GSDraw)();
-extern void (*GSFree)();
-extern void (*GSUnload)();
+extern void (*GameStateLoad)();
+extern void (*GameStateInit)();
+extern void (*GameStateUpdate)();
+extern void (*GameStateDraw)();
+extern void (*GameStateFree)();
+extern void (*GameStateUnload)();
 
-void GSMInit(unsigned int gameStateInit);
-void GSMUpdate();
+void GameStateManagerInit(unsigned int gameStateInit);
+void GameStateManagerUpdate();

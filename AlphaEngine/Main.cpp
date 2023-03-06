@@ -13,6 +13,8 @@
 
 // ---------------------------------------------------------------------------
 
+int FONT_SIZE = 30;
+
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	_In_opt_ HINSTANCE hPrevInstance,
 	_In_ LPWSTR    lpCmdLine,
@@ -21,10 +23,10 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	UNREFERENCED_PARAMETER(hPrevInstance);
 	UNREFERENCED_PARAMETER(lpCmdLine);
 
-	//enum spell_slot {empty, fire_slot, poison_slot, lighting_slot};
-	//Elements spell_slot_one = NILL;
-	//Elements spell_slot_two = NILL;
-	//int gGameRunning = 1;
+	//Mem check
+	#if defined(DEBUG) | defined(_DEBUG)
+		_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
+	#endif
 
 	// Using custom window procedure
 	AESysInit(hInstance, nCmdShow, 1280, 720, 1, 60, true, NULL);
@@ -33,9 +35,9 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	// Changing the window title
 	AESysSetWindowTitle("Alchemy Main");
 
-	GSMInit(GS_LOAD);
+	GameStateManagerInit(GS_LOAD);
 
-	font = AEGfxCreateFont("Assets/Roboto-Regular.ttf", 26);
+	font = AEGfxCreateFont("Assets/font/DotGothic16-Regular.ttf", 30);
 
 	// Game Loop
 	while (gGameStateCurr != GS_QUIT)
@@ -44,13 +46,13 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 		AESysReset();
 
 		if (gGameStateCurr != GS_RESTART) {
-			GSMUpdate();
-			GSLoad();
+			GameStateManagerUpdate();
+			GameStateLoad();
 		}
 		else
 			gGameStateNext = gGameStateCurr = gGameStatePrev;
 
-		GSInit();
+		GameStateInit();
 
 		while (gGameStateCurr == gGameStateNext)
 		{
@@ -60,19 +62,19 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 			// Handling Input
 			AEInputUpdate();
 
-			GSUpdate();
+			GameStateUpdate();
 
-			GSDraw();
+			GameStateDraw();
 
 			AESysFrameEnd();
 
 			if (AESysDoesWindowExist() == false)
 				gGameStateNext = GS_QUIT;
 		}
-		GSFree();
+		GameStateFree();
 
 		if (gGameStateNext != GS_RESTART) {
-			GSUnload();
+			GameStateUnload();
 		}
 
 		gGameStatePrev = gGameStateCurr;
