@@ -62,6 +62,9 @@ struct Spell {
 
 	//Set a Spells' AABB and Coords when called
 	void init_spells_draw(Spell& spell, AEVec2 coord);
+
+	//Reset a spells customisable stuff / variables
+	void reset_spell();
 };
 
 class craftingtable {

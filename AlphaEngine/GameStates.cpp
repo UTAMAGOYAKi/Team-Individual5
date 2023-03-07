@@ -277,17 +277,13 @@ void GameStateAlchemiceUpdate() {
 							{
 								enemies[j].take_damage(spellbook[i].base_damage);
 								if (spellbook[i].id > 3) {
-									spellbook[i].unlocked = false;
+									spellbook[i].reset_spell();
 									cards.x -= 110;
 								}
 							}
 						}
 
 					}
-					std::cout << spellbook[i].id << "TR X is" << spellbook[i].spell_dragdrop->getcoord().tr.x << std::endl;
-					std::cout << spellbook[i].id << "TR Y is" << spellbook[i].spell_dragdrop->getcoord().tr.y << std::endl;
-					std::cout << spellbook[i].id << "mid X is" << spellbook[i].spell_dragdrop->getcoord().mid.x << std::endl;
-					std::cout << spellbook[i].id << "mid Y is" << spellbook[i].spell_dragdrop->getcoord().mid.y << std::endl;
 				}
 
 				for (int i = 0; i <= max_spells - 1; i++)

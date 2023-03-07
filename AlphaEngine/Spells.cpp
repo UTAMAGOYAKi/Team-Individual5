@@ -87,6 +87,13 @@ void Spell::init_spells_draw(Spell& spell, AEVec2 coords)
 	spell.spell_dragdrop->moveto(coords);
 }
 
+void Spell::reset_spell()
+{
+	unlocked = false;
+	delete spell_dragdrop;
+	spell_dragdrop = new dragdrop;
+}
+
 
 // Returns true if spell can be unlocked
 bool combine_spells(Spell* spellbook, int id1, int id2) {
@@ -176,21 +183,20 @@ int craftingtable::crafting_table_update(Spell* spellbook, int spell_id)
 			spellbook[this->spell2_id].spell_dragdrop->resetaabb();
 			this->spell1_id = INVALID_SPELL;
 			this->spell2_id = INVALID_SPELL;
-			return 2;
+			return 3;
 		}
 		else {
 			spellbook[this->spell1_id].spell_dragdrop->resetaabb();
 			spellbook[this->spell2_id].spell_dragdrop->resetaabb();
 			this->spell1_id = INVALID_SPELL;
 			this->spell2_id = INVALID_SPELL;
-			return 3;
+			return 2;
 		}
 	}
 	//spellbook[table.spell1_id].spell_dragdrop->resetaabb();
 	//spellbook[table.spell2_id].spell_dragdrop->resetaabb();
 	//table.spell1_id = INVALID_SPELL;
 	//table.spell2_id = INVALID_SPELL;
-	return 2;
 }
 
 dragdrop* craftingtable::get_dragdrop()
