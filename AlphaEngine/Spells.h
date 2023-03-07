@@ -23,10 +23,10 @@ enum Spells {
 	INVALID_SPELL
 };
 
-enum class crafting{
-ONE_SPELL=1,
-INVALID_COMBO,
-SUCCESFUL_COMBO
+enum class crafting {
+	ONE_SPELL = 1,
+	INVALID_COMBO,
+	SUCCESFUL_COMBO
 };
 
 extern const int max_spells;
@@ -77,10 +77,15 @@ public:
 
 	//Returns a pointer to the crafting table's dragdrop object
 	dragdrop* get_dragdrop();
-
 	//Default Ctor
 	craftingtable();
 
+	//Get Spell1 id
+	int get_spell1();
+	//Set Spell1 id
+	void reset_spells();
+	//Get Spell2 id
+	int get_spell2();
 private:
 	const float table_width{ 128 };
 	const float table_height{ 128 };

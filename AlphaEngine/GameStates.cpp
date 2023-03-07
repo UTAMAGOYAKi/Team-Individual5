@@ -296,6 +296,9 @@ void GameStateAlchemiceUpdate() {
 							}
 						}
 						else {
+							if (crafting_table.get_spell1() == spellbook[i].id) {
+								crafting_table.reset_spells();
+							}
 							spellbook[i].spell_dragdrop->resetaabb();
 							spellbook[i].spell_dragdrop->mousechange(false);
 						}

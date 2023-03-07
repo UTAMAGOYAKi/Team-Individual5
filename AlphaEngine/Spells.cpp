@@ -217,3 +217,19 @@ craftingtable::craftingtable()
 	table_dragdrop.moveto(zero);
 	table_dragdrop.changeaabb(table_width, table_height);
 }
+
+int craftingtable::get_spell1()
+{
+	return spell1_id;
+}
+
+void craftingtable::reset_spells()
+{
+	spell1_id= INVALID_SPELL;
+	spell2_id = INVALID_SPELL;
+}
+
+int craftingtable::get_spell2()
+{
+	return spell2_id;
+}
