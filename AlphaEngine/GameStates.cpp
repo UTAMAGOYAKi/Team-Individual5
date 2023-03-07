@@ -46,7 +46,7 @@ craftingtable crafting_table{};
 AEGfxVertexList* pMesh{}, * pLoad{};
 AEGfxTexture* chara{}, * rat{}, * spell_g{}, * pause_box{}, * sub{}, * load_screen{}, * crafting_test{}, * bg{}, * end_turn_box{};
 //Animation frames
-AEGfxTexture* blast1{}, * blast2{}, * blast3{};
+//AEGfxTexture* blast1{}, * blast2{}, * blast3{};
 
 aabb* chara_pos;
 aabb* Enemy_pos_1;
@@ -107,12 +107,12 @@ void GameStateAlchemiceLoad() {
 	bg = AEGfxTextureLoad("Assets/background.png");
 
 	//Animation frames
-	blast1 = AEGfxTextureLoad("Assets/blast1.png");
-	blast2 = AEGfxTextureLoad("Assets/blast2.png");
-	blast3 = AEGfxTextureLoad("Assets/blast3.png");
-	blast[0] = blast1;
-	blast[1] = blast2;
-	blast[2] = blast3;
+	//blast1 = AEGfxTextureLoad("Assets/blast1.png");
+	//blast2 = AEGfxTextureLoad("Assets/blast2.png");
+	//blast3 = AEGfxTextureLoad("Assets/blast3.png");
+	blast[0] = AEGfxTextureLoad("Assets/blast1.png");
+	blast[1] = AEGfxTextureLoad("Assets/blast2.png");
+	blast[2] = AEGfxTextureLoad("Assets/blast3.png");
 }
 
 // Initialization of your own variables go here
@@ -156,6 +156,9 @@ void GameStateAlchemiceInit() {
 
 
 void GameStateAlchemiceUpdate() {
+	//for (int i{}; i<3; ++i)
+		std::cout << 1 << std::endl;
+
 	// Updates global mouse pos
 	int x, y;
 	AEInputGetCursorPosition(&x, &y);
@@ -375,6 +378,7 @@ void GameStateAlchemiceUpdate() {
 		}//End of enemy_turn logic
 	}//End of Main Gameplay Loop.
 }
+
 void GameStateAlchemiceDraw() {
 	// Your own rendering logic goes here
 	// Set the background to black.
@@ -568,10 +572,11 @@ void GameStateAlchemiceUnload() {
 	AEGfxTextureUnload(end_turn_box);
 	AEGfxTextureUnload(crafting_test);
 	AEGfxTextureUnload(bg);
-	AEGfxTextureUnload(blast1);
-	AEGfxTextureUnload(blast2);
-	AEGfxTextureUnload(blast3);
+	AEGfxTextureUnload(blast[0]);
+	AEGfxTextureUnload(blast[1]);
+	AEGfxTextureUnload(blast[2]);
 	unload_spells(spellbook);
+	delete_player(alchemice);
 }
 
 float load_screen_time{};
