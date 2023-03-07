@@ -156,8 +156,6 @@ void GameStateAlchemiceInit() {
 
 
 void GameStateAlchemiceUpdate() {
-	//for (int i{}; i<3; ++i)
-		std::cout << 1 << std::endl;
 
 	// Updates global mouse pos
 	int x, y;
@@ -273,9 +271,10 @@ void GameStateAlchemiceUpdate() {
 					{
 						if (aabbbutton(spellbook[i].spell_dragdrop, enemies[j].get_aabb()) != -1)
 						{
-							if (enemies[j].is_alive())
+							if (enemies[j].is_alive() && alchemice->mp > 0)
 							{
 								enemies[j].take_damage(spellbook[i].base_damage);
+								alchemice->mp -= 1;
 								if (spellbook[i].id > 3) {
 									spellbook[i].reset_spell();
 									cards.x -= 110;
@@ -291,8 +290,10 @@ void GameStateAlchemiceUpdate() {
 					if (spellbook[i].spell_dragdrop->getmouse())
 					{
 						std::cout << "RELEASE" << std::endl;
-						if (aabbbutton(crafting_table.get_dragdrop(), spellbook[i].spell_dragdrop) == 1) {
-							crafting_table.crafting_table_update(spellbook, spellbook[i].id);
+						if (aabbbutton(crafting_table.get_dragdrop(), spellbook[i].spell_dragdrop) == 1 && alchemice->mp > 0) {
+							if (crafting_table.crafting_table_update(spellbook, spellbook[i].id) == 3) {
+								alchemice->mp -= 1;
+							}
 						}
 						else {
 							spellbook[i].spell_dragdrop->resetaabb();
