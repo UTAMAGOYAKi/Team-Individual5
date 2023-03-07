@@ -1,6 +1,7 @@
 #include "EnemyObject.h"
 #include "Buttons.h"
 
+//Functions to retrieve Enemy datas
 std::string Enemy::get_name() {
     return name;
 }
@@ -26,7 +27,7 @@ AEGfxTexture* Enemy::get_texture() {
 }
 
 bool Enemy::is_alive() {
-    return alive;
+    return life_state;
 }
 
 aabb Enemy::get_aabb()
@@ -46,19 +47,20 @@ void Enemy::set_position(AEVec2 input_pos) {
     //std::cout << enemy_aabb.mid.x << " " << enemy_aabb.mid.y << std::endl;
 }
 
-//for getting healed or damage
+//When enemy take damage, insert damage number there.
 void Enemy::take_damage(int val) {
     if (alive) { //if alive
         hp -= val;
         if (hp <= 0) {
             hp = 0;
-            alive = false;
+            life_state = dead;
         }
     }
 }
 
-void Enemy::set_frame_num(int v){
-    frame_num = v;
+
+void Enemy::set_frame_num(int frame_no){
+    frame_num = frame_no;
 }
 
 void Enemy::update_animation(f64 dt) {

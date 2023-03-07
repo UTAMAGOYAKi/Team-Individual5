@@ -46,7 +46,7 @@ craftingtable crafting_table;
 AEGfxVertexList* pMesh{}, * pLoad{};
 AEGfxTexture* chara{}, * rat{}, * spell_g{}, * pause_box{}, * sub{}, * load_screen{}, * crafting_test{}, * bg{}, * end_turn_box{};
 //Animation frames
-AEGfxTexture* blast1{}, * blast2{}, * blast3{};
+//AEGfxTexture* blast1{}, * blast2{}, * blast3{};
 
 aabb* chara_pos;
 aabb* Enemy_pos_1;
@@ -61,20 +61,22 @@ s32 pY{};
 bool alchemy_mode = 0;
 bool pause_mode = false;
 bool sub_menu = false;
+
+//Level Turn checks
 Turn turn;
 Level level;
 
+//GameObject Creations
 player* alchemice{};
-
-//GameObject creations
-std::string rat_hp{};
 Enemy enemies[3]{};
+
 //Enemy Animations
 AEGfxTexture* blast[3];
 float frame_time{ 2 };
-f64 curr_time{ frame_time }; //Animations Timer
+double curr_time{ frame_time }; //Animations Timer
 bool is_enemy_turn = false;
 
+//Button AABB
 aabb pause_buttons[3];
 aabb end_turn_button;
 
@@ -105,12 +107,12 @@ void GameStateAlchemiceLoad() {
 	bg = AEGfxTextureLoad("Assets/background.png");
 
 	//Animation frames
-	blast1 = AEGfxTextureLoad("Assets/blast1.png");
-	blast2 = AEGfxTextureLoad("Assets/blast2.png");
-	blast3 = AEGfxTextureLoad("Assets/blast3.png");
-	blast[0] = blast1;
-	blast[1] = blast2;
-	blast[2] = blast3;
+	//blast1 = AEGfxTextureLoad("Assets/blast1.png");
+	//blast2 = AEGfxTextureLoad("Assets/blast2.png");
+	//blast3 = AEGfxTextureLoad("Assets/blast3.png");
+	blast[0] = AEGfxTextureLoad("Assets/blast1.png");
+	blast[1] = AEGfxTextureLoad("Assets/blast2.png");
+	blast[2] = AEGfxTextureLoad("Assets/blast3.png");
 }
 
 // Initialization of your own variables go here
@@ -154,6 +156,9 @@ void GameStateAlchemiceInit() {
 
 
 void GameStateAlchemiceUpdate() {
+	//for (int i{}; i<3; ++i)
+		std::cout << 1 << std::endl;
+
 	// Updates global mouse pos
 	int x, y;
 	AEInputGetCursorPosition(&x, &y);
@@ -260,8 +265,6 @@ void GameStateAlchemiceUpdate() {
 				}
 			}
 
-
-
 			if (AEInputCheckReleased(AEVK_LBUTTON))
 			{
 				for (int i = 0; i < max_spells; i++)
@@ -335,7 +338,7 @@ void GameStateAlchemiceUpdate() {
 			{
 				enemies[rand() % TOTAL_ENEMY].take_damage(1);
 			}
-		}
+		}//End of player turn logic
 
 		//Enemy turn; runs all the enemy functions and animations
 		else if (turn == enemy_turn) {
@@ -344,6 +347,8 @@ void GameStateAlchemiceUpdate() {
 			if (curr_time <= 0.0f) {
 				turn = player_turn;
 				level.display_turn = "Player's Turn";
+
+				//Variables to update when switching back to Player Turn.
 				is_enemy_turn = false;
 				curr_time = frame_time;
 
@@ -370,9 +375,10 @@ void GameStateAlchemiceUpdate() {
 				}
 
 			}
-		}
-	}
+		}//End of enemy_turn logic
+	}//End of Main Gameplay Loop.
 }
+
 void GameStateAlchemiceDraw() {
 	// Your own rendering logic goes here
 	// Set the background to black.
@@ -433,10 +439,10 @@ void GameStateAlchemiceDraw() {
 	AEGfxPrint(font, (s8*)player_mp.c_str(), (player_position.x - 200) / 640, player_position.y / 360 - 0.5f, 1.0f, 1.0f, 1.0f, 1.0f);
 	//name_bar(mana_text, player_position_mp, font);
 
-	//crafting table
+	//Crafting Table
 	draw_crafting_table(pMesh, crafting_table, crafting_test);
 
-	// Card Drawing
+	//Card Drawing
 	for (int i = 0; i <= max_spells - 1; i++) {
 		if (spellbook[i].unlocked == true) {
 			AEGfxTextureSet(spellbook[i].texture, 0, 0);
@@ -566,10 +572,11 @@ void GameStateAlchemiceUnload() {
 	AEGfxTextureUnload(end_turn_box);
 	AEGfxTextureUnload(crafting_test);
 	AEGfxTextureUnload(bg);
-	AEGfxTextureUnload(blast1);
-	AEGfxTextureUnload(blast2);
-	AEGfxTextureUnload(blast3);
+	AEGfxTextureUnload(blast[0]);
+	AEGfxTextureUnload(blast[1]);
+	AEGfxTextureUnload(blast[2]);
 	unload_spells(spellbook);
+	delete_player(alchemice);
 }
 
 float load_screen_time{};

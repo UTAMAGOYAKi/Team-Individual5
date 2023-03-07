@@ -153,6 +153,7 @@ void unload_spells(Spell* spellbook) {
 	AEGfxTextureUnload(flame_burst);
 	AEGfxTextureUnload(rat_swarm);
 	AEGfxTextureUnload(bubonic_blaze);
+
 	delete[] spellbook;
 }
 
