@@ -1,9 +1,21 @@
+//---------------------------------------
+//Set Spell Damage Values
+
+//Base Damage
+const int base_low = 2;
+const int base_mid = 2;
+const int base_high = 3;
+
+//AOE Damage
+
+
+
 #include "Spells.h"
 
 //Number of spells that will be created
 const int max_spells = 10;
 
-//Textures for spells
+//Declare textures for spells
 AEGfxTexture* toxic_deluge{}, * inferno_blast{}, * umbral_tendrils{}, * maelstrom_surge{}, * venemous_bite{},
 * shadow_cloak{}, * flame_burst{}, * rat_swarm{}, * bubonic_blaze{};
 
@@ -54,7 +66,7 @@ Spell* init_all_spells()
 		//Set >tier 3 midpoint coords to 0
 		if (spellbook[i].tier < 3) {
 			spellbook[i].spell_dragdrop->moveto(cards);
-			spellbook[i].spell_dragdrop->changeref(spellbook[i].id);\
+			spellbook[i].spell_dragdrop->changeref(spellbook[i].id);
 		}
 	}
 	return spellbook;
@@ -69,7 +81,7 @@ Spell::~Spell()
 //Function that will set coords to a spell when called
 void Spell::init_spells_draw(Spell& spell, AEVec2 coords)
 {
-	//Set spells boundingbo
+	//Set spells boundingbox
 	spell.spell_dragdrop->changeaabb(spell.card_width, spell.card_height);
 	//Move spells to coords be drawn
 	spell.spell_dragdrop->moveto(coords);
@@ -148,28 +160,28 @@ void unload_spells(Spell* spellbook) {
 // State 1: When only 1 spell is input
 // State 2: When 2 spells has been input but invalid combo
 // State 3: When 2 spells has been input and spell is unloked
-int crafting_table_update(Spell* spellbook, craftingtable& table, int spell_id)
+int craftingtable::crafting_table_update(Spell* spellbook, int spell_id)
 {
 	spellbook[spell_id].spell_dragdrop->mousechange(false);
-	spellbook[spell_id].spell_dragdrop->moveto(table.table_dragdrop.getcoord());
-	if (table.spell1_id == INVALID_SPELL) {
-		table.spell1_id = spell_id;
+	spellbook[spell_id].spell_dragdrop->moveto(this->table_dragdrop.getcoord());
+	if (this->spell1_id == INVALID_SPELL) {
+		this->spell1_id = spell_id;
 		return 1;
 	}
-	else if (table.spell1_id != INVALID_SPELL && table.spell2_id == INVALID_SPELL) {
-		table.spell2_id = spell_id;
-		if (combine_spells(spellbook, table.spell1_id, table.spell2_id) == true) {
-			spellbook[table.spell1_id].spell_dragdrop->resetaabb();
-			spellbook[table.spell2_id].spell_dragdrop->resetaabb();
-			table.spell1_id = INVALID_SPELL;
-			table.spell2_id = INVALID_SPELL;
+	else if (this->spell1_id != INVALID_SPELL && this->spell2_id == INVALID_SPELL) {
+		this->spell2_id = spell_id;
+		if (combine_spells(spellbook, this->spell1_id, this->spell2_id) == true) {
+			spellbook[this->spell1_id].spell_dragdrop->resetaabb();
+			spellbook[this->spell2_id].spell_dragdrop->resetaabb();
+			this->spell1_id = INVALID_SPELL;
+			this->spell2_id = INVALID_SPELL;
 			return 2;
 		}
 		else {
-			spellbook[table.spell1_id].spell_dragdrop->resetaabb();
-			spellbook[table.spell2_id].spell_dragdrop->resetaabb();
-			table.spell1_id = INVALID_SPELL;
-			table.spell2_id = INVALID_SPELL;
+			spellbook[this->spell1_id].spell_dragdrop->resetaabb();
+			spellbook[this->spell2_id].spell_dragdrop->resetaabb();
+			this->spell1_id = INVALID_SPELL;
+			this->spell2_id = INVALID_SPELL;
 			return 3;
 		}
 	}
@@ -178,6 +190,15 @@ int crafting_table_update(Spell* spellbook, craftingtable& table, int spell_id)
 	//table.spell1_id = INVALID_SPELL;
 	//table.spell2_id = INVALID_SPELL;
 	return 2;
+}
+
+dragdrop* craftingtable::get_dragdrop()
+{
+	return &(this->table_dragdrop);
+}
+
+void draw_all_spells(Spell* spellbook)
+{
 }
 
 craftingtable::craftingtable()

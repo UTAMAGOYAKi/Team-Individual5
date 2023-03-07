@@ -33,7 +33,7 @@ Spell* spellbook{};
 //Coords for active cards
 AEVec2 cards;
 //Crafting table for magic
-craftingtable crafting_table{};
+craftingtable crafting_table;
 //---------------------------------------------------------------------------------
 
 
@@ -171,11 +171,11 @@ void GameStateAlchemiceUpdate() {
 	if (AEInputCheckTriggered(AEVK_ESCAPE)) {
 		pause_mode = !pause_mode;
 	}
-	
+
 	for (int i{}; i < sizeof(pause_buttons) / sizeof(pause_buttons[0]); ++i) //for every iteration of pause menu buttons
 	{
 		if ((mouse_pos.x >= pause_buttons[i].s2.x && mouse_pos.x <= pause_buttons[i].s1.x && //check mouse inside of button's aabb
-			mouse_pos.y <= pause_buttons[i].s2.y && mouse_pos.y >= pause_buttons[i].s1.y) && 
+			mouse_pos.y <= pause_buttons[i].s2.y && mouse_pos.y >= pause_buttons[i].s1.y) &&
 			AEInputCheckTriggered(AEVK_LBUTTON) && //check if left button is clicked
 			pause_mode == true) //only runs during pause mode
 		{
@@ -292,8 +292,8 @@ void GameStateAlchemiceUpdate() {
 					if (spellbook[i].spell_dragdrop->getmouse())
 					{
 						std::cout << "RELEASE" << std::endl;
-						if (aabbbutton(spellbook[i].spell_dragdrop, &crafting_table.table_dragdrop) == 1) {
-							crafting_table_update(spellbook, crafting_table, spellbook[i].id  );
+						if (aabbbutton(crafting_table.get_dragdrop(), spellbook[i].spell_dragdrop) == 1) {
+							crafting_table.crafting_table_update(spellbook, spellbook[i].id);
 						}
 						else {
 							spellbook[i].spell_dragdrop->resetaabb();
@@ -356,7 +356,7 @@ void GameStateAlchemiceUpdate() {
 					std::cout << "Enemy actual turn\n";
 
 					for (int i = 0; i < TOTAL_ENEMY; i++) {
-						if (enemies[i].is_alive()) 
+						if (enemies[i].is_alive())
 						{
 							enemies[i].set_frame_num(0);
 							alchemice->hp -= enemies[i].get_atk();
@@ -535,7 +535,7 @@ void GameStateAlchemiceDraw() {
 		const char* mytex[3]{ { "Continue" }, { "Options" }, {"Main Menu"} };
 
 		for (int i = 0; i < 3; ++i) {
-			f32 middle = -(((float)strlen(mytex[i]) / 2) / (AEGetWindowWidth()/FONT_SIZE));
+			f32 middle = -(((float)strlen(mytex[i]) / 2) / (AEGetWindowWidth() / FONT_SIZE));
 			f32 textY = ((float)(AEGetWindowHeight() - i * AEGetWindowHeight()) / 2) / AEGetWindowHeight();
 			f32 boxY = (float)(190 - i * 180);
 			AEGfxTextureSet(pause_box, 0.f, 0.f);

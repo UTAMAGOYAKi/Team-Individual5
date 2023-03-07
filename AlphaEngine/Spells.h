@@ -23,28 +23,17 @@ enum Spells {
 	INVALID_SPELL
 };
 
-extern const int max_spells;
-
-class craftingtable {
-public:
-
-	craftingtable();
-
-	const float table_width{ 128 };
-	const float table_height{ 128 };
-
-	//Spell 1 hold
-	int spell1_id = INVALID_SPELL;
-
-	//Spell 2 hold
-	int spell2_id = INVALID_SPELL;
-
-	//Crafting table snap
-	dragdrop table_dragdrop{};
+enum class crafting{
+ONE_SPELL=1,
+INVALID_COMBO,
+SUCCESFUL_COMBO
 };
 
-class Spell {
-public:
+extern const int max_spells;
+
+
+
+struct Spell {
 	Spell(int id, int tier, int element, std::string spell_name, AEGfxTexture* texture, bool unlocked, int base_damage,
 		int AOE_damage, int lingering_damage, int lingering_rounds) :
 		id(id), tier(tier), element(element), spell_name(spell_name), texture(texture), unlocked(unlocked), base_damage(base_damage),
@@ -70,25 +59,49 @@ public:
 	// card size
 	const float			card_width = 100.0f;
 	const float			card_height = 100.0f;
-	void init_spells_draw(Spell& spell, AEVec2 coord);
-private:
 
+	//Set a Spells' AABB and Coords when called
+	void init_spells_draw(Spell& spell, AEVec2 coord);
 };
 
+class craftingtable {
+public:
+	//Returns state of the crafting table
+	// State 1: When only 1 spell is input
+	// State 2: When 2 spells has been input but invalid combo
+	// State 3: When 2 spells has been input and spell is unlocked
+	int crafting_table_update(Spell* spellbook, int spell_id);
 
+	//Returns a pointer to the crafting table's dragdrop object
+	dragdrop* get_dragdrop();
+
+	//Default Ctor
+	craftingtable();
+
+private:
+	const float table_width{ 128 };
+	const float table_height{ 128 };
+	//Spell 1 hold
+	int spell1_id = INVALID_SPELL;
+
+	//Spell 2 hold
+	int spell2_id = INVALID_SPELL;
+
+	//Crafting table snap
+	dragdrop table_dragdrop{};
+};
 
 // Create array of all spells
 Spell* init_all_spells();
 
 
-// Returns true if spell can be unlocked 
+// Returns true if spell has been unlocked 
 bool combine_spells(Spell* spellbook, int id1, int id2);
 
 // Called when level ends etc.
 void unload_spells(Spell* spellbook);
 
-//Returns state of the crafting table
-// State 1: When only 1 spell is input
-// State 2: When 2 spells has been input but invalid combo
-// State 3: When 2 spells has been input and spell is unloked
-int crafting_table_update(Spell* spellbook, craftingtable& table, int spell_id);
+void draw_all_spells(Spell* spellbook);
+
+
+
