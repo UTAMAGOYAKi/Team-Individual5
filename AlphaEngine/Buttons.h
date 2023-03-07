@@ -86,6 +86,8 @@ int aabbbutton(dragdrop* box, AEVec2 mouse);
 int aabbbutton(dragdrop* box, dragdrop* spell);
 int aabbbutton(dragdrop* spell, aabb box);
 
+int aabbbutton(aabb* ref, AEVec2 mouse);
+
 //std::istream& operator>> (std::istream is, dragdrop& box);
 
 #include "AEEngine.h"

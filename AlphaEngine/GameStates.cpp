@@ -78,6 +78,8 @@ bool is_enemy_turn = false;
 aabb pause_buttons[3];
 aabb end_turn_button;
 
+aabb menu_buttons[4];
+
 void GameStateAlchemiceLoad() {
 	pMesh = 0;
 	// Informing the library that we're about to start adding triangles
@@ -191,7 +193,7 @@ void GameStateAlchemiceUpdate() {
 				//options menu
 				break;
 			case 2:
-				gGameStateNext = GS_QUIT;
+				gGameStateNext = GS_MENU;
 				break;
 			}
 		}
@@ -648,4 +650,89 @@ void LoadScreenFree() {
 
 void LoadScreenUnload() {
 	AEGfxTextureUnload(load_screen);
+}
+
+
+void Menuload()
+{
+	pLoad = 0;
+	// Informing the library that we're about to start adding triangles
+	AEGfxMeshStart();
+	// This shape has 2 triangles that makes up a square
+	// Color parameters represent colours as ARGB
+	// UV coordinates to read from loaded textures
+	AEGfxTriAdd(
+		-0.5f, -0.5f, 0xFFFFFFFF, 0.0f, 1.0f,
+		-0.5f, 0.5f, 0xFFFFFFFF, 0.0f, 0.0f,
+		0.5f, 0.5f, 0xFFFFFFFF, 1.0f, 0.0f);
+	AEGfxTriAdd(
+		-0.5f, -0.5f, 0xFFFFFFFF, 0.0f, 1.0f,
+		0.5f, 0.5f, 0xFFFFFFFF, 1.0f, 0.0f,
+		0.5f, -0.5f, 0xFFFFFFFF, 1.0f, 1.0f);
+	// Saving the mesh (list of triangles) in pMesh
+	pLoad = AEGfxMeshEnd();
+}
+
+void Menuinit()
+{
+	for (int i = 0; i < 4; i++)
+	{
+		AEVec2 mid = { 0, 100+50*i};
+		menu_buttons[i] = CreateAABB(mid,100,50);
+	}
+
+}
+void Menuupdate()
+{
+
+	s32 x, y;
+	AEInputGetCursorPosition(&x, &y);
+	mouse_pos.x = (f32)x - AEGetWindowWidth() / 2;
+	mouse_pos.y = (f32)y - AEGetWindowHeight() / 2;
+
+	if (AEInputCheckTriggered(AEVK_ESCAPE))
+	{
+		gGameStateNext = GS_QUIT;
+	}
+	if (AEInputCheckTriggered(AEVK_LBUTTON))
+	{
+		for (int i = 0; i < 4; i++)
+		{
+			if (aabbbutton(&menu_buttons[i], mouse_pos))
+			{
+				std::cout << "test\n"<<i;
+
+			}
+		}
+	}
+	
+}
+void Menudraw()
+{
+	AEMtx33 scale{ 0 };
+	AEMtx33 rotate{ 0 };
+	AEMtx33 translate{ 0 };
+	AEMtx33 transform{ 0 };
+
+	AEGfxSetRenderMode(AE_GFX_RM_COLOR);
+	for (int i = 0; i < 4; i++)
+	{
+		AEMtx33Trans(&translate, 0, -(AEGetWindowHeight()/20.0f + i * 50+50));
+		AEMtx33Rot(&rotate, 0);
+		AEMtx33Scale(&scale, 10, 10); //hardcoded values from the pixels in .png file, 3x value 
+		AEMtx33Concat(&transform, &rotate, &scale);
+		AEMtx33Concat(&transform, &translate, &transform);
+		AEGfxSetTransform(transform.m);
+
+		AEGfxMeshDraw(pLoad, AE_GFX_MDM_TRIANGLES);
+	}
+
+}
+void Menufree()
+{
+	AEGfxMeshFree(pLoad);
+}
+void Menuunload()
+{
+	return;
 }
