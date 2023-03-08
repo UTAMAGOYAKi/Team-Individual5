@@ -1,5 +1,4 @@
-#ifndef GS_H
-#define GS_H
+#pragma once
 
 enum Turn {
 	player_turn,
@@ -24,12 +23,3 @@ void LoadScreenUpdate();
 void LoadScreenDraw();
 void LoadScreenFree();
 void LoadScreenUnload();
-
-
-void Menuload();
-void Menuinit();
-void Menuupdate();
-void Menudraw();
-void Menufree();
-void Menuunload(); 
-#endif // !GS_H
