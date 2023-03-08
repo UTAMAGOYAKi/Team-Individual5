@@ -5,6 +5,7 @@
 #include <iostream>
 #include <fstream>
 #include "UI.h"
+#include <math.h>
 
 //Reference for controls
 //Q - basic attack against first rat
@@ -108,14 +109,13 @@ void GameStateAlchemiceLoad() {
 	//Creating the particle object
 	AEGfxMeshStart();
 	AEGfxTriAdd(
-		-0.5f, -0.5f, 0xFF0000FF, 0.0f, 0.0f,
-		0.5f, -0.5f, 0xFF0000FF, 0.0f, 0.0f,
-		-0.5f, 0.5f, 0xFF0000FF, 0.0f, 0.0f);
-
+		-0.5f, -0.5f, 0xFFFFFFFF, 0.0f, 1.0f,
+		-0.5f, 0.5f, 0xFFFFFFFF, 0.0f, 0.0f,
+		0.5f, 0.5f, 0xFFFFFFFF, 1.0f, 0.0f);
 	AEGfxTriAdd(
-		-0.5f, 0.5f, 0xFF0000FF, 0.0f, 0.0f,
-		0.5f, -0.5f, 0xFF0000FF, 0.0f, 0.0f,
-		0.5f, 0.5f, 0xFF0000FF, 0.0f, 0.0f);
+		-0.5f, -0.5f, 0xFFFFFFFF, 0.0f, 1.0f,
+		0.5f, -0.5f, 0xFFFFFFFF, 1.0f, 1.0f,
+		0.5f, 0.5f, 0xFFFFFFFF, 1.0f, 0.0f);
 
 	particle_mesh = AEGfxMeshEnd();
 
@@ -207,8 +207,7 @@ void GameStateAlchemiceUpdate() {
 
 	for (int i{}; i < sizeof(pause_buttons) / sizeof(pause_buttons[0]); ++i) //for every iteration of pause menu buttons
 	{
-		if ((mouse_pos.x >= pause_buttons[i].s2.x && mouse_pos.x <= pause_buttons[i].s1.x && //check mouse inside of button's aabb
-			mouse_pos.y <= pause_buttons[i].s2.y && mouse_pos.y >= pause_buttons[i].s1.y) &&
+		if (aabbbutton(&pause_buttons[i],mouse_pos) &&
 			AEInputCheckTriggered(AEVK_LBUTTON) && //check if left button is clicked
 			pause_mode == true) //only runs during pause mode
 		{
@@ -259,9 +258,10 @@ void GameStateAlchemiceUpdate() {
 	{
 		particle new_particle;
 		//Contiune
-		new_particle.size = fmodf((float)rand(), 0.4f);
+		new_particle.size = fmodf((float)rand(), 100.0f);
 		new_particle.lifespan = fmodf((float)rand(), 0.7f);
 		new_particle.position = enemies[0].get_pos();
+
 		AEVec2 new_vel;
 		//int num = rand();
 		if (rand() % 2) {
@@ -575,6 +575,29 @@ void GameStateAlchemiceDraw() {
 			enemy_info(enemies[i], font, pMesh);
 		}
 	}
+
+	//Particle Drawing
+	AEMtx33 scale2, trans, matrix;
+
+	//Drawing of Particles
+	for (int i = 0; i < particle_vector.size(); ++i)
+	{
+		AEGfxTextureSet(blast[0], 0, 0);
+		//Apply scale
+		AEMtx33Scale(&scale2, particle_vector[i].size, particle_vector[i].size);
+		//Apply translation
+		AEMtx33Trans(&trans, particle_vector[i].position.x, particle_vector[i].position.y);
+		//Concatenate the scale and translation matrix
+		AEMtx33Concat(&matrix, &trans, &scale2);
+		//Concatenate the result with the particle's matrix
+		//AEMtx33Concat(&matrix, &MapTransform, &matrix);
+		//Send the resultant matrix to the graphics manager using "AEGfxSetTransform"
+		AEGfxSetTransform(matrix.m);
+		//Draw the particle's mesh
+		AEGfxMeshDraw(particle_mesh, AE_GFX_MDM_TRIANGLES);
+		std::cout << i << "Drawing";
+	}
+
 	//Enemy Attack Animation
 	if (turn == enemy_turn) {
 
@@ -595,26 +618,7 @@ void GameStateAlchemiceDraw() {
 		}
 	}
 
-	//Particle Drawing
-	AEMtx33 trans, matrix;
 
-	//Drawing of Particles
-	for (int i = 0; i < particle_vector.size(); ++i)
-	{
-		//Apply scale
-		AEMtx33Scale(&scale, particle_vector[i].size, particle_vector[i].size);
-		//Apply translation
-		AEMtx33Trans(&trans, particle_vector[i].position.x, particle_vector[i].position.y);
-		//Concatenate the scale and translation matrix
-		AEMtx33Concat(&matrix, &trans, &scale);
-		//Concatenate the result with the particle's matrix
-		//AEMtx33Concat(&matrix, &MapTransform, &matrix);
-		//Send the resultant matrix to the graphics manager using "AEGfxSetTransform"
-		AEGfxSetTransform(matrix.m);
-		//Draw the particle's mesh
-		AEGfxMeshDraw(particle_mesh, AE_GFX_MDM_TRIANGLES);
-		std::cout << i << "Drawing";
-	}
 
 
 	// End turn button
@@ -706,6 +710,8 @@ void GameStateAlchemiceUnload() {
 	AEGfxTextureUnload(blast[1]);
 	AEGfxTextureUnload(blast[2]);
 	AEGfxTextureUnload(blast[3]);
+
+	AEGfxMeshFree(particle_mesh);
 }
 
 float load_screen_time{};
