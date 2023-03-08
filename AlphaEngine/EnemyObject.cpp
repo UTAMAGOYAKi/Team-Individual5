@@ -51,7 +51,7 @@ bool Enemy::is_bleeding() {
     return bleeding;
 }
 
-int Enemy::get_bleed_timer() {
+f64 Enemy::get_bleed_timer() {
     return bleed_timer;
 };
 

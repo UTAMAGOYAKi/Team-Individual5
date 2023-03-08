@@ -26,7 +26,7 @@ struct particle
 {
     AEVec2 position;
     AEVec2 velocity;
-    float lifespan;
+    f64 lifespan;
     float size;
 };
 
@@ -59,7 +59,7 @@ private:
     //Bleed Time
     bool bleeding{false};
     float bleed_time{2.0f};
-    float bleed_timer{bleed_time};
+    f64 bleed_timer{bleed_time};
     
 public:
     Enemy() : name{ "" }, max_hp{ 0 }, hp{ 0 }, atk{ 0 }, pos{ 0.f,0.f }, texture{ nullptr }, life_state{ alive }, size{ 0 }, enemy_aabb{ CreateAABB() } {};
@@ -108,7 +108,7 @@ public:
     int get_total_frame();
     bool get_finish_attack();
     bool is_bleeding();
-    int get_bleed_timer();
+    f64 get_bleed_timer();
     
     //Used to make changes to damage classes.
     void set_position_and_aabb(AEVec2 input_pos);

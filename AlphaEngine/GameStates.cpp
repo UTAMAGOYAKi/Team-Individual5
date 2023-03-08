@@ -269,7 +269,7 @@ void GameStateAlchemiceUpdate() {
 
 			if (enemies[i].get_bleed_timer() <= 0) {
 				enemies[i].reset_bleed_time();
-				int j = enemies[i].get_bleed_timer();
+				f64 j = enemies[i].get_bleed_timer();
 				std::cout << "bleed timer" << j;
 				enemies[i].set_bleeding(false);
 			}
