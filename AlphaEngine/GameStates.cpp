@@ -45,6 +45,7 @@ craftingtable crafting_table;
 //Loading of Mesh and Texture
 AEGfxVertexList* pMesh{}, * pLoad{};
 AEGfxTexture* chara{}, * rat{}, * spell_g{}, * pause_box{}, * sub{}, * load_screen{}, * crafting_test{}, * bg{}, * end_turn_box{}, *mana_full{}, * mana_empty{};
+AEGfxTexture* Menu_ui{};
 //Animation frames
 //AEGfxTexture* blast1{}, * blast2{}, * blast3{};
 
@@ -124,6 +125,8 @@ void GameStateAlchemiceInit() {
 
 	//
 	turn = player_turn;
+	sub_menu = false;
+	pause_mode = false;
 
 	//Draw all spells that are active at beginning
 	AEVec2Zero(&cards);
@@ -652,6 +655,8 @@ void LoadScreenUnload() {
 
 void Menuload()
 {
+	Menu_ui = AEGfxTextureLoad("Assets/Menu_placeh.png");
+
 	pLoad = 0;
 	// Informing the library that we're about to start adding triangles
 	AEGfxMeshStart();
@@ -674,8 +679,8 @@ void Menuinit()
 {
 	for (int i = 0; i < 4; i++)
 	{
-		AEVec2 mid = { 0, 100+50*i};
-		menu_buttons[i] = CreateAABB(mid,100,50);
+		AEVec2 mid = { 0, -100.0f+75.0f*i};
+		menu_buttons[i] = CreateAABB(mid,128.0,50.0);
 	}
 
 }
@@ -687,17 +692,33 @@ void Menuupdate()
 	mouse_pos.x = (f32)x - AEGetWindowWidth() / 2;
 	mouse_pos.y = (f32)y - AEGetWindowHeight() / 2;
 
-	if (AEInputCheckTriggered(AEVK_ESCAPE))
-	{
-		gGameStateNext = GS_QUIT;
-	}
+	
 	if (AEInputCheckTriggered(AEVK_LBUTTON))
 	{
 		for (int i = 0; i < 4; i++)
 		{
 			if (aabbbutton(&menu_buttons[i], mouse_pos))
 			{
-				std::cout << "test\n"<<i;
+				switch (i+1)
+				{
+				case 1:
+					gGameStateNext = GS_ALCHEMICE;
+					break;
+
+				case 2:
+					std::cout << "Options are not coded yet!\n";
+					break;
+
+				case 3:
+					//send the player to the credits
+					std::cout <<"Credits are not coded yet!\n";
+					break;
+
+				case 4:
+					gGameStateNext = GS_QUIT;
+					break;
+
+				}
 
 			}
 		}
@@ -711,17 +732,28 @@ void Menudraw()
 	AEMtx33 translate{ 0 };
 	AEMtx33 transform{ 0 };
 
-	AEGfxSetRenderMode(AE_GFX_RM_COLOR);
+	AEGfxSetRenderMode(AE_GFX_RM_TEXTURE);
 	for (int i = 0; i < 4; i++)
 	{
-		AEMtx33Trans(&translate, 0, -(AEGetWindowHeight()/20.0f + i * 50+50));
+		AEGfxTextureSet(Menu_ui, 0, 0);
+		AEMtx33Trans(&translate, 0, -125.0f+(i*75.0f));
 		AEMtx33Rot(&rotate, 0);
-		AEMtx33Scale(&scale, 10, 10); //hardcoded values from the pixels in .png file, 3x value 
+		AEMtx33Scale(&scale, 128, 100); //hardcoded values from the pixels in .png file, 3x value 
 		AEMtx33Concat(&transform, &rotate, &scale);
 		AEMtx33Concat(&transform, &translate, &transform);
 		AEGfxSetTransform(transform.m);
-
 		AEGfxMeshDraw(pLoad, AE_GFX_MDM_TRIANGLES);
+	}
+
+	char strbuffer[100];
+	const char* words[4] = { "Play","Options", "Credits","Exit" };
+	memset(strbuffer, 0, 100 * sizeof(char));
+	AEGfxSetBlendMode(AE_GFX_BM_BLEND);
+	for (int i = 0; i < 4; i++)
+	{
+		sprintf_s(strbuffer, words[i]);
+		AEGfxPrint(font, strbuffer, -0.08f, 0.25f-i*0.21f, 1.0f, 0.0f, 0.0f, 0.0f);
+
 	}
 
 }
@@ -731,5 +763,5 @@ void Menufree()
 }
 void Menuunload()
 {
-	return;
+	AEGfxTextureUnload(Menu_ui);
 }
