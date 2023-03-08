@@ -28,7 +28,7 @@ private:
     AEVec2 pos;
     AEGfxTexture* texture;
     bool life_state; //Uses enemy_life_state: either dead or alive
-    int size = 128; //pixel size
+    int size = 1; //pixel size for AABB
     aabb enemy_aabb;
 
     //For Animations
@@ -40,7 +40,7 @@ public:
     Enemy() : name{ "" }, max_hp{ 0 }, hp{ 0 }, atk{ 0 }, pos{ 0.f,0.f }, texture{ nullptr }, life_state{ alive }, size{ 0 }, enemy_aabb{ CreateAABB() } {};
 
        
-    Enemy(enemy_types type, AEGfxTexture* input_texture) :name{ "" }, max_hp{ 0 }, hp{ 0 }, atk{ 0 }, pos{ 0.f,0.f }, texture{ input_texture }, life_state{alive}, size{ 128 } {
+    Enemy(enemy_types type, AEGfxTexture* input_texture) :name{ "" }, max_hp{ 0 }, hp{ 0 }, atk{ 0 }, pos{ 0.f,0.f }, texture{ input_texture }, life_state{alive} {
         switch (type)
         {
         case base_rat:
