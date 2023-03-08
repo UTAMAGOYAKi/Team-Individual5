@@ -225,9 +225,8 @@ AEVec2 enemy_position[3];
 AEVec2 player_position;
 
 void PositionInit() {
-
 	player_position.x = (float)(-(AEGetWindowWidth() / 4));
-	player_position.y = 0;// (float)-(AEGetWindowHeight() / 8);
+	player_position.y = 0;
 
 	enemy_position[0].x = (float)((9.0 / 16.0) * ((f32)AEGetWindowWidth() / 2));
 	enemy_position[0].y = 0;
