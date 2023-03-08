@@ -39,6 +39,14 @@ int Enemy::get_frame_num() {
     return frame_num;
 }
 
+int Enemy::get_total_frame() {
+    return total_frame;
+}
+
+bool Enemy::get_finish_attack() {
+    return finish_attack;
+}
+
 //Actions
 void Enemy::set_position_and_aabb(AEVec2 input_pos) {
     pos.x = input_pos.x;
@@ -58,7 +66,6 @@ void Enemy::take_damage(int val) {
     }
 }
 
-
 void Enemy::set_frame_num(int frame_no){
     frame_num = frame_no;
 }
@@ -66,12 +73,21 @@ void Enemy::set_frame_num(int frame_no){
 void Enemy::update_animation(f64 dt) {
     frame_timer -= dt;
 
+    if (frame_num == total_frame)
+        frame_num = 0;
+
     if (frame_timer <= 0) {
         frame_timer = frame_time;
         frame_num++;
 
-        if (frame_num > 2) {
-            frame_num = 2;
+        if (frame_num >= total_frame) {
+            switch_finish_attack();
+            frame_num = total_frame; //Stay at last frame
         }
     }
+}
+
+void Enemy::switch_finish_attack() 
+{
+    finish_attack = !finish_attack;
 }

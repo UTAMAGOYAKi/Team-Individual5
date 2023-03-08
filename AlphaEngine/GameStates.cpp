@@ -19,8 +19,8 @@
 
 // ---------------------------------------------------------------------------
 // main
-int i = 0;
-float position = 1000.0;
+//int i = 0;
+//float position = 1000.0;
 AEVec2 mouse_pos{}; // Current mouse pos
 
 //Card Variables
@@ -71,11 +71,12 @@ player* alchemice{};
 Enemy enemies[3]{};
 
 //Enemy Animations
-AEGfxTexture* blast[3];
-float frame_time{ 2 };
-double curr_time{ frame_time }; //Animations Timer
+AEGfxTexture* blast[4];
+//float frame_time{animation_time * TOTAL_ENEMY};
+//double curr_time{ frame_time }; //Animations Timer
 bool is_enemy_turn = false;
-int enemy_animation_turn = 0;
+//specific enemy turn
+int s_enemy_turn = 0;
 
 //Button AABB
 aabb pause_buttons[3];
@@ -112,6 +113,7 @@ void GameStateAlchemiceLoad() {
 	blast[0] = AEGfxTextureLoad("Assets/blast1.png");
 	blast[1] = AEGfxTextureLoad("Assets/blast2.png");
 	blast[2] = AEGfxTextureLoad("Assets/blast3.png");
+	blast[3] = AEGfxTextureLoad("Assets/blast4.png");
 }
 
 // Initialization of your own variables go here
@@ -317,6 +319,7 @@ void GameStateAlchemiceUpdate() {
 				if (mouse_pos.x >= end_turn_button.s2.x && mouse_pos.x <= end_turn_button.s1.x &&
 					mouse_pos.y <= end_turn_button.s2.y && mouse_pos.y >= end_turn_button.s1.y) {
 					turn = enemy_turn;
+					s_enemy_turn = 0;
 					is_enemy_turn = true;
 					level.display_turn = "Enemy's Turn";
 					std::cout << "enemy turn " << std::endl;
@@ -340,39 +343,56 @@ void GameStateAlchemiceUpdate() {
 		//Enemy turn; runs all the enemy functions and animations
 		else if (turn == enemy_turn) 
 		{
-			
-			curr_time -= AEFrameRateControllerGetFrameTime();
+			//Enemy turn duration
+			//curr_time -= AEFrameRateControllerGetFrameTime();
 
 			//When turn ends
-			if (curr_time <= 0.0f) {
+			if (is_enemy_turn == false) {
 				turn = player_turn;
 				level.display_turn = "Player's Turn";
 
 				//Variables to update when switching back to Player Turn.
-				is_enemy_turn = false;
-				curr_time = frame_time;
+				//is_enemy_turn = false;
+				//curr_time = frame_time;
 				
 				//Player Mana System
 				alchemice->max_mp = (alchemice->max_mp == 5) ? 5 : alchemice->max_mp + 1;
 				alchemice->mp = alchemice->max_mp;
 			}
+			//WORK IN PROGRESS
 			else
 			{
-				if (is_enemy_turn) {
+				if (s_enemy_turn < TOTAL_ENEMY) 
+				{
 					std::cout << "Enemy actual turn\n";
+					//Is a one time check when it becomes enemy then run animations
+					if (enemies[s_enemy_turn].get_finish_attack())
+					{
 
-					for (int i = 0; i < TOTAL_ENEMY; i++) {
-						if (enemies[i].is_alive())
+						alchemice->hp -= enemies[s_enemy_turn].get_atk();
+						std::cout << "Enemy Damage\n";
+
+						enemies[s_enemy_turn].switch_finish_attack();
+						s_enemy_turn++;
+						//is_enemy_turn = false;
+					}
+					else
+					{
+						//To update animations(it will auto switch)
+						if (enemies[s_enemy_turn].is_alive())
 						{
-							enemies[i].set_frame_num(0);
-							alchemice->hp -= enemies[i].get_atk();
-							std::cout << "Enemy Damage\n";
+							//update_animation will switch enemy object's animation to be finished when it ends.
+							enemies[s_enemy_turn].update_animation(AEFrameRateControllerGetFrameTime());
+						}
+						else
+						{
+							s_enemy_turn++;
 						}
 					}
-					is_enemy_turn = false;
 				}
-				for (int i{}; i < TOTAL_ENEMY; i++) {
-					enemies[i].update_animation(AEFrameRateControllerGetFrameTime());
+				else
+				{
+					is_enemy_turn = false;
 				}
 			}
 		}//End of enemy_turn logic
@@ -488,15 +508,16 @@ void GameStateAlchemiceDraw() {
 			enemy_info(enemies[i], font, pMesh);
 		}
 	}
-
 	//Enemy Attack Animation
 	if (turn == enemy_turn) {
 
-		for (int i{}; i < TOTAL_ENEMY; i++) {
-			if (enemies[i].is_alive() && (i == enemy_animation_turn))
+		if (enemies[s_enemy_turn].is_alive())
+		{
+			//Ensure 4th frame which is the delay frame does not get drawn and crash
+			if (enemies[s_enemy_turn].get_frame_num() < enemies[s_enemy_turn].get_total_frame()) 
 			{
-				AEGfxTextureSet(blast[enemies[i].get_frame_num()], 0, 0);
-				AEMtx33Trans(&translate, (f32)(enemies[i].get_pos().x), (f32)(enemies[i].get_pos().y));
+				AEGfxTextureSet(blast[enemies[s_enemy_turn].get_frame_num()], 0, 0);
+				AEMtx33Trans(&translate, (f32)(enemies[s_enemy_turn].get_pos().x), (f32)(enemies[s_enemy_turn].get_pos().y));
 				AEMtx33Rot(&rotate, 0);
 				AEMtx33Scale(&scale, 100.f, 100.f);
 				AEMtx33Concat(&transform, &rotate, &scale);
@@ -583,6 +604,7 @@ void GameStateAlchemiceUnload() {
 	AEGfxTextureUnload(blast[0]);
 	AEGfxTextureUnload(blast[1]);
 	AEGfxTextureUnload(blast[2]);
+	AEGfxTextureUnload(blast[3]);
 	AEGfxTextureUnload(mana_full);
 	AEGfxTextureUnload(mana_empty);
 	unload_spells(spellbook);

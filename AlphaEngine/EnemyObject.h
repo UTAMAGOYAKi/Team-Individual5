@@ -8,6 +8,7 @@
 #include <AEVec2.h>
 
 #define TOTAL_ENEMY 3
+const int animation_time = 1;
 
 enum enemy_types 
 {
@@ -30,14 +31,16 @@ private:
     int atk;
     AEVec2 pos;
     AEGfxTexture* texture;
-    bool life_state; //Uses enemy_life_state: either dead or alive
     int size = 1; //pixel size for AABB
     aabb enemy_aabb;
 
-    //FOR ANIMATIONS
-  //______________________________________________________________
+    //________________________ENEMY COMBAT SETTINGS____________________________
+    bool life_state; //Uses enemy_life_state: either dead or alive
+    bool finish_attack{ false };
+               
+  //________________________FOR ANIMATIONS____________________________
   //Setting
-    int total_frame = 3;
+    int total_frame = 4;
     int frame_num = 0; //current frame
     double attack_animation_timer = 1.0f;
 
@@ -89,12 +92,15 @@ public:
     bool is_alive();
     int get_frame_num();
     aabb get_aabb();
+    int get_total_frame();
+    bool get_finish_attack();
     
     //Used to make changes to damage classes.
     void set_position_and_aabb(AEVec2 input_pos);
     void take_damage(int val);
-    void set_frame_num(int); //Changes the frame number for the update animation
+    void set_frame_num(int);        //Changes the frame number for the update animation
     void update_animation(f64 dt); //Updates the frame number to draw the correct frame.
+    void switch_finish_attack();      //switches true to false or false to true;
 };
 
 #endif // ENEMY_H
