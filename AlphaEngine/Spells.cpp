@@ -1,9 +1,27 @@
+//---------------------------------------
+//Set Spell Damage Values
+
+//Base Damage
+const int base_low = 2;
+const int base_mid = 3;
+const int base_high = 5;
+
+//AOE Damage
+const int aoe_low = 1;
+const int aoe_mid = 2;
+const int aoe_high = 3;
+
+//Lingering Damage 
+const int lingering_low = 1;
+const int lingering_mid = 2;
+const int lingering_high = 3;
+
+//Lingering Rounds
+const int lingering_rounds_mid = 2;
+
 #include "Spells.h"
 
-//Number of spells that will be created
-const int max_spells = 10;
-
-//Textures for spells
+//Declare textures for spells
 AEGfxTexture* toxic_deluge{}, * inferno_blast{}, * umbral_tendrils{}, * maelstrom_surge{}, * venemous_bite{},
 * shadow_cloak{}, * flame_burst{}, * rat_swarm{}, * bubonic_blaze{};
 
@@ -34,19 +52,19 @@ Spell* init_all_spells()
 
 	Spell* spellbook = new Spell[max_spells]{
 		// Tier 3 spells
-		Spell(TOXIC_DELUGE, 3, POISON, "Toxic Deluge",toxic_deluge,true, 2, 0, 1,0),
-		Spell(INFERNO_BLAST, 3, FIRE, "Inferno Blast",maelstrom_surge,true, 2, 0, 1,0),
-		Spell(UMBRAL_TENDRILS, 3, SHADOW, "Umbral Tendrils",inferno_blast,true, 2, 0, 1,0),
-		Spell(MAELSTROM_SURGE, 3, WATER, "Maelstrom Surge",umbral_tendrils,true, 2, 0, 1,0),
+		Spell(TOXIC_DELUGE, 3, POISON, "Toxic Deluge",toxic_deluge,true, base_low, NULL, lingering_low,NULL),
+		Spell(INFERNO_BLAST, 3, FIRE, "Inferno Blast",maelstrom_surge,true, base_low, NULL, lingering_low,NULL),
+		Spell(UMBRAL_TENDRILS, 3, SHADOW, "Umbral Tendrils",inferno_blast,true, base_low, NULL, lingering_low,NULL),
+		Spell(MAELSTROM_SURGE, 3, WATER, "Maelstrom Surge",umbral_tendrils,true, base_low, NULL, lingering_low,NULL),
 		// Tier 2 spells
-		Spell(VENOMOUS_BITE, 2, POISON, "Venomous Bite",venemous_bite,false, 3, 1, 5,2),
-		Spell(SHADOW_CLOAK, 2, SHADOW, "Shadow Cloak",shadow_cloak,false, 3, 1, 5,0),
-		Spell(FLAME_BURST, 2, FIRE, "Flame Burst",flame_burst,false, 3, 1, 5,0),
-		// Tier 1 spells
-		Spell(RAT_SWARM, 1, SHADOW, "Rat Swarm",rat_swarm,false, 5, 1, 5,1),
-		Spell(BUBONIC_BLAZE, 1, FIRE, "Bubonic Blaze",bubonic_blaze,false, 5, 1, 5,5),
+		Spell(VENOMOUS_BITE, 2, POISON, "Venomous Bite",venemous_bite,false, base_mid, aoe_low, lingering_mid,lingering_rounds_mid),
+		Spell(SHADOW_CLOAK, 2, SHADOW, "Shadow Cloak",shadow_cloak,false, base_mid, aoe_low, lingering_mid,NULL),
+		Spell(FLAME_BURST, 2, FIRE, "Flame Burst",flame_burst,false, base_mid, aoe_low, lingering_mid,NULL),
+		// Tier aoe_low spells
+		Spell(RAT_SWARM, 1, SHADOW, "Rat Swarm",rat_swarm,false, base_high, aoe_low,lingering_high,lingering_rounds_mid),
+		Spell(BUBONIC_BLAZE, 1, FIRE, "Bubonic Blaze",bubonic_blaze,false, base_high, aoe_low, lingering_high,lingering_rounds_mid),
 		// Invalid Spell
-		Spell(INVALID_SPELL, 0, INVALID_ELEMENT, "",nullptr,false, 0, 0, 0,0),
+		Spell(INVALID_SPELL, 0, INVALID_ELEMENT, "",nullptr,false, NULL, NULL, NULL,NULL),
 	};
 
 	AEVec2Zero(&cards);
@@ -54,7 +72,7 @@ Spell* init_all_spells()
 		//Set >tier 3 midpoint coords to 0
 		if (spellbook[i].tier < 3) {
 			spellbook[i].spell_dragdrop->moveto(cards);
-			spellbook[i].spell_dragdrop->changeref(spellbook[i].id);\
+			spellbook[i].spell_dragdrop->changeref(spellbook[i].id);
 		}
 	}
 	return spellbook;
@@ -69,10 +87,17 @@ Spell::~Spell()
 //Function that will set coords to a spell when called
 void Spell::init_spells_draw(Spell& spell, AEVec2 coords)
 {
-	//Set spells boundingbo
+	//Set spells boundingbox
 	spell.spell_dragdrop->changeaabb(spell.card_width, spell.card_height);
 	//Move spells to coords be drawn
 	spell.spell_dragdrop->moveto(coords);
+}
+
+void Spell::reset_spell()
+{
+	unlocked = false;
+	delete spell_dragdrop;
+	spell_dragdrop = new dragdrop;
 }
 
 
@@ -149,36 +174,61 @@ void unload_spells(Spell* spellbook) {
 // State 1: When only 1 spell is input
 // State 2: When 2 spells has been input but invalid combo
 // State 3: When 2 spells has been input and spell is unloked
-int crafting_table_update(Spell* spellbook, craftingtable& table, int spell_id)
+int craftingtable::crafting_table_update(Spell* spellbook, int spell_id)
 {
 	spellbook[spell_id].spell_dragdrop->mousechange(false);
-	spellbook[spell_id].spell_dragdrop->moveto(table.table_dragdrop.getcoord());
-	if (table.spell1_id == INVALID_SPELL) {
-		table.spell1_id = spell_id;
+	spellbook[spell_id].spell_dragdrop->moveto(this->table_dragdrop.getcoord());
+	if (this->spell1_id == INVALID_SPELL) {
+		this->spell1_id = spell_id;
 		return 1;
 	}
-	else if (table.spell1_id != INVALID_SPELL && table.spell2_id == INVALID_SPELL) {
-		table.spell2_id = spell_id;
-		if (combine_spells(spellbook, table.spell1_id, table.spell2_id) == true) {
-			spellbook[table.spell1_id].spell_dragdrop->resetaabb();
-			spellbook[table.spell2_id].spell_dragdrop->resetaabb();
-			table.spell1_id = INVALID_SPELL;
-			table.spell2_id = INVALID_SPELL;
-			return 2;
-		}
-		else {
-			spellbook[table.spell1_id].spell_dragdrop->resetaabb();
-			spellbook[table.spell2_id].spell_dragdrop->resetaabb();
-			table.spell1_id = INVALID_SPELL;
-			table.spell2_id = INVALID_SPELL;
+	else if (this->spell1_id != INVALID_SPELL && this->spell2_id == INVALID_SPELL) {
+		this->spell2_id = spell_id;
+		if (combine_spells(spellbook, this->spell1_id, this->spell2_id) == true) {
+			spellbook[this->spell1_id].spell_dragdrop->resetaabb();
+			spellbook[this->spell2_id].spell_dragdrop->resetaabb();
+			this->spell1_id = INVALID_SPELL;
+			this->spell2_id = INVALID_SPELL;
 			return 3;
 		}
+		else {
+			spellbook[this->spell1_id].spell_dragdrop->resetaabb();
+			spellbook[this->spell2_id].spell_dragdrop->resetaabb();
+			this->spell1_id = INVALID_SPELL;
+			this->spell2_id = INVALID_SPELL;
+			return 2;
+		}
 	}
+	return 2;
 	//spellbook[table.spell1_id].spell_dragdrop->resetaabb();
 	//spellbook[table.spell2_id].spell_dragdrop->resetaabb();
 	//table.spell1_id = INVALID_SPELL;
 	//table.spell2_id = INVALID_SPELL;
-	return 2;
+}
+
+dragdrop* craftingtable::get_dragdrop()
+{
+	return &(this->table_dragdrop);
+}
+
+void draw_all_spells(Spell* spellbook, AEGfxVertexList* pMesh)
+{
+	AEMtx33 scale{ };
+	AEMtx33 rotate{  };
+	AEMtx33 translate{  };
+	AEMtx33 transform{  };
+	for (int i = 0; i <= max_spells - 1; i++) {
+		if (spellbook[i].unlocked == true) {
+			AEGfxTextureSet(spellbook[i].texture, 0, 0);
+			AEMtx33Trans(&translate, spellbook[i].spell_dragdrop->getcoord().mid.x, -spellbook[i].spell_dragdrop->getcoord().mid.y);
+			AEMtx33Rot(&rotate, 0);
+			AEMtx33Scale(&scale, spellbook[i].card_width, spellbook[i].card_height);
+			AEMtx33Concat(&transform, &rotate, &scale);
+			AEMtx33Concat(&transform, &translate, &transform);
+			AEGfxSetTransform(transform.m);
+			AEGfxMeshDraw(pMesh, AE_GFX_MDM_TRIANGLES);
+		}
+	}
 }
 
 craftingtable::craftingtable()
@@ -189,4 +239,20 @@ craftingtable::craftingtable()
 	AEVec2Set(&zero, 1, 1);
 	table_dragdrop.moveto(zero);
 	table_dragdrop.changeaabb(table_width, table_height);
+}
+
+int craftingtable::get_spell1()
+{
+	return spell1_id;
+}
+
+void craftingtable::reset_spells()
+{
+	spell1_id = INVALID_SPELL;
+	spell2_id = INVALID_SPELL;
+}
+
+int craftingtable::get_spell2()
+{
+	return spell2_id;
 }

@@ -33,7 +33,7 @@ Spell* spellbook{};
 //Coords for active cards
 AEVec2 cards;
 //Crafting table for magic
-craftingtable crafting_table{};
+craftingtable crafting_table;
 //---------------------------------------------------------------------------------
 
 
@@ -44,7 +44,7 @@ craftingtable crafting_table{};
 
 //Loading of Mesh and Texture
 AEGfxVertexList* pMesh{}, * pLoad{};
-AEGfxTexture* chara{}, * rat{}, * spell_g{}, * pause_box{}, * sub{}, * load_screen{}, * crafting_test{}, * bg{}, * end_turn_box{};
+AEGfxTexture* chara{}, * rat{}, * spell_g{}, * pause_box{}, * sub{}, * load_screen{}, * crafting_test{}, * bg{}, * end_turn_box{}, *mana_full{}, * mana_empty{};
 //Animation frames
 //AEGfxTexture* blast1{}, * blast2{}, * blast3{};
 
@@ -61,20 +61,22 @@ s32 pY{};
 bool alchemy_mode = 0;
 bool pause_mode = false;
 bool sub_menu = false;
+
+//Level Turn checks
 Turn turn;
 Level level;
 
+//GameObject Creations
 player* alchemice{};
-
-//GameObject creations
-std::string rat_hp{};
 Enemy enemies[3]{};
+
 //Enemy Animations
 AEGfxTexture* blast[3];
 float frame_time{ 2 };
-f64 curr_time{ frame_time }; //Animations Timer
+double curr_time{ frame_time }; //Animations Timer
 bool is_enemy_turn = false;
 
+//Button AABB
 aabb pause_buttons[3];
 aabb end_turn_button;
 
@@ -105,11 +107,9 @@ void GameStateAlchemiceLoad() {
 	end_turn_box = AEGfxTextureLoad("Assets/end_button.png");
 	crafting_test = AEGfxTextureLoad("Assets/copyright_table.png");
 	bg = AEGfxTextureLoad("Assets/background.png");
+	mana_full = AEGfxTextureLoad("Assets/mana_full.png");
+	mana_empty = AEGfxTextureLoad("Assets/mana_empty.png");
 
-	//Animation frames
-	//blast1 = AEGfxTextureLoad("Assets/blast1.png");
-	//blast2 = AEGfxTextureLoad("Assets/blast2.png");
-	//blast3 = AEGfxTextureLoad("Assets/blast3.png");
 	blast[0] = AEGfxTextureLoad("Assets/blast1.png");
 	blast[1] = AEGfxTextureLoad("Assets/blast2.png");
 	blast[2] = AEGfxTextureLoad("Assets/blast3.png");
@@ -156,8 +156,6 @@ void GameStateAlchemiceInit() {
 
 
 void GameStateAlchemiceUpdate() {
-	//for (int i{}; i<3; ++i)
-		std::cout << 1 << std::endl;
 
 	// Updates global mouse pos
 	int x, y;
@@ -172,25 +170,24 @@ void GameStateAlchemiceUpdate() {
 	bool drag;
 
 	drag = true;
-	//Actions that can be done anytime
+	//Pause button, switch state of pause_mode
 	if (AEInputCheckTriggered(AEVK_ESCAPE)) {
 		pause_mode = !pause_mode;
 	}
-	
+
 	for (int i{}; i < sizeof(pause_buttons) / sizeof(pause_buttons[0]); ++i) //for every iteration of pause menu buttons
 	{
 		if ((mouse_pos.x >= pause_buttons[i].s2.x && mouse_pos.x <= pause_buttons[i].s1.x && //check mouse inside of button's aabb
-			mouse_pos.y <= pause_buttons[i].s2.y && mouse_pos.y >= pause_buttons[i].s1.y) && 
+			mouse_pos.y <= pause_buttons[i].s2.y && mouse_pos.y >= pause_buttons[i].s1.y) &&
 			AEInputCheckTriggered(AEVK_LBUTTON) && //check if left button is clicked
 			pause_mode == true) //only runs during pause mode
 		{
-			std::cout << "button clicked " << i << std::endl;
 			switch (i) {
 			case 0:
 				pause_mode = !pause_mode;
 				break;
 			case 1:
-				//options menu
+				//to be implemented when options is up
 				break;
 			case 2:
 				gGameStateNext = GS_MENU;
@@ -202,12 +199,12 @@ void GameStateAlchemiceUpdate() {
 	//Draw spells player unlocks / combines
 	for (int i = 4; i <= max_spells - 1; i++) {
 		if (spellbook[i].unlocked == true) {
+			//Checks if 2 spells are colliding for combination
 			if (spellbook[i].spell_dragdrop->getcoord().mid.x == 0 && spellbook[i].spell_dragdrop->getcoord().mid.y == 0) {
 				spellbook[i].init_spells_draw(spellbook[i], cards);
 				cards.x += 110;
 				spellbook[i].spell_dragdrop->set_origin();
 			}
-			//Checks if 2 spells are colliding for combination
 		}
 	}
 
@@ -226,7 +223,7 @@ void GameStateAlchemiceUpdate() {
 	}
 
 	//MAIN GAMEPLAY LOOP
-	//Check if players or enemies or all enemies are all dead or if the game is pause.
+	//Check if players or enemies or all enemies are all dead
 	if (alchemice->hp > 0 && enemies_alive && !pause_mode) {
 		//Checking for turns
 		if (turn == player_turn) {
@@ -265,8 +262,6 @@ void GameStateAlchemiceUpdate() {
 				}
 			}
 
-
-
 			if (AEInputCheckReleased(AEVK_LBUTTON))
 			{
 				for (int i = 0; i < max_spells; i++)
@@ -275,21 +270,18 @@ void GameStateAlchemiceUpdate() {
 					{
 						if (aabbbutton(spellbook[i].spell_dragdrop, enemies[j].get_aabb()) != -1)
 						{
-							if (enemies[j].is_alive())
+							if (enemies[j].is_alive() && alchemice->mp > 0)
 							{
 								enemies[j].take_damage(spellbook[i].base_damage);
+								alchemice->mp -= 1;
 								if (spellbook[i].id > 3) {
-									spellbook[i].unlocked = false;
+									spellbook[i].reset_spell();
 									cards.x -= 110;
 								}
 							}
 						}
 
 					}
-					std::cout << spellbook[i].id << "TR X is" << spellbook[i].spell_dragdrop->getcoord().tr.x << std::endl;
-					std::cout << spellbook[i].id << "TR Y is" << spellbook[i].spell_dragdrop->getcoord().tr.y << std::endl;
-					std::cout << spellbook[i].id << "mid X is" << spellbook[i].spell_dragdrop->getcoord().mid.x << std::endl;
-					std::cout << spellbook[i].id << "mid Y is" << spellbook[i].spell_dragdrop->getcoord().mid.y << std::endl;
 				}
 
 				for (int i = 0; i <= max_spells - 1; i++)
@@ -297,10 +289,15 @@ void GameStateAlchemiceUpdate() {
 					if (spellbook[i].spell_dragdrop->getmouse())
 					{
 						std::cout << "RELEASE" << std::endl;
-						if (aabbbutton(spellbook[i].spell_dragdrop, &crafting_table.table_dragdrop) == 1) {
-							crafting_table_update(spellbook, crafting_table, spellbook[i].id  );
+						if (aabbbutton(crafting_table.get_dragdrop(), spellbook[i].spell_dragdrop) == 1 && alchemice->mp > 0) {
+							if (crafting_table.crafting_table_update(spellbook, spellbook[i].id) == 3) {
+								alchemice->mp -= 1;
+							}
 						}
 						else {
+							if (crafting_table.get_spell1() == spellbook[i].id) {
+								crafting_table.reset_spells();
+							}
 							spellbook[i].spell_dragdrop->resetaabb();
 							spellbook[i].spell_dragdrop->mousechange(false);
 						}
@@ -340,7 +337,7 @@ void GameStateAlchemiceUpdate() {
 			{
 				enemies[rand() % TOTAL_ENEMY].take_damage(1);
 			}
-		}
+		}//End of player turn logic
 
 		//Enemy turn; runs all the enemy functions and animations
 		else if (turn == enemy_turn) {
@@ -349,6 +346,8 @@ void GameStateAlchemiceUpdate() {
 			if (curr_time <= 0.0f) {
 				turn = player_turn;
 				level.display_turn = "Player's Turn";
+
+				//Variables to update when switching back to Player Turn.
 				is_enemy_turn = false;
 				curr_time = frame_time;
 
@@ -361,7 +360,7 @@ void GameStateAlchemiceUpdate() {
 					std::cout << "Enemy actual turn\n";
 
 					for (int i = 0; i < TOTAL_ENEMY; i++) {
-						if (enemies[i].is_alive()) 
+						if (enemies[i].is_alive())
 						{
 							enemies[i].set_frame_num(0);
 							alchemice->hp -= enemies[i].get_atk();
@@ -375,8 +374,8 @@ void GameStateAlchemiceUpdate() {
 				}
 
 			}
-		}
-	}
+		}//End of enemy_turn logic
+	}//End of Main Gameplay Loop.
 }
 
 void GameStateAlchemiceDraw() {
@@ -420,9 +419,6 @@ void GameStateAlchemiceDraw() {
 	AEGfxSetTransform(transform.m);
 	AEGfxMeshDraw(pMesh, AE_GFX_MDM_TRIANGLES);
 	std::string player_hp;
-	std::string mana_text{ "Mana" };
-	std::string player_mp;
-	player_mp += (alchemice->mp) ? std::to_string(alchemice->mp) : "0"; player_mp += "/"; player_mp += std::to_string(alchemice->max_mp);
 	if (alchemice->hp)
 	{
 		player_hp += std::to_string(alchemice->hp);
@@ -435,27 +431,45 @@ void GameStateAlchemiceDraw() {
 	player_hp += "/";
 	player_hp += std::to_string(alchemice->max_hp);
 	name_bar(player_hp, player_position, font);
-	AEGfxPrint(font, (s8*)mana_text.c_str(), (player_position.x - 200) / 640, player_position.y / 360 - 0.4f, 1.0f, 1.0f, 1.0f, 1.0f);
-	AEGfxPrint(font, (s8*)player_mp.c_str(), (player_position.x - 200) / 640, player_position.y / 360 - 0.5f, 1.0f, 1.0f, 1.0f, 1.0f);
-	//name_bar(mana_text, player_position_mp, font);
+	
+	for (int i{0}; i < alchemice->max_mp; ++i) {
+		AEVec2 mana_draw_position{ (f32)(-AEGetWindowWidth()/2.5 ) + (i * 40), (f32)(-AEGetWindowHeight() / 4) };
+		AEGfxTextureSet(mana_full, 0, 0);
+		AEMtx33Trans(&translate, mana_draw_position.x, mana_draw_position.y);
+		AEMtx33Rot(&rotate, 0);
+		AEMtx33Scale(&scale, 32.f, 32.f);
+		AEMtx33Concat(&transform, &rotate, &scale);
+		AEMtx33Concat(&transform, &translate, &transform);
+		AEGfxSetTransform(transform.m);
+		AEGfxMeshDraw(pMesh, AE_GFX_MDM_TRIANGLES);
 
-	//crafting table
-	draw_crafting_table(pMesh, crafting_table, crafting_test);
-
-	// Card Drawing
-	for (int i = 0; i <= max_spells - 1; i++) {
-		if (spellbook[i].unlocked == true) {
-			AEGfxTextureSet(spellbook[i].texture, 0, 0);
-			AEMtx33Trans(&translate, spellbook[i].spell_dragdrop->getcoord().mid.x, -spellbook[i].spell_dragdrop->getcoord().mid.y);
-			//std::cout << "drawing spell:" << spellbook[i].spell_name << "has" << spellbook[i].spell_dragdrop->getcoord().mid.x << spellbook[i].spell_dragdrop->getcoord().mid.y << std::endl;
-			AEMtx33Rot(&rotate, 0);
-			AEMtx33Scale(&scale, spellbook[i].card_width, spellbook[i].card_height);
-			AEMtx33Concat(&transform, &rotate, &scale);
-			AEMtx33Concat(&transform, &translate, &transform);
-			AEGfxSetTransform(transform.m);
-			AEGfxMeshDraw(pMesh, AE_GFX_MDM_TRIANGLES);
+		if (alchemice->mp < alchemice->max_mp) {
+			for (int j{alchemice->mp}; j < alchemice->max_mp; ++j) {
+				AEGfxTextureSet(mana_empty, 0, 0);
+				AEVec2 mana_draw_position{ (f32)(-AEGetWindowWidth()/2.5) + (j * 40), (f32)(-AEGetWindowHeight() / 4) };
+				AEMtx33Trans(&translate, mana_draw_position.x, mana_draw_position.y);
+				AEMtx33Concat(&transform, &rotate, &scale);
+				AEMtx33Concat(&transform, &translate, &transform);
+				AEGfxSetTransform(transform.m);
+				AEGfxMeshDraw(pMesh, AE_GFX_MDM_TRIANGLES);
+			}
 		}
 	}
+
+	//AEGfxTextureSet(mana_full, 0, 0);
+	//AEMtx33Trans(&translate, (f32)(-AEGetWindowWidth()/3), (f32)(-AEGetWindowHeight()/4) );
+	//AEMtx33Rot(&rotate, 0);
+	//AEMtx33Scale(&scale, 24.f, 24.f);
+	//AEMtx33Concat(&transform, &rotate, &scale);
+	//AEMtx33Concat(&transform, &translate, &transform);
+	//AEGfxSetTransform(transform.m);
+	//AEGfxMeshDraw(pMesh, AE_GFX_MDM_TRIANGLES);
+
+	//Crafting Table
+	draw_crafting_table(pMesh, crafting_table, crafting_test);
+
+	//Card Drawing
+	draw_all_spells(spellbook, pMesh);
 
 	//Enemy drawing
 	for (int i = 0; i < TOTAL_ENEMY; ++i) {
@@ -512,11 +526,7 @@ void GameStateAlchemiceDraw() {
 
 
 	AEGfxSetRenderMode(AE_GFX_RM_TEXTURE);
-	// Set the tint to white, so that the sprite can 
-	// display the full range of colors (default is black).
 	AEGfxSetTintColor(1.0f, 1.0f, 1.0f, 1.0f);
-	// Set blend mode to AE_GFX_BM_BLEND
-	// This will allow transparency.
 	AEGfxSetBlendMode(AE_GFX_BM_BLEND);
 	AEGfxSetTransparency(1.0f);
 
@@ -541,7 +551,7 @@ void GameStateAlchemiceDraw() {
 		const char* mytex[3]{ { "Continue" }, { "Options" }, {"Main Menu"} };
 
 		for (int i = 0; i < 3; ++i) {
-			f32 middle = -(((float)strlen(mytex[i]) / 2) / (AEGetWindowWidth()/FONT_SIZE));
+			f32 middle = -(((float)strlen(mytex[i]) / 2) / (AEGetWindowWidth() / FONT_SIZE));
 			f32 textY = ((float)(AEGetWindowHeight() - i * AEGetWindowHeight()) / 2) / AEGetWindowHeight();
 			f32 boxY = (float)(190 - i * 180);
 			AEGfxTextureSet(pause_box, 0.f, 0.f);
@@ -555,9 +565,6 @@ void GameStateAlchemiceDraw() {
 			AEGfxPrint(font, (s8*)mytex[i], middle, textY, 1, 0, 0, 0);
 		}
 	}
-	// DONT DELETE, THIS IS FONT SCALING TEST
-	//const char* mytext1{ "test font1test font2test font3test font4test font5test font6test font7test font8test font9test font0test font1test font2test" };
-	//AEGfxPrint(font, (s8*)mytext1, -1, 0, 1, 1, 1, 1);
 }
 
 void GameStateAlchemiceFree() {
@@ -575,6 +582,8 @@ void GameStateAlchemiceUnload() {
 	AEGfxTextureUnload(blast[0]);
 	AEGfxTextureUnload(blast[1]);
 	AEGfxTextureUnload(blast[2]);
+	AEGfxTextureUnload(mana_full);
+	AEGfxTextureUnload(mana_empty);
 	unload_spells(spellbook);
 	delete_player(alchemice);
 }
@@ -583,11 +592,7 @@ float load_screen_time{};
 
 void LoadScreenLoad() {
 	pLoad = 0;
-	// Informing the library that we're about to start adding triangles
 	AEGfxMeshStart();
-	// This shape has 2 triangles that makes up a square
-	// Color parameters represent colours as ARGB
-	// UV coordinates to read from loaded textures
 	AEGfxTriAdd(
 		-0.5f, -0.5f, 0x00000000, 0.0f, 1.0f,
 		-0.5f, 0.5f, 0x00000000, 0.0f, 0.0f,
@@ -596,7 +601,6 @@ void LoadScreenLoad() {
 		-0.5f, -0.5f, 0x00000000, 0.0f, 1.0f,
 		0.5f, 0.5f, 0x00000000, 1.0f, 0.0f,
 		0.5f, -0.5f, 0x00000000, 1.0f, 1.0f);
-	// Saving the mesh (list of triangles) in pMesh
 	pLoad = AEGfxMeshEnd();
 
 	load_screen = AEGfxTextureLoad("Assets/digilogo.png");
@@ -616,16 +620,9 @@ void LoadScreenUpdate() {
 }
 
 void LoadScreenDraw() {
-	// Your own rendering logic goes here
-	// Set the background to black.
 	AEGfxSetBackgroundColor(.0f, .0f, .0f);
-	// Tell the engine to get ready to draw something with texture.
 	AEGfxSetRenderMode(AE_GFX_RM_TEXTURE);
-	// Set the tint to white, so that the sprite can 
-	// display the full range of colors (default is black).
 	AEGfxSetTintColor(1.0f, 1.0f, 1.0f, 1.0f);
-	// Set blend mode to AE_GFX_BM_BLEND
-	// This will allow transparency.
 	AEGfxSetBlendMode(AE_GFX_BM_BLEND);
 	AEGfxSetTransparency(1.0f);
 
@@ -637,7 +634,7 @@ void LoadScreenDraw() {
 	AEGfxTextureSet(load_screen, 0, 0);
 	AEMtx33Trans(&translate, 0, 0);
 	AEMtx33Rot(&rotate, 0);
-	AEMtx33Scale(&scale, 915, 287); //hardcoded values from the pixels in .png file, 3x value 
+	AEMtx33Scale(&scale, 915, 287);
 	AEMtx33Concat(&transform, &rotate, &scale);
 	AEMtx33Concat(&transform, &translate, &transform);
 	AEGfxSetTransform(transform.m);
