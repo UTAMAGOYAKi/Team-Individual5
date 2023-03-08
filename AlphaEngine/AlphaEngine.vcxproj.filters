@@ -31,9 +31,6 @@
     <ClCompile Include="UI.cpp">
       <Filter>Source file</Filter>
     </ClCompile>
-    <ClCompile Include="LevelManager.cpp">
-      <Filter>Source file</Filter>
-    </ClCompile>
     <ClCompile Include="Map.cpp">
       <Filter>Source file</Filter>
     </ClCompile>
@@ -70,9 +67,6 @@
       <Filter>Header file</Filter>
     </ClInclude>
     <ClInclude Include="UI.h">
-      <Filter>Header file</Filter>
-    </ClInclude>
-    <ClInclude Include="LevelManager.h">
       <Filter>Header file</Filter>
     </ClInclude>
     <ClInclude Include="Map.h">
