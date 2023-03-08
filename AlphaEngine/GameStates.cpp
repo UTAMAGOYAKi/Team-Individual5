@@ -78,6 +78,12 @@ bool is_enemy_turn = false;
 //specific enemy turn
 int s_enemy_turn = 0;
 
+//Bleeding Animation
+bool enemy_bleeding{false};
+int bleeding_enemy_no{0};
+//float bleed_time{ 1 };
+//float bleed_timer { bleed_time };
+
 //Particles
 const int particle_max = 50;
 std::vector<particle>	particle_vector;
@@ -254,27 +260,22 @@ void GameStateAlchemiceUpdate() {
 
 	//TESTING PARTICLE SYSTEM
 	//Particle System Logic/ To spawn a particle each turn.
-	if (particle_vector.size() < particle_max)
-	{
-		particle new_particle;
-		//Contiune
-		new_particle.size = fmodf((float)rand(), 100.0f);
-		new_particle.lifespan = fmodf((float)rand(), 0.7f);
-		new_particle.position = enemies[0].get_pos();
+	for (int i{}; i < TOTAL_ENEMY; i++) {
+		if (enemies[i].is_bleeding() == true) {
+			enemies[i].create_particle(particle_vector, particle_max);
+			enemies[i].update_bleed_timer();
 
-		AEVec2 new_vel;
-		//int num = rand();
-		if (rand() % 2) {
-			AEVec2Set(&new_vel, fmodf((float)rand(), 5.0f), fmodf((float)rand(), 5.0f));
-		}
-		else
-		{
-			AEVec2Set(&new_vel, -fmodf((float)rand(), 5.0f), fmodf((float)rand(), 5.0f));
-		}
+			std::cout << "Bleeding";
 
-		new_particle.velocity = new_vel;
-		particle_vector.push_back(new_particle);
+			if (enemies[i].get_bleed_timer() <= 0) {
+				enemies[i].reset_bleed_time();
+				int j = enemies[i].get_bleed_timer();
+				std::cout << "bleed timer" << j;
+				enemies[i].set_bleeding(false);
+			}
+		}
 	}
+	
 
 	//Particle Update
 	for (int i = 0; i < particle_vector.size(); i++)
@@ -342,6 +343,9 @@ void GameStateAlchemiceUpdate() {
 							if (enemies[j].is_alive() && alchemice->mp > 0)
 							{
 								enemies[j].take_damage(spellbook[i].base_damage);
+								enemies[j].set_bleeding(true);
+
+								std::cout << "BLEED";
 								alchemice->mp -= 1;
 								if (spellbook[i].id > 3) {
 									spellbook[i].reset_spell();
@@ -595,7 +599,6 @@ void GameStateAlchemiceDraw() {
 		AEGfxSetTransform(matrix.m);
 		//Draw the particle's mesh
 		AEGfxMeshDraw(particle_mesh, AE_GFX_MDM_TRIANGLES);
-		std::cout << i << "Drawing";
 	}
 
 	//Enemy Attack Animation

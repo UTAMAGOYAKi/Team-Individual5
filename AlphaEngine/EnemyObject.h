@@ -56,6 +56,11 @@ private:
     double frame_time = attack_animation_timer / (float)total_frame;
     double frame_timer = frame_time;
 
+    //Bleed Time
+    bool bleeding{false};
+    float bleed_time{2.0f};
+    float bleed_timer{bleed_time};
+    
 public:
     Enemy() : name{ "" }, max_hp{ 0 }, hp{ 0 }, atk{ 0 }, pos{ 0.f,0.f }, texture{ nullptr }, life_state{ alive }, size{ 0 }, enemy_aabb{ CreateAABB() } {};
 
@@ -102,6 +107,8 @@ public:
     aabb get_aabb();
     int get_total_frame();
     bool get_finish_attack();
+    bool is_bleeding();
+    int get_bleed_timer();
     
     //Used to make changes to damage classes.
     void set_position_and_aabb(AEVec2 input_pos);
@@ -109,6 +116,14 @@ public:
     void set_frame_num(int);        //Changes the frame number for the update animation
     void update_animation(f64 dt); //Updates the frame number to draw the correct frame.
     void switch_finish_attack();      //switches true to false or false to true;
+
+    void create_particle(std::vector<particle>& particle_vector, int particle_max);
+    void set_bleeding(bool logic);
+    void update_bleed_timer();
+    void reset_bleed_time();
 };
+
+//Particles
+void update_particle();
 
 #endif // ENEMY_H
