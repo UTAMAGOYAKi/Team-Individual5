@@ -6,7 +6,6 @@
 #include <fstream>
 #include "UI.h"
 
-
 //Reference for controls
 //Q - basic attack against first rat
 //W - start alchemy
@@ -44,7 +43,7 @@ craftingtable crafting_table;
 
 //Loading of Mesh and Texture
 AEGfxVertexList* pMesh{}, * pLoad{};
-AEGfxTexture* chara{}, * rat{}, * spell_g{}, * pause_box{}, * sub{}, * load_screen{}, * crafting_test{}, * bg{}, * end_turn_box{}, *mana_full{}, * mana_empty{}, *Menu_ui;
+AEGfxTexture* chara{}, * rat{}, * big_rat_texture{}, *spell_g{}, * pause_box{}, * sub{}, * load_screen{}, * crafting_test{}, * bg{}, * end_turn_box{}, * mana_full{}, * mana_empty{}, * Menu_ui;
 //Animation frames
 //AEGfxTexture* blast1{}, * blast2{}, * blast3{};
 
@@ -78,6 +77,11 @@ bool is_enemy_turn = false;
 //specific enemy turn
 int s_enemy_turn = 0;
 
+//Particles
+const int particle_max = 50;
+std::vector<particle>	particle_vector;
+AEGfxVertexList* particle_mesh;
+
 //Button AABB
 aabb pause_buttons[3];
 aabb end_turn_button;
@@ -101,8 +105,24 @@ void GameStateAlchemiceLoad() {
 	// Saving the mesh (list of triangles) in pMesh
 	pMesh = AEGfxMeshEnd();
 
+	//Creating the particle object
+	AEGfxMeshStart();
+	AEGfxTriAdd(
+		-0.5f, -0.5f, 0xFF0000FF, 0.0f, 0.0f,
+		0.5f, -0.5f, 0xFF0000FF, 0.0f, 0.0f,
+		-0.5f, 0.5f, 0xFF0000FF, 0.0f, 0.0f);
+
+	AEGfxTriAdd(
+		-0.5f, 0.5f, 0xFF0000FF, 0.0f, 0.0f,
+		0.5f, -0.5f, 0xFF0000FF, 0.0f, 0.0f,
+		0.5f, 0.5f, 0xFF0000FF, 0.0f, 0.0f);
+
+	particle_mesh = AEGfxMeshEnd();
+
+
 	chara = AEGfxTextureLoad("Assets/char.png");
 	rat = AEGfxTextureLoad("Assets/Rat.png");
+	big_rat_texture = AEGfxTextureLoad("Assets/big_rat.png");
 	sub = AEGfxTextureLoad("Assets/submenu.png");
 	pause_box = AEGfxTextureLoad("Assets/pause_button.png");
 	end_turn_box = AEGfxTextureLoad("Assets/end_button.png");
@@ -142,10 +162,18 @@ void GameStateAlchemiceInit() {
 	}
 
 	//Creation of enemy
-	for (int i = 0; i < 3; i++) {
-		enemies[i] = Enemy(base_rat, rat);
+	/*for (int i = 0; i < 3; i++) {
+		enemies[i] = Enemy(big_rat, rat);
 		enemies[i].set_position_and_aabb(enemy_position[i]);
-	}
+	}*/
+	enemies[0] = Enemy(big_rat, big_rat_texture);
+	enemies[0].set_position_and_aabb(enemy_position[0]);
+
+	enemies[1] = Enemy(base_rat, rat);
+	enemies[1].set_position_and_aabb(enemy_position[1]);
+
+	enemies[2] = Enemy(base_rat, rat);
+	enemies[2].set_position_and_aabb(enemy_position[2]);
 
 	//creates the button from top to bottom top most button [0]
 	for (int i = 0; i < sizeof(pause_buttons) / sizeof(pause_buttons[0]); ++i) {
@@ -222,6 +250,44 @@ void GameStateAlchemiceUpdate() {
 	for (int i{}; i < TOTAL_ENEMY; i++) {
 		if (enemies[i].is_alive()) {
 			enemies_alive = true;
+		}
+	}
+
+	//TESTING PARTICLE SYSTEM
+	//Particle System Logic/ To spawn a particle each turn.
+	if (particle_vector.size() < particle_max)
+	{
+		particle new_particle;
+		//Contiune
+		new_particle.size = fmodf((float)rand(), 0.4f);
+		new_particle.lifespan = fmodf((float)rand(), 0.7f);
+		new_particle.position = enemies[0].get_pos();
+		AEVec2 new_vel;
+		//int num = rand();
+		if (rand() % 2) {
+			AEVec2Set(&new_vel, fmodf((float)rand(), 5.0f), fmodf((float)rand(), 5.0f));
+		}
+		else
+		{
+			AEVec2Set(&new_vel, -fmodf((float)rand(), 5.0f), fmodf((float)rand(), 5.0f));
+		}
+
+		new_particle.velocity = new_vel;
+		particle_vector.push_back(new_particle);
+	}
+
+	//Particle Update
+	for (int i = 0; i < particle_vector.size(); i++)
+	{
+		if (particle_vector[i].lifespan < 0)
+		{
+			particle_vector.erase(particle_vector.begin() + i);
+		}
+		else
+		{
+			particle_vector[i].lifespan -= AEFrameRateControllerGetFrameTime();
+			particle_vector[i].position.x += particle_vector[i].velocity.x;
+			particle_vector[i].position.y += particle_vector[i].velocity.y;
 		}
 	}
 
@@ -529,6 +595,27 @@ void GameStateAlchemiceDraw() {
 		}
 	}
 
+	//Particle Drawing
+	AEMtx33 trans, matrix;
+
+	//Drawing of Particles
+	for (int i = 0; i < particle_vector.size(); ++i)
+	{
+		//Apply scale
+		AEMtx33Scale(&scale, particle_vector[i].size, particle_vector[i].size);
+		//Apply translation
+		AEMtx33Trans(&trans, particle_vector[i].position.x, particle_vector[i].position.y);
+		//Concatenate the scale and translation matrix
+		AEMtx33Concat(&matrix, &trans, &scale);
+		//Concatenate the result with the particle's matrix
+		//AEMtx33Concat(&matrix, &MapTransform, &matrix);
+		//Send the resultant matrix to the graphics manager using "AEGfxSetTransform"
+		AEGfxSetTransform(matrix.m);
+		//Draw the particle's mesh
+		AEGfxMeshDraw(particle_mesh, AE_GFX_MDM_TRIANGLES);
+		std::cout << i << "Drawing";
+	}
+
 
 	// End turn button
 	// 113 characters on screen, start to end, 113/2 =  56.5(left and right for scaling) Roboto
@@ -595,21 +682,30 @@ void GameStateAlchemiceFree() {
 }
 
 void GameStateAlchemiceUnload() {
+
+	delete_player(alchemice);
+
+	//Character texture
 	AEGfxTextureUnload(chara);
 	AEGfxTextureUnload(rat);
+	AEGfxTextureUnload(big_rat_texture);
+
+	//UI
 	AEGfxTextureUnload(sub);
 	AEGfxTextureUnload(pause_box);
 	AEGfxTextureUnload(end_turn_box);
 	AEGfxTextureUnload(crafting_test);
 	AEGfxTextureUnload(bg);
+	AEGfxTextureUnload(mana_full);
+	AEGfxTextureUnload(mana_empty);
+	unload_spells(spellbook);
+	
+
+	//Animations
 	AEGfxTextureUnload(blast[0]);
 	AEGfxTextureUnload(blast[1]);
 	AEGfxTextureUnload(blast[2]);
 	AEGfxTextureUnload(blast[3]);
-	AEGfxTextureUnload(mana_full);
-	AEGfxTextureUnload(mana_empty);
-	unload_spells(spellbook);
-	delete_player(alchemice);
 }
 
 float load_screen_time{};

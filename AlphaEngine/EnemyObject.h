@@ -22,6 +22,14 @@ enum enemy_life_state_enum
     alive,
 };
 
+struct particle
+{
+    AEVec2 position;
+    AEVec2 velocity;
+    float lifespan;
+    float size;
+};
+
 class Enemy 
 {
 private:
@@ -65,7 +73,7 @@ public:
 
         case big_rat:
             name = "Big Rat";
-            atk = 5;
+            atk = 3;
             max_hp = 15;
             hp = max_hp;
             break;
