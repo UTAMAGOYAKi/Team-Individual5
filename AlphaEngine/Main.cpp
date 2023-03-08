@@ -1,18 +1,6 @@
 #pragma once
 #include "Main.h"
 
-//Reference for controls
-//Q - basic attack against first rat
-//W - start alchemy
-//Z - check for mouse position
-//X - cancel alchemy
-//E - in alchemy, try combination
-//drag& drop fire to left spell slot of glyth
-//poison on right
-//burn can be placed on either rat, but second rat has no hp
-
-// ---------------------------------------------------------------------------
-
 int FONT_SIZE = 30;
 
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
@@ -37,7 +25,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
 	GameStateManagerInit(GS_LOAD);
 
-	font = AEGfxCreateFont("Assets/font/DotGothic16-Regular.ttf", 30);
+	font = AEGfxCreateFont("Assets/font/DotGothic16-Regular.ttf", FONT_SIZE);
 
 	// Game Loop
 	while (gGameStateCurr != GS_QUIT)
