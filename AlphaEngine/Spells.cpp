@@ -30,15 +30,15 @@ Spell* init_all_spells()
 	AEVec2 cards;
 
 	//Currently Textures are used as placeholder, ignore the meaning
-	umbral_tendrils = AEGfxTextureLoad("Assets/spell_glyph.png");
+	umbral_tendrils = AEGfxTextureLoad("Assets/Card-Sprite-umbral.png");
 	std::cout << "spell_g MemLoc: " << umbral_tendrils << std::endl;
-	inferno_blast = AEGfxTextureLoad("Assets/not_fire.png");
+	inferno_blast = AEGfxTextureLoad("Assets/Card-Sprite-Inferno-Blast.png");
 	std::cout << "fire MemLoc: " << inferno_blast << std::endl;
 	toxic_deluge = AEGfxTextureLoad("Assets/not_posion.png");
 	std::cout << "poison MemLoc: " << toxic_deluge << std::endl;
-	maelstrom_surge = AEGfxTextureLoad("Assets/not_burn.png");
+	maelstrom_surge = AEGfxTextureLoad("Assets/Card-Sprite-Maelstrom.png");
 	std::cout << "shame MemLoc: " << maelstrom_surge << std::endl;
-	venemous_bite = AEGfxTextureLoad("Assets/venemous_bite.png");
+	venemous_bite = AEGfxTextureLoad("Assets/Card-Sprite-Venemous.png");
 	std::cout << "venemous_bite MemLoc: " << venemous_bite << std::endl;
 	shadow_cloak = AEGfxTextureLoad("Assets/shadow_cloak.png");
 	std::cout << "shadow_cloak MemLoc: " << shadow_cloak << std::endl;
@@ -53,9 +53,9 @@ Spell* init_all_spells()
 	Spell* spellbook = new Spell[max_spells]{
 		// Tier 3 spells
 		Spell(TOXIC_DELUGE, 3, POISON, "Toxic Deluge",toxic_deluge,true, base_low, NULL, lingering_low,NULL),
-		Spell(INFERNO_BLAST, 3, FIRE, "Inferno Blast",maelstrom_surge,true, base_low, NULL, lingering_low,NULL),
-		Spell(UMBRAL_TENDRILS, 3, SHADOW, "Umbral Tendrils",inferno_blast,true, base_low, NULL, lingering_low,NULL),
-		Spell(MAELSTROM_SURGE, 3, WATER, "Maelstrom Surge",umbral_tendrils,true, base_low, NULL, lingering_low,NULL),
+		Spell(INFERNO_BLAST, 3, FIRE, "Inferno Blast",inferno_blast,true, base_low, NULL, lingering_low,NULL),
+		Spell(UMBRAL_TENDRILS, 3, SHADOW, "Umbral Tendrils",umbral_tendrils,true, base_low, NULL, lingering_low,NULL),
+		Spell(MAELSTROM_SURGE, 3, WATER, "Maelstrom Surge",maelstrom_surge,true, base_low, NULL, lingering_low,NULL),
 		// Tier 2 spells
 		Spell(VENOMOUS_BITE, 2, POISON, "Venomous Bite",venemous_bite,false, base_mid, aoe_low, lingering_mid,lingering_rounds_mid),
 		Spell(SHADOW_CLOAK, 2, SHADOW, "Shadow Cloak",shadow_cloak,false, base_mid, aoe_low, lingering_mid,NULL),
