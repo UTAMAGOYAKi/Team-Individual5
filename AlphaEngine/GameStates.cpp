@@ -612,7 +612,8 @@ void LoadScreenLoad() {
 }
 
 void LoadScreenInit() {
-	load_screen_time = 3;
+	//0 for now since its annoying to wait
+	load_screen_time = 0;
 }
 
 void LoadScreenUpdate() {
@@ -620,7 +621,7 @@ void LoadScreenUpdate() {
 		load_screen_time -= (f32)AEFrameRateControllerGetFrameTime();
 	}
 	else {
-		gGameStateNext = GS_ALCHEMICE;
+		gGameStateNext = GS_MENU;
 	}
 }
 
@@ -688,6 +689,7 @@ void Menuinit()
 }
 void Menuupdate()
 {
+	AEGfxSetBackgroundColor(.2f, .2f, .2f);
 
 	s32 x, y;
 	AEInputGetCursorPosition(&x, &y);
@@ -740,7 +742,7 @@ void Menudraw()
 		AEGfxTextureSet(Menu_ui, 0, 0);
 		AEMtx33Trans(&translate, 0, -125.0f+(i*75.0f));
 		AEMtx33Rot(&rotate, 0);
-		AEMtx33Scale(&scale, 128, 100); //hardcoded values from the pixels in .png file, 3x value 
+		AEMtx33Scale(&scale, 128, 100);
 		AEMtx33Concat(&transform, &rotate, &scale);
 		AEMtx33Concat(&transform, &translate, &transform);
 		AEGfxSetTransform(transform.m);
@@ -755,7 +757,6 @@ void Menudraw()
 	{
 		sprintf_s(strbuffer, words[i]);
 		AEGfxPrint(font, strbuffer, -0.08f, 0.25f-i*0.21f, 1.0f, 0.0f, 0.0f, 0.0f);
-
 	}
 
 }
