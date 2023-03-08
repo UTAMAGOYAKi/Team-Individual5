@@ -3,17 +3,23 @@
 
 //Base Damage
 const int base_low = 2;
-const int base_mid = 2;
-const int base_high = 3;
+const int base_mid = 3;
+const int base_high = 5;
 
 //AOE Damage
+const int aoe_low = 1;
+const int aoe_mid = 2;
+const int aoe_high = 3;
 
+//Lingering Damage 
+const int lingering_low = 1;
+const int lingering_mid = 2;
+const int lingering_high = 3;
 
+//Lingering Rounds
+const int lingering_rounds_mid = 2;
 
 #include "Spells.h"
-
-//Number of spells that will be created
-const int max_spells = 10;
 
 //Declare textures for spells
 AEGfxTexture* toxic_deluge{}, * inferno_blast{}, * umbral_tendrils{}, * maelstrom_surge{}, * venemous_bite{},
@@ -46,19 +52,19 @@ Spell* init_all_spells()
 
 	Spell* spellbook = new Spell[max_spells]{
 		// Tier 3 spells
-		Spell(TOXIC_DELUGE, 3, POISON, "Toxic Deluge",toxic_deluge,true, 2, 0, 1,0),
-		Spell(INFERNO_BLAST, 3, FIRE, "Inferno Blast",maelstrom_surge,true, 2, 0, 1,0),
-		Spell(UMBRAL_TENDRILS, 3, SHADOW, "Umbral Tendrils",inferno_blast,true, 2, 0, 1,0),
-		Spell(MAELSTROM_SURGE, 3, WATER, "Maelstrom Surge",umbral_tendrils,true, 2, 0, 1,0),
+		Spell(TOXIC_DELUGE, 3, POISON, "Toxic Deluge",toxic_deluge,true, base_low, NULL, lingering_low,NULL),
+		Spell(INFERNO_BLAST, 3, FIRE, "Inferno Blast",maelstrom_surge,true, base_low, NULL, lingering_low,NULL),
+		Spell(UMBRAL_TENDRILS, 3, SHADOW, "Umbral Tendrils",inferno_blast,true, base_low, NULL, lingering_low,NULL),
+		Spell(MAELSTROM_SURGE, 3, WATER, "Maelstrom Surge",umbral_tendrils,true, base_low, NULL, lingering_low,NULL),
 		// Tier 2 spells
-		Spell(VENOMOUS_BITE, 2, POISON, "Venomous Bite",venemous_bite,false, 3, 1, 5,2),
-		Spell(SHADOW_CLOAK, 2, SHADOW, "Shadow Cloak",shadow_cloak,false, 3, 1, 5,0),
-		Spell(FLAME_BURST, 2, FIRE, "Flame Burst",flame_burst,false, 3, 1, 5,0),
-		// Tier 1 spells
-		Spell(RAT_SWARM, 1, SHADOW, "Rat Swarm",rat_swarm,false, 5, 1, 5,1),
-		Spell(BUBONIC_BLAZE, 1, FIRE, "Bubonic Blaze",bubonic_blaze,false, 5, 1, 5,5),
+		Spell(VENOMOUS_BITE, 2, POISON, "Venomous Bite",venemous_bite,false, base_mid, aoe_low, lingering_mid,lingering_rounds_mid),
+		Spell(SHADOW_CLOAK, 2, SHADOW, "Shadow Cloak",shadow_cloak,false, base_mid, aoe_low, lingering_mid,NULL),
+		Spell(FLAME_BURST, 2, FIRE, "Flame Burst",flame_burst,false, base_mid, aoe_low, lingering_mid,NULL),
+		// Tier aoe_low spells
+		Spell(RAT_SWARM, 1, SHADOW, "Rat Swarm",rat_swarm,false, base_high, aoe_low,lingering_high,lingering_rounds_mid),
+		Spell(BUBONIC_BLAZE, 1, FIRE, "Bubonic Blaze",bubonic_blaze,false, base_high, aoe_low, lingering_high,lingering_rounds_mid),
 		// Invalid Spell
-		Spell(INVALID_SPELL, 0, INVALID_ELEMENT, "",nullptr,false, 0, 0, 0,0),
+		Spell(INVALID_SPELL, 0, INVALID_ELEMENT, "",nullptr,false, NULL, NULL, NULL,NULL),
 	};
 
 	AEVec2Zero(&cards);
@@ -193,6 +199,7 @@ int craftingtable::crafting_table_update(Spell* spellbook, int spell_id)
 			return 2;
 		}
 	}
+	return 2;
 	//spellbook[table.spell1_id].spell_dragdrop->resetaabb();
 	//spellbook[table.spell2_id].spell_dragdrop->resetaabb();
 	//table.spell1_id = INVALID_SPELL;
@@ -204,8 +211,24 @@ dragdrop* craftingtable::get_dragdrop()
 	return &(this->table_dragdrop);
 }
 
-void draw_all_spells(Spell* spellbook)
+void draw_all_spells(Spell* spellbook, AEGfxVertexList* pMesh)
 {
+	AEMtx33 scale{ };
+	AEMtx33 rotate{  };
+	AEMtx33 translate{  };
+	AEMtx33 transform{  };
+	for (int i = 0; i <= max_spells - 1; i++) {
+		if (spellbook[i].unlocked == true) {
+			AEGfxTextureSet(spellbook[i].texture, 0, 0);
+			AEMtx33Trans(&translate, spellbook[i].spell_dragdrop->getcoord().mid.x, -spellbook[i].spell_dragdrop->getcoord().mid.y);
+			AEMtx33Rot(&rotate, 0);
+			AEMtx33Scale(&scale, spellbook[i].card_width, spellbook[i].card_height);
+			AEMtx33Concat(&transform, &rotate, &scale);
+			AEMtx33Concat(&transform, &translate, &transform);
+			AEGfxSetTransform(transform.m);
+			AEGfxMeshDraw(pMesh, AE_GFX_MDM_TRIANGLES);
+		}
+	}
 }
 
 craftingtable::craftingtable()
@@ -225,7 +248,7 @@ int craftingtable::get_spell1()
 
 void craftingtable::reset_spells()
 {
-	spell1_id= INVALID_SPELL;
+	spell1_id = INVALID_SPELL;
 	spell2_id = INVALID_SPELL;
 }
 

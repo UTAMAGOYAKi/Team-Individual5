@@ -443,19 +443,7 @@ void GameStateAlchemiceDraw() {
 	draw_crafting_table(pMesh, crafting_table, crafting_test);
 
 	//Card Drawing
-	for (int i = 0; i <= max_spells - 1; i++) {
-		if (spellbook[i].unlocked == true) {
-			AEGfxTextureSet(spellbook[i].texture, 0, 0);
-			AEMtx33Trans(&translate, spellbook[i].spell_dragdrop->getcoord().mid.x, -spellbook[i].spell_dragdrop->getcoord().mid.y);
-			//std::cout << "drawing spell:" << spellbook[i].spell_name << "has" << spellbook[i].spell_dragdrop->getcoord().mid.x << spellbook[i].spell_dragdrop->getcoord().mid.y << std::endl;
-			AEMtx33Rot(&rotate, 0);
-			AEMtx33Scale(&scale, spellbook[i].card_width, spellbook[i].card_height);
-			AEMtx33Concat(&transform, &rotate, &scale);
-			AEMtx33Concat(&transform, &translate, &transform);
-			AEGfxSetTransform(transform.m);
-			AEGfxMeshDraw(pMesh, AE_GFX_MDM_TRIANGLES);
-		}
-	}
+	draw_all_spells(spellbook, pMesh);
 
 	//Enemy drawing
 	for (int i = 0; i < TOTAL_ENEMY; ++i) {

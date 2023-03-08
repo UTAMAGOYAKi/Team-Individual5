@@ -6,6 +6,10 @@
 #include <string>
 #include <limits>
 
+//Declare global number of spells that will be created
+//Including 
+const int max_spells = 10;
+
 enum Spells {
 	// Tier 3
 	TOXIC_DELUGE,
@@ -28,9 +32,6 @@ enum class crafting {
 	INVALID_COMBO,
 	SUCCESFUL_COMBO
 };
-
-extern const int max_spells;
-
 
 
 struct Spell {
@@ -109,7 +110,7 @@ bool combine_spells(Spell* spellbook, int id1, int id2);
 // Called when level ends etc.
 void unload_spells(Spell* spellbook);
 
-void draw_all_spells(Spell* spellbook);
+void draw_all_spells(Spell* spellbook, AEGfxVertexList* pMesh);
 
 
 
