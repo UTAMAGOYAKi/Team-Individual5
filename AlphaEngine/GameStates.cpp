@@ -265,7 +265,7 @@ void GameStateAlchemiceUpdate() {
 
 			if (AEInputCheckReleased(AEVK_LBUTTON))
 			{
-				for (int i = 0; i < max_spells -1; i++)
+				for (int i = 0; i < max_spells - 1; i++)
 				{
 					for (int j = 0; j < TOTAL_ENEMY; ++j)
 					{
