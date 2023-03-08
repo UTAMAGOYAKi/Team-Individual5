@@ -37,17 +37,10 @@ craftingtable crafting_table;
 //---------------------------------------------------------------------------------
 
 
-//enum spell_slot { empty, fire_slot, poison_slot, lighting_slot };
-//Elements spell_slot_one = NILL;
-//Elements spell_slot_two = NILL;
-//int gGameRunning = 1;
-
 //Loading of Mesh and Texture
 AEGfxVertexList* pMesh{}, * pLoad{};
 AEGfxTexture* chara{}, * rat{}, * spell_g{}, * pause_box{}, * sub{}, * load_screen{}, * crafting_test{}, * bg{}, * end_turn_box{}, *mana_full{}, * mana_empty{};
 AEGfxTexture* Menu_ui{};
-//Animation frames
-//AEGfxTexture* blast1{}, * blast2{}, * blast3{};
 
 aabb* chara_pos;
 aabb* Enemy_pos_1;
@@ -81,7 +74,6 @@ int enemy_animation_turn = 0;
 //Button AABB
 aabb pause_buttons[3];
 aabb end_turn_button;
-
 aabb menu_buttons[4];
 
 void GameStateAlchemiceLoad() {
@@ -181,8 +173,7 @@ void GameStateAlchemiceUpdate() {
 
 	for (int i{}; i < sizeof(pause_buttons) / sizeof(pause_buttons[0]); ++i) //for every iteration of pause menu buttons
 	{
-		if ((mouse_pos.x >= pause_buttons[i].s2.x && mouse_pos.x <= pause_buttons[i].s1.x && //check mouse inside of button's aabb
-			mouse_pos.y <= pause_buttons[i].s2.y && mouse_pos.y >= pause_buttons[i].s1.y) &&
+		if (aabbbutton(&pause_buttons[i], mouse_pos) &&
 			AEInputCheckTriggered(AEVK_LBUTTON) && //check if left button is clicked
 			pause_mode == true) //only runs during pause mode
 		{
@@ -249,10 +240,6 @@ void GameStateAlchemiceUpdate() {
 						{
 							spellbook[i].spell_dragdrop->mousechange(true);
 						}
-
-						/*std::cout << "Crafting X tr"<< crafting_table.table_dragdrop.getcoord().tr.x << std::endl;
-						std::cout << "Crafting Y tr" << crafting_table.table_dragdrop.getcoord().tr.y << std::endl;*/
-
 					}
 				}
 			}
@@ -460,15 +447,6 @@ void GameStateAlchemiceDraw() {
 			}
 		}
 	}
-
-	//AEGfxTextureSet(mana_full, 0, 0);
-	//AEMtx33Trans(&translate, (f32)(-AEGetWindowWidth()/3), (f32)(-AEGetWindowHeight()/4) );
-	//AEMtx33Rot(&rotate, 0);
-	//AEMtx33Scale(&scale, 24.f, 24.f);
-	//AEMtx33Concat(&transform, &rotate, &scale);
-	//AEMtx33Concat(&transform, &translate, &transform);
-	//AEGfxSetTransform(transform.m);
-	//AEGfxMeshDraw(pMesh, AE_GFX_MDM_TRIANGLES);
 
 	//Crafting Table
 	draw_crafting_table(pMesh, crafting_table, crafting_test);

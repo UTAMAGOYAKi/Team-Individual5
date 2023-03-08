@@ -44,7 +44,6 @@ void Enemy::set_position_and_aabb(AEVec2 input_pos) {
     pos.x = input_pos.x;
     pos.y = input_pos.y;
     enemy_aabb = CreateAABB(input_pos, size, size);
-    //std::cout << enemy_aabb.mid.x << " " << enemy_aabb.mid.y << std::endl;
 }
 
 //When enemy take damage, insert damage number there.

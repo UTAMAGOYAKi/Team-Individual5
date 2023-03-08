@@ -8,7 +8,6 @@
 #include "EnemyObject.h"
 #include "GameStates.h"
 #include "GameStateManager.h"
-#include "LevelManager.h"
 #include "Mesh.h"
 #include "Player.h"
 #include "Spells.h"
