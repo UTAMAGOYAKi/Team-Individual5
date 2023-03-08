@@ -45,6 +45,7 @@ craftingtable crafting_table;
 //Loading of Mesh and Texture
 AEGfxVertexList* pMesh{}, * pLoad{};
 AEGfxTexture* chara{}, * rat{}, * spell_g{}, * pause_box{}, * sub{}, * load_screen{}, * crafting_test{}, * bg{}, * end_turn_box{}, *mana_full{}, * mana_empty{};
+AEGfxTexture* Menu_ui{};
 //Animation frames
 //AEGfxTexture* blast1{}, * blast2{}, * blast3{};
 
@@ -80,6 +81,8 @@ int enemy_animation_turn = 0;
 //Button AABB
 aabb pause_buttons[3];
 aabb end_turn_button;
+
+aabb menu_buttons[4];
 
 void GameStateAlchemiceLoad() {
 	pMesh = 0;
@@ -123,6 +126,8 @@ void GameStateAlchemiceInit() {
 
 	//
 	turn = player_turn;
+	sub_menu = false;
+	pause_mode = false;
 
 	//Draw all spells that are active at beginning
 	AEVec2Zero(&cards);
@@ -189,8 +194,7 @@ void GameStateAlchemiceUpdate() {
 				//to be implemented when options is up
 				break;
 			case 2:
-				//to be implemented into GS_MENU when main menu is up
-				gGameStateNext = GS_QUIT;
+				gGameStateNext = GS_MENU;
 				break;
 			}
 		}
@@ -648,4 +652,118 @@ void LoadScreenFree() {
 
 void LoadScreenUnload() {
 	AEGfxTextureUnload(load_screen);
+}
+
+
+void Menuload()
+{
+	Menu_ui = AEGfxTextureLoad("Assets/Menu_placeh.png");
+
+	pLoad = 0;
+	// Informing the library that we're about to start adding triangles
+	AEGfxMeshStart();
+	// This shape has 2 triangles that makes up a square
+	// Color parameters represent colours as ARGB
+	// UV coordinates to read from loaded textures
+	AEGfxTriAdd(
+		-0.5f, -0.5f, 0xFFFFFFFF, 0.0f, 1.0f,
+		-0.5f, 0.5f, 0xFFFFFFFF, 0.0f, 0.0f,
+		0.5f, 0.5f, 0xFFFFFFFF, 1.0f, 0.0f);
+	AEGfxTriAdd(
+		-0.5f, -0.5f, 0xFFFFFFFF, 0.0f, 1.0f,
+		0.5f, 0.5f, 0xFFFFFFFF, 1.0f, 0.0f,
+		0.5f, -0.5f, 0xFFFFFFFF, 1.0f, 1.0f);
+	// Saving the mesh (list of triangles) in pMesh
+	pLoad = AEGfxMeshEnd();
+}
+
+void Menuinit()
+{
+	for (int i = 0; i < 4; i++)
+	{
+		AEVec2 mid = { 0, -100.0f+75.0f*i};
+		menu_buttons[i] = CreateAABB(mid,128.0,50.0);
+	}
+
+}
+void Menuupdate()
+{
+
+	s32 x, y;
+	AEInputGetCursorPosition(&x, &y);
+	mouse_pos.x = (f32)x - AEGetWindowWidth() / 2;
+	mouse_pos.y = (f32)y - AEGetWindowHeight() / 2;
+
+	
+	if (AEInputCheckTriggered(AEVK_LBUTTON))
+	{
+		for (int i = 0; i < 4; i++)
+		{
+			if (aabbbutton(&menu_buttons[i], mouse_pos))
+			{
+				switch (i+1)
+				{
+				case 1:
+					gGameStateNext = GS_ALCHEMICE;
+					break;
+
+				case 2:
+					std::cout << "Options are not coded yet!\n";
+					break;
+
+				case 3:
+					//send the player to the credits
+					std::cout <<"Credits are not coded yet!\n";
+					break;
+
+				case 4:
+					gGameStateNext = GS_QUIT;
+					break;
+
+				}
+
+			}
+		}
+	}
+	
+}
+void Menudraw()
+{
+	AEMtx33 scale{ 0 };
+	AEMtx33 rotate{ 0 };
+	AEMtx33 translate{ 0 };
+	AEMtx33 transform{ 0 };
+
+	AEGfxSetRenderMode(AE_GFX_RM_TEXTURE);
+	for (int i = 0; i < 4; i++)
+	{
+		AEGfxTextureSet(Menu_ui, 0, 0);
+		AEMtx33Trans(&translate, 0, -125.0f+(i*75.0f));
+		AEMtx33Rot(&rotate, 0);
+		AEMtx33Scale(&scale, 128, 100); //hardcoded values from the pixels in .png file, 3x value 
+		AEMtx33Concat(&transform, &rotate, &scale);
+		AEMtx33Concat(&transform, &translate, &transform);
+		AEGfxSetTransform(transform.m);
+		AEGfxMeshDraw(pLoad, AE_GFX_MDM_TRIANGLES);
+	}
+
+	char strbuffer[100];
+	const char* words[4] = { "Play","Options", "Credits","Exit" };
+	memset(strbuffer, 0, 100 * sizeof(char));
+	AEGfxSetBlendMode(AE_GFX_BM_BLEND);
+	for (int i = 0; i < 4; i++)
+	{
+		sprintf_s(strbuffer, words[i]);
+		AEGfxPrint(font, strbuffer, -0.08f, 0.25f-i*0.21f, 1.0f, 0.0f, 0.0f, 0.0f);
+
+	}
+
+}
+void Menufree()
+{
+	AEGfxMeshFree(pLoad);
+}
+void Menuunload()
+{
+	AEGfxTextureUnload(Menu_ui);
 }
