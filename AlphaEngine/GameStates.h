@@ -23,3 +23,10 @@ void LoadScreenUpdate();
 void LoadScreenDraw();
 void LoadScreenFree();
 void LoadScreenUnload();
+
+void Menuload();
+void Menuinit();
+void Menuupdate();
+void Menudraw();
+void Menufree();
+void Menuunload();

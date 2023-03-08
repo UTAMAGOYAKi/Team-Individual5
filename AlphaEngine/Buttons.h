@@ -85,6 +85,7 @@ double distance_diagonal(AEVec2 first, AEVec2 second);
 int aabbbutton(dragdrop* box, AEVec2 mouse);
 int aabbbutton(dragdrop* box, dragdrop* spell);
 int aabbbutton(dragdrop* spell, aabb box);
+int aabbbutton(aabb* ref, AEVec2 mouse);
 
 //std::istream& operator>> (std::istream is, dragdrop& box);
 

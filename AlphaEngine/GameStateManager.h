@@ -6,7 +6,7 @@ enum
 	// list of all game states
 	GS_LOAD = 0,
 	GS_ALCHEMICE,
-
+	GS_MENU,
 	// special game state. Do not change
 	GS_RESTART,
 	GS_QUIT,

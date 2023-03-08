@@ -182,6 +182,22 @@ int aabbbutton(dragdrop* spell, aabb box)
 	}
 }
 
+int aabbbutton(aabb* ref, AEVec2 mouse)
+{
+	if (
+		(ref->bl.x < mouse.x && mouse.x < ref->tr.x)
+		&&
+		(ref->bl.y > mouse.y && mouse.y > ref->tr.y)
+		)
+	{
+		return 1;
+	}
+	else
+	{
+		return 0;
+	}
+}
+
 //Extra functions for main functions
 AEVec2 midpoint(aabb box)
 {
