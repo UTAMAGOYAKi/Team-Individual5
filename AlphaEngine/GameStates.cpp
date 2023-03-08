@@ -75,6 +75,7 @@ AEGfxTexture* blast[3];
 float frame_time{ 2 };
 double curr_time{ frame_time }; //Animations Timer
 bool is_enemy_turn = false;
+int enemy_animation_turn = 0;
 
 //Button AABB
 aabb pause_buttons[3];
@@ -140,7 +141,7 @@ void GameStateAlchemiceInit() {
 	//Creation of enemy
 	for (int i = 0; i < 3; i++) {
 		enemies[i] = Enemy(base_rat, rat);
-		enemies[i].set_position(enemy_position[i]);
+		enemies[i].set_position_and_aabb(enemy_position[i]);
 	}
 
 	//creates the button from top to bottom top most button [0]
@@ -304,8 +305,6 @@ void GameStateAlchemiceUpdate() {
 				}
 			}
 
-
-
 			//Check for mouse click
 			if (AEInputCheckTriggered(AEVK_LBUTTON))
 			{
@@ -339,9 +338,12 @@ void GameStateAlchemiceUpdate() {
 		}//End of player turn logic
 
 		//Enemy turn; runs all the enemy functions and animations
-		else if (turn == enemy_turn) {
-
+		else if (turn == enemy_turn) 
+		{
+			
 			curr_time -= AEFrameRateControllerGetFrameTime();
+
+			//When turn ends
 			if (curr_time <= 0.0f) {
 				turn = player_turn;
 				level.display_turn = "Player's Turn";
@@ -349,7 +351,8 @@ void GameStateAlchemiceUpdate() {
 				//Variables to update when switching back to Player Turn.
 				is_enemy_turn = false;
 				curr_time = frame_time;
-
+				
+				//Player Mana System
 				alchemice->max_mp = (alchemice->max_mp == 5) ? 5 : alchemice->max_mp + 1;
 				alchemice->mp = alchemice->max_mp;
 			}
@@ -371,7 +374,6 @@ void GameStateAlchemiceUpdate() {
 				for (int i{}; i < TOTAL_ENEMY; i++) {
 					enemies[i].update_animation(AEFrameRateControllerGetFrameTime());
 				}
-
 			}
 		}//End of enemy_turn logic
 	}//End of Main Gameplay Loop.
@@ -491,7 +493,7 @@ void GameStateAlchemiceDraw() {
 	if (turn == enemy_turn) {
 
 		for (int i{}; i < TOTAL_ENEMY; i++) {
-			if (enemies[i].is_alive())
+			if (enemies[i].is_alive() && (i == enemy_animation_turn))
 			{
 				AEGfxTextureSet(blast[enemies[i].get_frame_num()], 0, 0);
 				AEMtx33Trans(&translate, (f32)(enemies[i].get_pos().x), (f32)(enemies[i].get_pos().y));

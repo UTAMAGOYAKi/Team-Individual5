@@ -9,17 +9,20 @@
 
 #define TOTAL_ENEMY 3
 
-enum enemy_types {
+enum enemy_types 
+{
     base_rat,
     big_rat
 };
 
-enum enemy_life_state_enum {
+enum enemy_life_state_enum 
+{
     dead = 0,
     alive,
 };
 
-class Enemy {
+class Enemy 
+{
 private:
     std::string name;
     int max_hp;
@@ -31,16 +34,22 @@ private:
     int size = 1; //pixel size for AABB
     aabb enemy_aabb;
 
-    //For Animations
-    int frame_num = 0;
-    double frame_time = 0.6667;
+    //FOR ANIMATIONS
+  //______________________________________________________________
+  //Setting
+    int total_frame = 3;
+    int frame_num = 0; //current frame
+    double attack_animation_timer = 1.0f;
+
+    //Frame times
+    double frame_time = attack_animation_timer / (float)total_frame;
     double frame_timer = frame_time;
 
 public:
     Enemy() : name{ "" }, max_hp{ 0 }, hp{ 0 }, atk{ 0 }, pos{ 0.f,0.f }, texture{ nullptr }, life_state{ alive }, size{ 0 }, enemy_aabb{ CreateAABB() } {};
 
-       
-    Enemy(enemy_types type, AEGfxTexture* input_texture) :name{ "" }, max_hp{ 0 }, hp{ 0 }, atk{ 0 }, pos{ 0.f,0.f }, texture{ input_texture }, life_state{alive} {
+    Enemy(enemy_types type, AEGfxTexture* input_texture) : texture{ input_texture }, life_state{alive} 
+    {
         switch (type)
         {
         case base_rat:
@@ -67,8 +76,7 @@ public:
         }
     };
 
-    ~Enemy() { //deconstructor
-    }
+    ~Enemy() {};//deconstructor
     //Member functions
     
     //Used to retrieve data from class
@@ -83,7 +91,7 @@ public:
     aabb get_aabb();
     
     //Used to make changes to damage classes.
-    void set_position(AEVec2 input_pos);
+    void set_position_and_aabb(AEVec2 input_pos);
     void take_damage(int val);
     void set_frame_num(int); //Changes the frame number for the update animation
     void update_animation(f64 dt); //Updates the frame number to draw the correct frame.

@@ -40,7 +40,7 @@ int Enemy::get_frame_num() {
 }
 
 //Actions
-void Enemy::set_position(AEVec2 input_pos) {
+void Enemy::set_position_and_aabb(AEVec2 input_pos) {
     pos.x = input_pos.x;
     pos.y = input_pos.y;
     enemy_aabb = CreateAABB(input_pos, size, size);
