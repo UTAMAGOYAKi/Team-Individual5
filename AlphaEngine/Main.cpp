@@ -17,7 +17,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	#endif
 
 	// Using custom window procedure
-	AESysInit(hInstance, nCmdShow, 1280, 720, 1, 60, true, NULL);
+	//AESysInit(hInstance, nCmdShow, 1280, 720, 1, 60, true, NULL);
+	AESysInit(hInstance, nCmdShow, 720, 405, 1, 60, true, NULL);
 	AESysToggleFullScreen(false);
 
 	// Changing the window title
@@ -25,7 +26,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
 	GameStateManagerInit(GS_LOAD);
 
-	font = AEGfxCreateFont("Assets/font/DotGothic16-Regular.ttf", 30);
+	font = AEGfxCreateFont("Assets/font/DotGothic16-Regular.ttf", FONT_SIZE);
 
 	// Game Loop
 	while (gGameStateCurr != GS_QUIT)
