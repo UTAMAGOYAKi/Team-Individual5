@@ -87,8 +87,6 @@ int aabbbutton(dragdrop* box, dragdrop* spell);
 int aabbbutton(dragdrop* spell, aabb box);
 int aabbbutton(aabb* ref, AEVec2 mouse);
 
-//std::istream& operator>> (std::istream is, dragdrop& box);
-
 #include "AEEngine.h"
 
 extern AEVec2 player_position;

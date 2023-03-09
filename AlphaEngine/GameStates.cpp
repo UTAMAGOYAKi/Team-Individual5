@@ -36,17 +36,9 @@ AEVec2 cards;
 craftingtable crafting_table;
 //---------------------------------------------------------------------------------
 
-
-//enum spell_slot { empty, fire_slot, poison_slot, lighting_slot };
-//Elements spell_slot_one = NILL;
-//Elements spell_slot_two = NILL;
-//int gGameRunning = 1;
-
 //Loading of Mesh and Texture
 AEGfxVertexList* pMesh{}, * pLoad{};
 AEGfxTexture* chara{}, * rat{}, * big_rat_texture{}, *spell_g{}, * pause_box{}, * sub{}, * load_screen{}, * crafting_test{}, * bg{}, * end_turn_box{}, * mana_full{}, * mana_empty{}, * Menu_ui;
-//Animation frames
-//AEGfxTexture* blast1{}, * blast2{}, * blast3{};
 
 aabb* chara_pos;
 aabb* Enemy_pos_1;
@@ -72,8 +64,6 @@ Enemy enemies[3]{};
 
 //Enemy Animations
 AEGfxTexture* blast[4];
-//float frame_time{animation_time * TOTAL_ENEMY};
-//double curr_time{ frame_time }; //Animations Timer
 bool is_enemy_turn = false;
 //specific enemy turn
 int s_enemy_turn = 0;
@@ -81,8 +71,6 @@ int s_enemy_turn = 0;
 //Bleeding Animation
 bool enemy_bleeding{false};
 int bleeding_enemy_no{0};
-//float bleed_time{ 1 };
-//float bleed_timer { bleed_time };
 
 //Particles
 const int particle_max = 50;
@@ -166,12 +154,6 @@ void GameStateAlchemiceInit() {
 			}
 		}
 	}
-
-	//Creation of enemy
-	/*for (int i = 0; i < 3; i++) {
-		enemies[i] = Enemy(big_rat, rat);
-		enemies[i].set_position_and_aabb(enemy_position[i]);
-	}*/
 	enemies[0] = Enemy(big_rat, big_rat_texture);
 	enemies[0].set_position_and_aabb(enemy_position[0]);
 
@@ -315,10 +297,6 @@ void GameStateAlchemiceUpdate() {
 						{
 							spellbook[i].spell_dragdrop->mousechange(true);
 						}
-
-						/*std::cout << "Crafting X tr"<< crafting_table.table_dragdrop.getcoord().tr.x << std::endl;
-						std::cout << "Crafting Y tr" << crafting_table.table_dragdrop.getcoord().tr.y << std::endl;*/
-
 					}
 				}
 			}
@@ -548,15 +526,6 @@ void GameStateAlchemiceDraw() {
 		}
 	}
 
-	//AEGfxTextureSet(mana_full, 0, 0);
-	//AEMtx33Trans(&translate, (f32)(-AEGetWindowWidth()/3), (f32)(-AEGetWindowHeight()/4) );
-	//AEMtx33Rot(&rotate, 0);
-	//AEMtx33Scale(&scale, 24.f, 24.f);
-	//AEMtx33Concat(&transform, &rotate, &scale);
-	//AEMtx33Concat(&transform, &translate, &transform);
-	//AEGfxSetTransform(transform.m);
-	//AEGfxMeshDraw(pMesh, AE_GFX_MDM_TRIANGLES);
-
 	//Crafting Table
 	draw_crafting_table(pMesh, crafting_table, crafting_test);
 
@@ -594,7 +563,6 @@ void GameStateAlchemiceDraw() {
 		//Concatenate the scale and translation matrix
 		AEMtx33Concat(&matrix, &trans, &scale2);
 		//Concatenate the result with the particle's matrix
-		//AEMtx33Concat(&matrix, &MapTransform, &matrix);
 		//Send the resultant matrix to the graphics manager using "AEGfxSetTransform"
 		AEGfxSetTransform(matrix.m);
 		//Draw the particle's mesh

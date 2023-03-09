@@ -200,10 +200,6 @@ int craftingtable::crafting_table_update(Spell* spellbook, int spell_id)
 		}
 	}
 	return 2;
-	//spellbook[table.spell1_id].spell_dragdrop->resetaabb();
-	//spellbook[table.spell2_id].spell_dragdrop->resetaabb();
-	//table.spell1_id = INVALID_SPELL;
-	//table.spell2_id = INVALID_SPELL;
 }
 
 dragdrop* craftingtable::get_dragdrop()

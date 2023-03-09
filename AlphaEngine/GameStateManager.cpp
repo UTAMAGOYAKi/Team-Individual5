@@ -62,7 +62,7 @@ void GameStateManagerUpdate() {
 		case GS_QUIT:
 			break;
 		default:
-			//AE_FATAL_ERROR("invalid state!!");
+			AE_FATAL_ERROR("invalid state!!");
 			break;
 	}
 }

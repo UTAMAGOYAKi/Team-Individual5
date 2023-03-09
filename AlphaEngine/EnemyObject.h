@@ -30,7 +30,7 @@ struct particle
     float size;
 };
 
-class Enemy 
+class Enemy
 {
 private:
     std::string name;
