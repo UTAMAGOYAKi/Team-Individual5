@@ -78,12 +78,13 @@ Spell* init_all_spells()
 	return spellbook;
 }
 
+//destructor for the coordinates
 Spell::~Spell()
 {
 	delete spell_dragdrop;
 }
 
-
+//Function that will set coords to a spell when called
 void Spell::init_spells_draw(Spell& spell, AEVec2 coords)
 {
 	//Set spells boundingbox
@@ -100,6 +101,7 @@ void Spell::reset_spell()
 }
 
 
+// Returns true if spell can be unlocked
 bool combine_spells(Spell* spellbook, int id1, int id2) {
 	if (spellbook[id1].tier == 3 && spellbook[id2].tier == 3) {
 		// combine tier 3 spells
@@ -153,6 +155,7 @@ bool combine_spells(Spell* spellbook, int id1, int id2) {
 }
 
 
+// Called when level ends etc.
 void unload_spells(Spell* spellbook) {
 	AEGfxTextureUnload(umbral_tendrils);
 	AEGfxTextureUnload(inferno_blast);
@@ -167,6 +170,10 @@ void unload_spells(Spell* spellbook) {
 	delete[] spellbook;
 }
 
+//Returns state of the crafting table
+// State 1: When only 1 spell is input
+// State 2: When 2 spells has been input but invalid combo
+// State 3: When 2 spells has been input and spell is unloked
 int craftingtable::crafting_table_update(Spell* spellbook, int spell_id)
 {
 	spellbook[spell_id].spell_dragdrop->mousechange(false);
