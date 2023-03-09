@@ -70,7 +70,7 @@ int s_enemy_turn = 0;
 
 //Bleeding Animation
 bool enemy_bleeding{false};
-int bleeding_enemy_no{0};
+int bleeding_enemy_no{0};	
 
 //Particles
 const int particle_max = 50;
@@ -686,6 +686,7 @@ void GameStateAlchemiceUnload() {
 }
 
 float load_screen_time{};
+const float load_screen_timer{ 3 };
 
 void LoadScreenLoad() {
 	pLoad = 0;
@@ -704,14 +705,14 @@ void LoadScreenLoad() {
 }
 
 void LoadScreenInit() {
-	load_screen_time = 0;
+	load_screen_time = load_screen_timer;
 }
 
 void LoadScreenUpdate() {
 	if (load_screen_time > 0) {
 		load_screen_time -= (f32)AEFrameRateControllerGetFrameTime();
 	}
-	else {
+	if (load_screen_time <= 0 || AEInputCheckTriggered(AEVK_LBUTTON)) {
 		gGameStateNext = GS_MENU;
 	}
 }
@@ -721,7 +722,14 @@ void LoadScreenDraw() {
 	AEGfxSetRenderMode(AE_GFX_RM_TEXTURE);
 	AEGfxSetTintColor(1.0f, 1.0f, 1.0f, 1.0f);
 	AEGfxSetBlendMode(AE_GFX_BM_BLEND);
-	AEGfxSetTransparency(1.0f);
+
+
+	if (load_screen_time >= (load_screen_timer/2)) {
+		AEGfxSetTransparency((load_screen_timer - load_screen_time)/(load_screen_timer/2));
+	}
+	else {
+		AEGfxSetTransparency(load_screen_time);
+	}
 
 	AEMtx33 scale{ 0 };
 	AEMtx33 rotate{ 0 };
@@ -828,6 +836,7 @@ void Menudraw()
 	AEMtx33 transform{ 0 };
 
 	AEGfxSetRenderMode(AE_GFX_RM_TEXTURE);
+	AEGfxSetTransparency(1.0f);
 	for (int i = 0; i < 4; i++)
 	{
 		AEGfxTextureSet(Menu_ui, 0, 0);
