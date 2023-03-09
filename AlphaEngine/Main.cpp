@@ -2,6 +2,8 @@
 #include "Main.h"
 
 int FONT_SIZE = 30;
+AEVec2 mouse_pos;
+s8 font;
 
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	_In_opt_ HINSTANCE hPrevInstance,
@@ -44,6 +46,12 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
 		while (gGameStateCurr == gGameStateNext)
 		{
+			// Updates global mouse pos
+			int x, y;
+			AEInputGetCursorPosition(&x, &y);
+			mouse_pos.x = (f32)x - AEGetWindowWidth() / 2;
+			mouse_pos.y = (f32)y - AEGetWindowHeight() / 2;
+
 			// Informing the system about the loop's start
 			AESysFrameStart();
 
