@@ -54,7 +54,7 @@ bool sub_menu = false;
 
 //Level Turn checks
 Turn turn;
-Level level;
+level_manager level;
 
 //GameObject Creations
 player* alchemice{};
@@ -126,17 +126,20 @@ void GameStateAlchemiceLoad() {
 	blast[1] = AEGfxTextureLoad("Assets/blast2.png");
 	blast[2] = AEGfxTextureLoad("Assets/blast3.png");
 	blast[3] = AEGfxTextureLoad("Assets/blast4.png");
-}
 
-// Initialization of your own variables go here
-void GameStateAlchemiceInit() {
 	PositionInit();
 	alchemice = create_player();
 	//Init All Spells
 	spellbook = init_all_spells();
+}
+
+// Initialization of your own variables go here
+void GameStateAlchemiceInit() {
+
 
 	//
 	turn = player_turn;
+
 
 	//Draw all spells that are active at beginning
 	AEVec2Zero(&cards);
@@ -151,15 +154,6 @@ void GameStateAlchemiceInit() {
 			}
 		}
 	}
-	enemies[0] = Enemy(big_rat, big_rat_texture,"Big Rat", 12, 3);
-	enemies[0].set_position_and_aabb(enemy_position[0]);
-
-	enemies[1] = Enemy(base_rat, rat, "Rat", 10 , 2);
-	enemies[1].set_position_and_aabb(enemy_position[1]);
-
-	enemies[2] = Enemy(base_rat, rat, "Rat", 10 , 2);
-	enemies[2].set_position_and_aabb(enemy_position[2]);
-
 	//creates the button from top to bottom top most button [0]
 	for (int i = 0; i < sizeof(pause_buttons) / sizeof(pause_buttons[0]); ++i) {
 		pause_buttons[i] = CreateAABB({ 0,(f32)-190 + i * 180 }, 300, 80);
@@ -167,6 +161,43 @@ void GameStateAlchemiceInit() {
 
 	cards.x = -50;
 	end_turn_button = CreateAABB({ 516,-308 }, 200, 80);
+
+	//Most stuff are only needed to be init in level 1;
+	if (level.curr_level == level_1) 
+	{
+		
+		enemies[0] = Enemy(big_rat, big_rat_texture, "Big Rat", 1, 3);
+		enemies[0].set_position_and_aabb(enemy_position[0]);
+
+		enemies[1] = Enemy(base_rat, rat, "Rat", 1, 2);
+		enemies[1].set_position_and_aabb(enemy_position[1]);
+
+		enemies[2] = Enemy(base_rat, rat, "Rat", 1, 2);
+		enemies[2].set_position_and_aabb(enemy_position[2]);
+
+	}
+	else if (level.curr_level == level_2) 
+	{
+		enemies[0] = Enemy(big_rat, big_rat_texture, "Level:2 Rat", 1, 3);
+		enemies[0].set_position_and_aabb(enemy_position[0]);
+
+		enemies[1] = Enemy(base_rat, rat, "Rat", 1, 2);
+		enemies[1].set_position_and_aabb(enemy_position[1]);
+
+		enemies[2] = Enemy(base_rat, rat, "Rat", 1, 2);
+		enemies[2].set_position_and_aabb(enemy_position[2]);
+	}
+	else if (level.curr_level == level_3) 
+	{
+		enemies[0] = Enemy(big_rat, big_rat_texture, "Level:3 Rat", 1, 3);
+		enemies[0].set_position_and_aabb(enemy_position[0]);
+
+		enemies[1] = Enemy(base_rat, rat, "Rat", 1, 2);
+		enemies[1].set_position_and_aabb(enemy_position[1]);
+
+		enemies[2] = Enemy(base_rat, rat, "Rat", 1, 2);
+		enemies[2].set_position_and_aabb(enemy_position[2]);
+	}
 }
 
 
@@ -238,12 +269,9 @@ void GameStateAlchemiceUpdate() {
 			enemies[i].create_particle(particle_vector, particle_max);
 			enemies[i].update_bleed_timer();
 
-			std::cout << "Bleeding";
-
 			if (enemies[i].get_bleed_timer() <= 0) {
 				enemies[i].reset_bleed_time();
 				f64 j = enemies[i].get_bleed_timer();
-				std::cout << "bleed timer" << j;
 				enemies[i].set_bleeding(false);
 			}
 		}
@@ -314,7 +342,6 @@ void GameStateAlchemiceUpdate() {
 								enemies[j].take_damage(spellbook[i].base_damage);
 								enemies[j].set_bleeding(true);
 
-								std::cout << "BLEED";
 								alchemice->mp -= 1;
 								if (spellbook[i].id > 3) {
 									spellbook[i].reset_spell();
@@ -403,13 +430,11 @@ void GameStateAlchemiceUpdate() {
 			{
 				if (s_enemy_turn < TOTAL_ENEMY) 
 				{
-					std::cout << "Enemy actual turn\n";
 					//Is a one time check when it becomes enemy then run animations
 					if (enemies[s_enemy_turn].get_finish_attack())
 					{
 
 						alchemice->hp -= enemies[s_enemy_turn].get_atk();
-						std::cout << "Enemy Damage\n";
 
 						enemies[s_enemy_turn].switch_finish_attack();
 						s_enemy_turn++;
@@ -436,6 +461,11 @@ void GameStateAlchemiceUpdate() {
 			}
 		}//End of enemy_turn logic
 	}//End of Main Gameplay Loop.
+	else if (!enemies_alive)
+	{
+	level.next_level();
+	gGameStateNext = GS_RESTART;
+	}
 }
 
 void GameStateAlchemiceDraw() {
@@ -640,10 +670,11 @@ void GameStateAlchemiceDraw() {
 }
 
 void GameStateAlchemiceFree() {
-	AEGfxMeshFree(pMesh);
 }
 
 void GameStateAlchemiceUnload() {
+
+	AEGfxMeshFree(pMesh);
 
 	delete_player(alchemice);
 
