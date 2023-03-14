@@ -151,13 +151,13 @@ void GameStateAlchemiceInit() {
 			}
 		}
 	}
-	enemies[0] = Enemy(big_rat, big_rat_texture);
+	enemies[0] = Enemy(big_rat, big_rat_texture,"Big Rat", 12, 3);
 	enemies[0].set_position_and_aabb(enemy_position[0]);
 
-	enemies[1] = Enemy(base_rat, rat);
+	enemies[1] = Enemy(base_rat, rat, "Rat", 10 , 2);
 	enemies[1].set_position_and_aabb(enemy_position[1]);
 
-	enemies[2] = Enemy(base_rat, rat);
+	enemies[2] = Enemy(base_rat, rat, "Rat", 10 , 2);
 	enemies[2].set_position_and_aabb(enemy_position[2]);
 
 	//creates the button from top to bottom top most button [0]
