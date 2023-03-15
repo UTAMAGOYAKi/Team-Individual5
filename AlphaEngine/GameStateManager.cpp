@@ -50,12 +50,12 @@ void GameStateManagerUpdate() {
 			GameStateUnload = GameStateAlchemiceUnload;
 			break;
 		case GS_MENU:
-			GameStateLoad = Menuload;
-			GameStateInit = Menuinit;
-			GameStateUpdate = Menuupdate;
-			GameStateDraw = Menudraw;
-			GameStateFree = Menufree;
-			GameStateUnload = Menuunload;
+			GameStateLoad = MenuLoad;
+			GameStateInit = MenuInit;
+			GameStateUpdate = MenuUpdate;
+			GameStateDraw = MenuDraw;
+			GameStateFree = MenuFree;
+			GameStateUnload = MenuUnload;
 			break;
 		case GS_RESTART:
 			break;

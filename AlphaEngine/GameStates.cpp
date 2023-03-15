@@ -21,7 +21,6 @@
 // main
 //int i = 0;
 //float position = 1000.0;
-AEVec2 mouse_pos{}; // Current mouse pos
 
 //Card Variables
 //---------------------------------------------------------------------------------
@@ -36,14 +35,13 @@ craftingtable crafting_table;
 //---------------------------------------------------------------------------------
 
 //Loading of Mesh and Texture
-AEGfxVertexList* pMesh{}, * pLoad{};
-AEGfxTexture* chara{}, * rat{}, * big_rat_texture{}, *spell_g{}, * pause_box{}, * sub{}, * load_screen{}, * crafting_test{}, * bg{}, * end_turn_box{}, * mana_full{}, * mana_empty{}, * Menu_ui;
+AEGfxVertexList* pMesh;
+AEGfxTexture* chara{}, * rat{}, * big_rat_texture{}, *spell_g{}, * pause_box{}, * sub{}, * crafting_test{}, * bg{}, * end_turn_box{}, * mana_full{}, * mana_empty{}, * Menu_ui;
 
 aabb* chara_pos;
 aabb* Enemy_pos_1;
 aabb* Enemy_pos_2;
 /// <summary>
-s8 font;
 
 s32 pX{};
 s32 pY{};
@@ -55,7 +53,7 @@ bool sub_menu = false;
 
 //Level Turn checks
 Turn turn;
-Level level;
+level_manager level;
 
 //GameObject Creations
 player* alchemice{};
@@ -79,7 +77,6 @@ AEGfxVertexList* particle_mesh;
 //Button AABB
 aabb pause_buttons[3];
 aabb end_turn_button;
-aabb menu_buttons[4];
 
 
 
@@ -130,19 +127,22 @@ void GameStateAlchemiceLoad() {
 	blast[1] = AEGfxTextureLoad("Assets/blast2.png");
 	blast[2] = AEGfxTextureLoad("Assets/blast3.png");
 	blast[3] = AEGfxTextureLoad("Assets/blast4.png");
-}
 
-// Initialization of your own variables go here
-void GameStateAlchemiceInit() {
 	PositionInit();
 	alchemice = create_player();
 	//Init All Spells
 	spellbook = init_all_spells();
+}
+
+// Initialization of your own variables go here
+void GameStateAlchemiceInit() {
+
 
 	//Contains all spells in a dynamically allocated array
 
 	//
 	turn = player_turn;
+
 
 	//Draw all spells that are active at beginning
 	AEVec2Zero(&cards);
@@ -157,15 +157,6 @@ void GameStateAlchemiceInit() {
 			}
 		}
 	}
-	enemies[0] = Enemy(big_rat, big_rat_texture);
-	enemies[0].set_position_and_aabb(enemy_position[0]);
-
-	enemies[1] = Enemy(base_rat, rat);
-	enemies[1].set_position_and_aabb(enemy_position[1]);
-
-	enemies[2] = Enemy(base_rat, rat);
-	enemies[2].set_position_and_aabb(enemy_position[2]);
-
 	//creates the button from top to bottom top most button [0]
 	for (int i = 0; i < sizeof(pause_buttons) / sizeof(pause_buttons[0]); ++i) {
 		pause_buttons[i] = CreateAABB({ 0,(f32)-190 + i * 180 }, 300, 80);
@@ -173,16 +164,47 @@ void GameStateAlchemiceInit() {
 
 	cards.x = -50;
 	end_turn_button = CreateAABB({ 516,-308 }, 200, 80);
+
+	//Most stuff are only needed to be init in level 1;
+	if (level.curr_level == level_1) 
+	{
+		
+		enemies[0] = Enemy(big_rat, big_rat_texture, "Big Rat", 1, 3);
+		enemies[0].set_position_and_aabb(enemy_position[0]);
+
+		enemies[1] = Enemy(base_rat, rat, "Rat", 1, 2);
+		enemies[1].set_position_and_aabb(enemy_position[1]);
+
+		enemies[2] = Enemy(base_rat, rat, "Rat", 1, 2);
+		enemies[2].set_position_and_aabb(enemy_position[2]);
+
+	}
+	else if (level.curr_level == level_2) 
+	{
+		enemies[0] = Enemy(big_rat, big_rat_texture, "Level:2 Rat", 1, 3);
+		enemies[0].set_position_and_aabb(enemy_position[0]);
+
+		enemies[1] = Enemy(base_rat, rat, "Rat", 1, 2);
+		enemies[1].set_position_and_aabb(enemy_position[1]);
+
+		enemies[2] = Enemy(base_rat, rat, "Rat", 1, 2);
+		enemies[2].set_position_and_aabb(enemy_position[2]);
+	}
+	else if (level.curr_level == level_3) 
+	{
+		enemies[0] = Enemy(big_rat, big_rat_texture, "Level:3 Rat", 1, 3);
+		enemies[0].set_position_and_aabb(enemy_position[0]);
+
+		enemies[1] = Enemy(base_rat, rat, "Rat", 1, 2);
+		enemies[1].set_position_and_aabb(enemy_position[1]);
+
+		enemies[2] = Enemy(base_rat, rat, "Rat", 1, 2);
+		enemies[2].set_position_and_aabb(enemy_position[2]);
+	}
 }
 
 
 void GameStateAlchemiceUpdate() {
-
-	// Updates global mouse pos
-	int x, y;
-	AEInputGetCursorPosition(&x, &y);
-	mouse_pos.x = (f32)x - AEGetWindowWidth() / 2;
-	mouse_pos.y = (f32)y - AEGetWindowHeight() / 2;
 
 	AEVec2 temp;
 	temp = mouse_pos;
@@ -250,12 +272,9 @@ void GameStateAlchemiceUpdate() {
 			enemies[i].create_particle(particle_vector, particle_max);
 			enemies[i].update_bleed_timer();
 
-			std::cout << "Bleeding";
-
 			if (enemies[i].get_bleed_timer() <= 0) {
 				enemies[i].reset_bleed_time();
 				f64 j = enemies[i].get_bleed_timer();
-				std::cout << "bleed timer" << j;
 				enemies[i].set_bleeding(false);
 			}
 		}
@@ -326,7 +345,6 @@ void GameStateAlchemiceUpdate() {
 								enemies[j].take_damage(spellbook.spell_array[i].base_damage);
 								enemies[j].set_bleeding(true);
 
-								std::cout << "BLEED";
 								alchemice->mp -= 1;
 								if (spellbook.spell_array[i].id > tier3_last) {
 									spellbook.spell_array[i].reset_spell();
@@ -368,8 +386,7 @@ void GameStateAlchemiceUpdate() {
 					}
 				}
 
-				if (mouse_pos.x >= end_turn_button.s2.x && mouse_pos.x <= end_turn_button.s1.x &&
-					mouse_pos.y <= end_turn_button.s2.y && mouse_pos.y >= end_turn_button.s1.y) {
+				if (aabbbutton(&end_turn_button, mouse_pos)) {
 					turn = enemy_turn;
 					s_enemy_turn = 0;
 					is_enemy_turn = true;
@@ -416,13 +433,11 @@ void GameStateAlchemiceUpdate() {
 			{
 				if (s_enemy_turn < TOTAL_ENEMY) 
 				{
-					std::cout << "Enemy actual turn\n";
 					//Is a one time check when it becomes enemy then run animations
 					if (enemies[s_enemy_turn].get_finish_attack())
 					{
 
 						alchemice->hp -= enemies[s_enemy_turn].get_atk();
-						std::cout << "Enemy Damage\n";
 
 						enemies[s_enemy_turn].switch_finish_attack();
 						s_enemy_turn++;
@@ -449,6 +464,11 @@ void GameStateAlchemiceUpdate() {
 			}
 		}//End of enemy_turn logic
 	}//End of Main Gameplay Loop.
+	else if (!enemies_alive)
+	{
+	level.next_level();
+	gGameStateNext = GS_RESTART;
+	}
 }
 
 void GameStateAlchemiceDraw() {
@@ -592,9 +612,6 @@ void GameStateAlchemiceDraw() {
 		}
 	}
 
-
-
-
 	// End turn button
 	// 113 characters on screen, start to end, 113/2 =  56.5(left and right for scaling) Roboto
 	// 85 characters, 85/2 = 42.5 Gothic
@@ -656,10 +673,11 @@ void GameStateAlchemiceDraw() {
 }
 
 void GameStateAlchemiceFree() {
-	AEGfxMeshFree(pMesh);
 }
 
 void GameStateAlchemiceUnload() {
+
+	AEGfxMeshFree(pMesh);
 
 	delete_player(alchemice);
 
@@ -686,188 +704,4 @@ void GameStateAlchemiceUnload() {
 	AEGfxTextureUnload(blast[3]);
 
 	AEGfxMeshFree(particle_mesh);
-}
-
-float load_screen_time{};
-const float load_screen_timer{ 3 };
-
-void LoadScreenLoad() {
-	pLoad = 0;
-	AEGfxMeshStart();
-	AEGfxTriAdd(
-		-0.5f, -0.5f, 0x00000000, 0.0f, 1.0f,
-		-0.5f, 0.5f, 0x00000000, 0.0f, 0.0f,
-		0.5f, 0.5f, 0x00000000, 1.0f, 0.0f);
-	AEGfxTriAdd(
-		-0.5f, -0.5f, 0x00000000, 0.0f, 1.0f,
-		0.5f, 0.5f, 0x00000000, 1.0f, 0.0f,
-		0.5f, -0.5f, 0x00000000, 1.0f, 1.0f);
-	pLoad = AEGfxMeshEnd();
-
-	load_screen = AEGfxTextureLoad("Assets/digilogo.png");
-}
-
-void LoadScreenInit() {
-	load_screen_time = load_screen_timer;
-}
-
-void LoadScreenUpdate() {
-	if (load_screen_time > 0) {
-		load_screen_time -= (f32)AEFrameRateControllerGetFrameTime();
-	}
-	if (load_screen_time <= 0 || AEInputCheckTriggered(AEVK_LBUTTON)) {
-		gGameStateNext = GS_MENU;
-	}
-}
-
-void LoadScreenDraw() {
-	AEGfxSetBackgroundColor(.0f, .0f, .0f);
-	AEGfxSetRenderMode(AE_GFX_RM_TEXTURE);
-	AEGfxSetTintColor(1.0f, 1.0f, 1.0f, 1.0f);
-	AEGfxSetBlendMode(AE_GFX_BM_BLEND);
-
-
-	if (load_screen_time >= (load_screen_timer/2)) {
-		AEGfxSetTransparency((load_screen_timer - load_screen_time)/(load_screen_timer/2));
-	}
-	else {
-		AEGfxSetTransparency(load_screen_time);
-	}
-
-	AEMtx33 scale{ 0 };
-	AEMtx33 rotate{ 0 };
-	AEMtx33 translate{ 0 };
-	AEMtx33 transform{ 0 };
-
-	AEGfxTextureSet(load_screen, 0, 0);
-	AEMtx33Trans(&translate, 0, 0);
-	AEMtx33Rot(&rotate, 0);
-	AEMtx33Scale(&scale, 915, 287);
-	AEMtx33Concat(&transform, &rotate, &scale);
-	AEMtx33Concat(&transform, &translate, &transform);
-	AEGfxSetTransform(transform.m);
-	AEGfxMeshDraw(pLoad, AE_GFX_MDM_TRIANGLES);
-}
-
-void LoadScreenFree() {
-	AEGfxMeshFree(pLoad);
-}
-
-void LoadScreenUnload() {
-	AEGfxTextureUnload(load_screen);
-}
-
-
-void Menuload()
-{
-	Menu_ui = AEGfxTextureLoad("Assets/Menu_placeh.png");
-
-	pLoad = 0;
-	// Informing the library that we're about to start adding triangles
-	AEGfxMeshStart();
-	// This shape has 2 triangles that makes up a square
-	// Color parameters represent colours as ARGB
-	// UV coordinates to read from loaded textures
-	AEGfxTriAdd(
-		-0.5f, -0.5f, 0xFFFFFFFF, 0.0f, 1.0f,
-		-0.5f, 0.5f, 0xFFFFFFFF, 0.0f, 0.0f,
-		0.5f, 0.5f, 0xFFFFFFFF, 1.0f, 0.0f);
-	AEGfxTriAdd(
-		-0.5f, -0.5f, 0xFFFFFFFF, 0.0f, 1.0f,
-		0.5f, 0.5f, 0xFFFFFFFF, 1.0f, 0.0f,
-		0.5f, -0.5f, 0xFFFFFFFF, 1.0f, 1.0f);
-	// Saving the mesh (list of triangles) in pMesh
-	pLoad = AEGfxMeshEnd();
-}
-
-void Menuinit()
-{
-	for (int i = 0; i < 4; i++)
-	{
-		AEVec2 mid = { 0, -100.0f + 75.0f * i };
-		menu_buttons[i] = CreateAABB(mid, 128.0, 50.0);
-	}
-
-}
-void Menuupdate()
-{
-	AEGfxSetBackgroundColor(.2f, .2f, .2f);
-
-	s32 x, y;
-	AEInputGetCursorPosition(&x, &y);
-	mouse_pos.x = (f32)x - AEGetWindowWidth() / 2;
-	mouse_pos.y = (f32)y - AEGetWindowHeight() / 2;
-
-
-	if (AEInputCheckTriggered(AEVK_LBUTTON))
-	{
-		for (int i = 0; i < 4; i++)
-		{
-			if (aabbbutton(&menu_buttons[i], mouse_pos))
-			{
-				switch (i + 1)
-				{
-				case 1:
-					gGameStateNext = GS_ALCHEMICE;
-					break;
-
-				case 2:
-					std::cout << "Options are not coded yet!\n";
-					break;
-
-				case 3:
-					//send the player to the credits
-					std::cout << "Credits are not coded yet!\n";
-					break;
-
-				case 4:
-					gGameStateNext = GS_QUIT;
-					break;
-
-				}
-
-			}
-		}
-	}
-
-}
-void Menudraw()
-{
-	AEMtx33 scale{ 0 };
-	AEMtx33 rotate{ 0 };
-	AEMtx33 translate{ 0 };
-	AEMtx33 transform{ 0 };
-
-	AEGfxSetRenderMode(AE_GFX_RM_TEXTURE);
-	AEGfxSetTransparency(1.0f);
-	for (int i = 0; i < 4; i++)
-	{
-		AEGfxTextureSet(Menu_ui, 0, 0);
-		AEMtx33Trans(&translate, 0, -125.0f + (i * 75.0f));
-		AEMtx33Rot(&rotate, 0);
-		AEMtx33Scale(&scale, 128, 100);
-		AEMtx33Concat(&transform, &rotate, &scale);
-		AEMtx33Concat(&transform, &translate, &transform);
-		AEGfxSetTransform(transform.m);
-		AEGfxMeshDraw(pLoad, AE_GFX_MDM_TRIANGLES);
-	}
-
-	char strbuffer[100];
-	const char* words[4] = { "Play","Options", "Credits","Exit" };
-	memset(strbuffer, 0, 100 * sizeof(char));
-	AEGfxSetBlendMode(AE_GFX_BM_BLEND);
-	for (int i = 0; i < 4; i++)
-	{
-		sprintf_s(strbuffer, words[i]);
-		AEGfxPrint(font, strbuffer, -0.08f, 0.25f - i * 0.21f, 1.0f, 0.0f, 0.0f, 0.0f);
-	}
-
-}
-void Menufree()
-{
-	AEGfxMeshFree(pLoad);
-}
-void Menuunload()
-{
-	AEGfxTextureUnload(Menu_ui);
 }

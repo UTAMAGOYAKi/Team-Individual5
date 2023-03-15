@@ -5,10 +5,21 @@ enum Turn {
 	enemy_turn
 };
 
-struct Level {
-	std::string display_turn = "Player's Turn";
+enum level_enum {
+	level_1 = 1,
+	level_2,
+	level_3,
 };
-extern s8 font;
+
+struct level_manager {
+	
+	level_enum curr_level = level_1;
+	std::string display_turn = "Player's Turn";
+	
+	void next_level() {
+		curr_level = static_cast<level_enum>(static_cast<int>(curr_level) + 1);
+	}
+};
 
 void GameStateAlchemiceLoad();
 void GameStateAlchemiceInit();
@@ -16,17 +27,3 @@ void GameStateAlchemiceUpdate();
 void GameStateAlchemiceDraw();
 void GameStateAlchemiceFree();
 void GameStateAlchemiceUnload();
-
-void LoadScreenLoad();
-void LoadScreenInit();
-void LoadScreenUpdate();
-void LoadScreenDraw();
-void LoadScreenFree();
-void LoadScreenUnload();
-
-void Menuload();
-void Menuinit();
-void Menuupdate();
-void Menudraw();
-void Menufree();
-void Menuunload();

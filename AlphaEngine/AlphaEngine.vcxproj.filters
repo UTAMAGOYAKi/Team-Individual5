@@ -34,6 +34,12 @@
     <ClCompile Include="Map.cpp">
       <Filter>Source file</Filter>
     </ClCompile>
+    <ClCompile Include="MainMenu.cpp">
+      <Filter>Source file</Filter>
+    </ClCompile>
+    <ClCompile Include="LoadScreen.cpp">
+      <Filter>Source file</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Battle_system.h">
@@ -70,6 +76,12 @@
       <Filter>Header file</Filter>
     </ClInclude>
     <ClInclude Include="Map.h">
+      <Filter>Header file</Filter>
+    </ClInclude>
+    <ClInclude Include="MainMenu.h">
+      <Filter>Header file</Filter>
+    </ClInclude>
+    <ClInclude Include="LoadScreen.h">
       <Filter>Header file</Filter>
     </ClInclude>
   </ItemGroup>

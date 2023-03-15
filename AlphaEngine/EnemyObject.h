@@ -43,7 +43,7 @@ private:
     aabb enemy_aabb;
 
     //________________________ENEMY COMBAT SETTINGS____________________________
-    bool life_state; //Uses enemy_life_state: either dead or alive
+    bool life_state{alive}; //Uses enemy_life_state: either dead or alive
     bool finish_attack{ false };
                
   //________________________FOR ANIMATIONS____________________________
@@ -62,34 +62,12 @@ private:
     f64 bleed_timer{bleed_time};
     
 public:
-    Enemy() : name{ "" }, max_hp{ 0 }, hp{ 0 }, atk{ 0 }, pos{ 0.f,0.f }, texture{ nullptr }, life_state{ alive }, size{ 0 }, enemy_aabb{ CreateAABB() } {};
+    Enemy(){};
 
-    Enemy(enemy_types type, AEGfxTexture* input_texture) : texture{ input_texture }, life_state{alive} 
+    Enemy(enemy_types type, AEGfxTexture* input_texture, std::string input_name, int input_hp, int input_atk) 
+        : texture{ input_texture }, life_state{alive} , name{input_name}, atk{input_atk}, max_hp{input_hp}
     {
-        switch (type)
-        {
-        case base_rat:
-            name = "Rat";
-            atk = 2;
-            max_hp = 10;
-            hp = max_hp; //Initialized hp will be same as max_hp;
-
-            break;
-
-        case big_rat:
-            name = "Big Rat";
-            atk = 3;
-            max_hp = 15;
-            hp = max_hp;
-            break;
-
-        default:
-            name = "Rat";
-            atk = 10;
-            max_hp = 10;
-            hp = max_hp; //Initialized hp will be same as max_hp;
-            break;
-        }
+        hp = max_hp; //Initialized hp will be same as max_hp;
     };
 
     ~Enemy() {};//deconstructor
