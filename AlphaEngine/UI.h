@@ -18,7 +18,7 @@ void name_bar(std::string name, aabb place, s8 font);
 
 void enemy_info(Enemy enemy, s8 font, AEGfxVertexList* mesh);
 
-void sub_menu_draw(AEGfxTexture* sub_menu, Spell spells[], AEGfxVertexList* mesh, s8 font);
+void sub_menu_draw(AEGfxTexture* sub_menu, spell_book& spells, AEGfxVertexList* mesh, s8 font);
 
 void draw_crafting_table( AEGfxVertexList* mesh, craftingtable& crafting_table, AEGfxTexture* table = nullptr );
 

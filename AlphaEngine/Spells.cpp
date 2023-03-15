@@ -1,3 +1,5 @@
+#include "Spells.h"
+
 //---------------------------------------
 //Set Spell Damage Values
 
@@ -19,15 +21,17 @@ const int lingering_high = 3;
 //Lingering Rounds
 const int lingering_rounds_mid = 2;
 
-#include "Spells.h"
+
+
 
 //Declare textures for spells
 AEGfxTexture* toxic_deluge{}, * inferno_blast{}, * umbral_tendrils{}, * maelstrom_surge{}, * venemous_bite{},
 * shadow_cloak{}, * flame_burst{}, * rat_swarm{}, * bubonic_blaze{};
 
-Spell* init_all_spells()
+spell_book init_all_spells()
 {
 	AEVec2 cards;
+	spell_book x;
 
 	//Currently Textures are used as placeholder, ignore the meaning
 	umbral_tendrils = AEGfxTextureLoad("Assets/Card-Sprite-umbral.png");
@@ -50,41 +54,43 @@ Spell* init_all_spells()
 	std::cout << "bubonic_blaze MemLoc: " << bubonic_blaze << std::endl;
 	std::cout << "Creating All " << max_spells << " Spells" << std::endl;
 
-	Spell* spellbook = new Spell[max_spells]{
+	// +1 due to invalid spell
+	Spell* spellbook = new Spell[max_spells + 1]{
 		// Tier 3 spells
-		Spell(TOXIC_DELUGE, 3, POISON, "Toxic Deluge",toxic_deluge,true, base_low, NULL, lingering_low,NULL),
-		Spell(INFERNO_BLAST, 3, FIRE, "Inferno Blast",inferno_blast,true, base_low, NULL, lingering_low,NULL),
-		Spell(UMBRAL_TENDRILS, 3, SHADOW, "Umbral Tendrils",umbral_tendrils,true, base_low, NULL, lingering_low,NULL),
-		Spell(MAELSTROM_SURGE, 3, WATER, "Maelstrom Surge",maelstrom_surge,true, base_low, NULL, lingering_low,NULL),
+		Spell(spells::TOXIC_DELUGE, tier3_last, POISON, "Toxic Deluge",toxic_deluge,true, base_low, NULL, lingering_low,NULL),
+		Spell(spells::INFERNO_BLAST,tier3_last, FIRE, "Inferno Blast",inferno_blast,true, base_low, NULL, lingering_low,NULL),
+		Spell(spells::UMBRAL_TENDRILS, tier3_last, SHADOW, "Umbral Tendrils",umbral_tendrils,true, base_low, NULL, lingering_low,NULL),
+		Spell(spells::MAELSTROM_SURGE, tier3_last, WATER, "Maelstrom Surge",maelstrom_surge,true, base_low, NULL, lingering_low,NULL),
 		// Tier 2 spells
-		Spell(VENOMOUS_BITE, 2, POISON, "Venomous Bite",venemous_bite,false, base_mid, aoe_low, lingering_mid,lingering_rounds_mid),
-		Spell(SHADOW_CLOAK, 2, SHADOW, "Shadow Cloak",shadow_cloak,false, base_mid, aoe_low, lingering_mid,NULL),
-		Spell(FLAME_BURST, 2, FIRE, "Flame Burst",flame_burst,false, base_mid, aoe_low, lingering_mid,NULL),
+		Spell(spells::VENOMOUS_BITE, tier2_last, POISON, "Venomous Bite",venemous_bite,false, base_mid, aoe_low, lingering_mid,lingering_rounds_mid),
+		Spell(spells::SHADOW_CLOAK, tier2_last, SHADOW, "Shadow Cloak",shadow_cloak,false, base_mid, aoe_low, lingering_mid,NULL),
+		Spell(spells::FLAME_BURST, tier2_last, FIRE, "Flame Burst",flame_burst,false, base_mid, aoe_low, lingering_mid,NULL),
 		// Tier aoe_low spells
-		Spell(RAT_SWARM, 1, SHADOW, "Rat Swarm",rat_swarm,false, base_high, aoe_low,lingering_high,lingering_rounds_mid),
-		Spell(BUBONIC_BLAZE, 1, FIRE, "Bubonic Blaze",bubonic_blaze,false, base_high, aoe_low, lingering_high,lingering_rounds_mid),
+		Spell(spells::RAT_SWARM, tier1_last, SHADOW, "Rat Swarm",rat_swarm,false, base_high, aoe_low,lingering_high,lingering_rounds_mid),
+		Spell(spells::BUBONIC_BLAZE,tier1_last, FIRE, "Bubonic Blaze",bubonic_blaze,false, base_high, aoe_low, lingering_high,lingering_rounds_mid),
 		// Invalid Spell
-		Spell(INVALID_SPELL, 0, INVALID_ELEMENT, "",nullptr,false, NULL, NULL, NULL,NULL),
+		Spell(spells::INVALID_SPELL,spells::INVALID_SPELL , INVALID_ELEMENT, "",nullptr,false, NULL, NULL, NULL,NULL),
 	};
 
+	x.spell_array = spellbook;
+
 	AEVec2Zero(&cards);
-	for (int i = 0; i <= max_spells - 1; i++) {
+	for (int i = 0; i <= max_spells; i++) {
 		//Set >tier 3 midpoint coords to 0
-		if (spellbook[i].tier < 3) {
-			spellbook[i].spell_dragdrop->moveto(cards);
-			spellbook[i].spell_dragdrop->changeref(spellbook[i].id);
+		if (x.spell_array[i].tier > tier3_last) {
+			x.spell_array[i].spell_dragdrop->moveto(cards);
+			x.spell_array[i].spell_dragdrop->changeref((int)x.spell_array[i].id);
 		}
 	}
-	return spellbook;
+
+	return x;
 }
 
-//destructor for the coordinates
 Spell::~Spell()
 {
 	delete spell_dragdrop;
 }
 
-//Function that will set coords to a spell when called
 void Spell::init_spells_draw(Spell& spell, AEVec2 coords)
 {
 	//Set spells boundingbox
@@ -101,26 +107,27 @@ void Spell::reset_spell()
 }
 
 
-// Returns true if spell can be unlocked
-bool combine_spells(Spell* spellbook, int id1, int id2) {
-	if (spellbook[id1].tier == 3 && spellbook[id2].tier == 3) {
+bool combine_spells(spell_book& spellbook, spells id1, spells id2) {
+	assert(spellbook.array_size <= max_spells);
+	assert(spellbook.array_size >= (size_t)first_spell);
+	if (spellbook.spell_array[(int)id1].tier == tier3_last && spellbook.spell_array[(int)id2].tier == tier3_last) {
 		// combine tier 3 spells
-		if (spellbook[id1].element == FIRE && spellbook[id2].element == SHADOW ||
-			spellbook[id2].element == FIRE && spellbook[id1].element == SHADOW) {
+		if (spellbook.spell_array[(int)id1].element == FIRE && spellbook.spell_array[(int)id2].element == SHADOW ||
+			spellbook.spell_array[(int)id2].element == FIRE && spellbook.spell_array[(int)id1].element == SHADOW) {
 			// combine inferno blast and umbral tendrils to create flame burst
-			spellbook[FLAME_BURST].unlocked = true;
+			spellbook.spell_array[(int)spells::FLAME_BURST].unlocked = true;
 			return true;
 		}
-		else if (spellbook[id1].element == POISON && spellbook[id2].element == SHADOW ||
-			spellbook[id2].element == POISON && spellbook[id1].element == SHADOW) {
+		else if (spellbook.spell_array[(int)id1].element == POISON && spellbook.spell_array[(int)id2].element == SHADOW ||
+			spellbook.spell_array[(int)id2].element == POISON && spellbook.spell_array[(int)id1].element == SHADOW) {
 			// combine toxic deluge and umbral tendrils to create venomous bite
-			spellbook[VENOMOUS_BITE].unlocked = true;
+			spellbook.spell_array[(int)spells::VENOMOUS_BITE].unlocked = true;
 			return true;
 		}
-		else if (spellbook[id1].element == WATER && spellbook[id2].element == SHADOW ||
-			spellbook[id2].element == WATER && spellbook[id1].element == SHADOW) {
+		else if (spellbook.spell_array[(int)id1].element == WATER && spellbook.spell_array[(int)id2].element == SHADOW ||
+			spellbook.spell_array[(int)id2].element == WATER && spellbook.spell_array[(int)id1].element == SHADOW) {
 			// combine maelstrom surge and umbral tendrils to create shadow cloak
-			spellbook[SHADOW_CLOAK].unlocked = true;;
+			spellbook.spell_array[(int)spells::SHADOW_CLOAK].unlocked = true;;
 			return true;
 
 		}
@@ -129,18 +136,18 @@ bool combine_spells(Spell* spellbook, int id1, int id2) {
 			return false;
 		}
 	}
-	else if (spellbook[id1].tier == 2 && spellbook[id2].tier == 2) {
+	else if (spellbook.spell_array[(int)id1].tier == tier2_last && spellbook.spell_array[(int)id2].tier == tier2_last) {
 		// combine tier 2 spells
-		if (spellbook[id1].element == POISON && spellbook[id2].element == SHADOW ||
-			spellbook[id2].element == POISON && spellbook[id1].element == SHADOW) {
+		if (spellbook.spell_array[(int)id1].element == POISON && spellbook.spell_array[(int)id2].element == SHADOW ||
+			spellbook.spell_array[(int)id2].element == POISON && spellbook.spell_array[(int)id1].element == SHADOW) {
 			// combine shadow cloak and venemous bite to create rat swarm
-			spellbook[RAT_SWARM].unlocked = true;;
+			spellbook.spell_array[(int)spells::RAT_SWARM].unlocked = true;;
 			return true;
 		}
-		if (spellbook[id1].element == FIRE && spellbook[id2].element == POISON ||
-			spellbook[id2].element == FIRE && spellbook[id1].element == POISON) {
+		if (spellbook.spell_array[(int)id1].element == FIRE && spellbook.spell_array[(int)id2].element == POISON ||
+			spellbook.spell_array[(int)id2].element == FIRE && spellbook.spell_array[(int)id1].element == POISON) {
 			// combine flame burst and venemous bite to create bubonic blaze
-			spellbook[BUBONIC_BLAZE].unlocked = true;
+			spellbook.spell_array[(int)spells::BUBONIC_BLAZE].unlocked = true;
 			return true;
 		}
 		else {
@@ -155,8 +162,7 @@ bool combine_spells(Spell* spellbook, int id1, int id2) {
 }
 
 
-// Called when level ends etc.
-void unload_spells(Spell* spellbook) {
+void unload_spells(spell_book& spellbook) {
 	AEGfxTextureUnload(umbral_tendrils);
 	AEGfxTextureUnload(inferno_blast);
 	AEGfxTextureUnload(toxic_deluge);
@@ -166,36 +172,33 @@ void unload_spells(Spell* spellbook) {
 	AEGfxTextureUnload(flame_burst);
 	AEGfxTextureUnload(rat_swarm);
 	AEGfxTextureUnload(bubonic_blaze);
-
-	delete[] spellbook;
+	delete[] spellbook.spell_array;
 }
 
-//Returns state of the crafting table
-// State 1: When only 1 spell is input
-// State 2: When 2 spells has been input but invalid combo
-// State 3: When 2 spells has been input and spell is unloked
-int craftingtable::crafting_table_update(Spell* spellbook, int spell_id)
+
+int craftingtable::crafting_table_update(spell_book& spellbook, spells spell_id)
 {
-	spellbook[spell_id].spell_dragdrop->mousechange(false);
-	spellbook[spell_id].spell_dragdrop->moveto(this->table_dragdrop.getcoord());
-	if (this->spell1_id == INVALID_SPELL) {
+	assert((spellbook.array_size <= max_spells) || (spellbook.array_size >= (size_t)first_spell));
+	spellbook.spell_array[(int)spell_id].spell_dragdrop->mousechange(false);
+	spellbook.spell_array[(int)spell_id].spell_dragdrop->moveto(this->table_dragdrop.getcoord());
+	if (this->spell1_id == spells::INVALID_SPELL) {
 		this->spell1_id = spell_id;
 		return 1;
 	}
-	else if (this->spell1_id != INVALID_SPELL && this->spell2_id == INVALID_SPELL) {
+	else if (this->spell1_id != spells::INVALID_SPELL && this->spell2_id == spells::INVALID_SPELL) {
 		this->spell2_id = spell_id;
 		if (combine_spells(spellbook, this->spell1_id, this->spell2_id) == true) {
-			spellbook[this->spell1_id].spell_dragdrop->resetaabb();
-			spellbook[this->spell2_id].spell_dragdrop->resetaabb();
-			this->spell1_id = INVALID_SPELL;
-			this->spell2_id = INVALID_SPELL;
+			spellbook.spell_array[(int)this->spell1_id].spell_dragdrop->resetaabb();
+			spellbook.spell_array[(int)this->spell2_id].spell_dragdrop->resetaabb();
+			this->spell1_id = spells::INVALID_SPELL;
+			this->spell2_id = spells::INVALID_SPELL;
 			return 3;
 		}
 		else {
-			spellbook[this->spell1_id].spell_dragdrop->resetaabb();
-			spellbook[this->spell2_id].spell_dragdrop->resetaabb();
-			this->spell1_id = INVALID_SPELL;
-			this->spell2_id = INVALID_SPELL;
+			spellbook.spell_array[(int)this->spell1_id].spell_dragdrop->resetaabb();
+			spellbook.spell_array[(int)this->spell2_id].spell_dragdrop->resetaabb();
+			this->spell1_id = spells::INVALID_SPELL;
+			this->spell2_id = spells::INVALID_SPELL;
 			return 2;
 		}
 	}
@@ -207,18 +210,19 @@ dragdrop* craftingtable::get_dragdrop()
 	return &(this->table_dragdrop);
 }
 
-void draw_all_spells(Spell* spellbook, AEGfxVertexList* pMesh)
+void draw_all_spells(spell_book& spellbook, AEGfxVertexList* pMesh)
 {
+	assert((spellbook.array_size <= max_spells) || (spellbook.array_size >= (size_t)first_spell));
 	AEMtx33 scale{ };
 	AEMtx33 rotate{  };
 	AEMtx33 translate{  };
 	AEMtx33 transform{  };
-	for (int i = 0; i <= max_spells - 1; i++) {
-		if (spellbook[i].unlocked == true) {
-			AEGfxTextureSet(spellbook[i].texture, 0, 0);
-			AEMtx33Trans(&translate, spellbook[i].spell_dragdrop->getcoord().mid.x, -spellbook[i].spell_dragdrop->getcoord().mid.y);
+	for (int i = 0; i <= spellbook.array_size - 1; i++) {
+		if (spellbook.spell_array[i].unlocked == true) {
+			AEGfxTextureSet(spellbook.spell_array[i].texture, 0, 0);
+			AEMtx33Trans(&translate, spellbook.spell_array[i].spell_dragdrop->getcoord().mid.x, -spellbook.spell_array[i].spell_dragdrop->getcoord().mid.y);
 			AEMtx33Rot(&rotate, 0);
-			AEMtx33Scale(&scale, spellbook[i].card_width, spellbook[i].card_height);
+			AEMtx33Scale(&scale, spellbook.spell_array[i].card_width, spellbook.spell_array[i].card_height);
 			AEMtx33Concat(&transform, &rotate, &scale);
 			AEMtx33Concat(&transform, &translate, &transform);
 			AEGfxSetTransform(transform.m);
@@ -237,18 +241,37 @@ craftingtable::craftingtable()
 	table_dragdrop.changeaabb(table_width, table_height);
 }
 
-int craftingtable::get_spell1()
+spells craftingtable::get_spell1()
 {
 	return spell1_id;
 }
 
 void craftingtable::reset_spells()
 {
-	spell1_id = INVALID_SPELL;
-	spell2_id = INVALID_SPELL;
+	spell1_id = spells::INVALID_SPELL;
+	spell2_id = spells::INVALID_SPELL;
 }
 
-int craftingtable::get_spell2()
+spells craftingtable::get_spell2()
 {
 	return spell2_id;
+}
+
+spell_book::spell_book(spell_book const& rhs)
+{
+	//std::copy(rhs.spell_array, rhs.spell_array + (rhs.array_size-1), this->spell_array);
+	this->spell_array = rhs.spell_array;
+}
+
+spell_book& spell_book::operator=(spell_book const& rhs)
+{
+	spell_book tmp{ rhs };
+	this->swap(tmp);
+	return *this;
+}
+
+void spell_book::swap(spell_book& rhs)
+{
+	std::swap(this->spell_array, rhs.spell_array);
+	std::swap(this->array_size, rhs.array_size);
 }

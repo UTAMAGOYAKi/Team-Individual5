@@ -75,7 +75,6 @@ void player_hp_bar(player ref, AEVec2 pos, AEGfxVertexList* mesh)
 	AEMtx33Trans(&translate,pos.x - (hp_bar_enemy_width * (((float)ref.max_hp - (float)ref.hp) / (float)ref.max_hp) * 10) / 2, pos.y - name_offset);
 	AEMtx33Rot(&rotate, PI);
 	AEMtx33Scale(&scale, hp_bar_enemy_width * ((float)ref.hp / (float)ref.max_hp) * 10, hp_bar_height);
-
 	AEMtx33Concat(&transform, &rotate, &scale);
 	AEMtx33Concat(&transform, &translate, &transform);
 	AEGfxSetTransform(transform.m);
@@ -102,7 +101,7 @@ void draw_crafting_table( AEGfxVertexList* mesh, craftingtable& crafting_table, 
 	AEGfxMeshDraw(mesh, AE_GFX_MDM_TRIANGLES);
 }
 
-void sub_menu_draw(AEGfxTexture* sub_menu, Spell spells[], AEGfxVertexList* mesh, s8 font)
+void sub_menu_draw(AEGfxTexture* sub_menu, spell_book& spells, AEGfxVertexList* mesh, s8 font)
 {
 	// to ensure the sub_menu is on left 
 	float tmpy = (float)AEGetWindowHeight();
@@ -122,9 +121,9 @@ void sub_menu_draw(AEGfxTexture* sub_menu, Spell spells[], AEGfxVertexList* mesh
 
 	for (int i = 0; i < max_spells-1; i++) 
 	{
-		if (spells[i].unlocked == true) 
+		if (spells.spell_array[i].unlocked == true) 
 		{
-			AEGfxTextureSet(spells[i].texture, 0, 0);
+			AEGfxTextureSet(spells.spell_array[i].texture, 0, 0);
 			AEMtx33Trans(&translate,(f32) - 590, (f32)300 - i * 50);
 			AEMtx33Rot(&rotate, 0);
 			AEMtx33Scale(&scale, 50, 50);
@@ -132,7 +131,6 @@ void sub_menu_draw(AEGfxTexture* sub_menu, Spell spells[], AEGfxVertexList* mesh
 			AEMtx33Concat(&transform, &translate, &transform);
 			AEGfxSetTransform(transform.m);
 			AEGfxMeshDraw(mesh, AE_GFX_MDM_TRIANGLES);
-
 			AEGfxPrint(font, (s8*)"+", ((-540.0f / 640.0f) * 1.0f), (((300 - i * 50) / 360.0f) * 1.0f-0.025f), 1, 1.0f, 1.0f, 1.0f);
 		}
 	}
