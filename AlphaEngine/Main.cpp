@@ -22,13 +22,9 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	#endif
 
 	// Using custom window procedure
-<<<<<<< Updated upstream
 	AESysInit(hInstance, nCmdShow, 1280, 720, 1, FRAMERATE, true, NULL);
 	AESysToggleFullScreen(true);
-=======
-	AESysInit(hInstance, nCmdShow, 1280, 720, 1, 60, true, NULL);
-	AESysToggleFullScreen(false);
->>>>>>> Stashed changes
+
 
 	// Changing the window title
 	AESysSetWindowTitle("Alchemy Main");

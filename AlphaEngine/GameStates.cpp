@@ -150,12 +150,8 @@ void GameStateAlchemiceInit() {
 
 	//Contains all spells in a dynamically allocated array
 
-	//
 	turn = player_turn;
-<<<<<<< Updated upstream
 	pause_mode = false;
-=======
->>>>>>> Stashed changes
 
 	//Draw all spells that are active at beginning
 	AEVec2Zero(&cards);
