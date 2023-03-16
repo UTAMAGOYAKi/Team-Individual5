@@ -36,7 +36,7 @@ craftingtable crafting_table;
 
 //Loading of Mesh and Texture
 AEGfxVertexList* pMesh;
-AEGfxTexture* chara{}, * rat{}, * big_rat_texture{}, *spell_g{}, * pause_box{}, * sub{}, * crafting_test{}, * bg{}, * end_turn_box{}, * mana_full{}, * mana_empty{}, * Menu_ui;
+AEGfxTexture* chara{}, * rat{}, * big_rat_texture{}, * spell_g{}, * pause_box{}, * sub{}, * crafting_test{}, * bg{}, * end_turn_box{}, * mana_full{}, * mana_empty{}, * Menu_ui;
 
 aabb* chara_pos;
 aabb* Enemy_pos_1;
@@ -66,8 +66,8 @@ bool is_enemy_turn = false;
 int s_enemy_turn = 0;
 
 //Bleeding Animation
-bool enemy_bleeding{false};
-int bleeding_enemy_no{0};	
+bool enemy_bleeding{ false };
+int bleeding_enemy_no{ 0 };
 
 //Particles
 const int particle_max = 50;
@@ -78,7 +78,7 @@ AEGfxVertexList* particle_mesh;
 aabb pause_buttons[3];
 aabb end_turn_button;
 
-
+f64  g_dt;
 
 void GameStateAlchemiceLoad() {
 	pMesh = 0;
@@ -166,9 +166,9 @@ void GameStateAlchemiceInit() {
 	end_turn_button = CreateAABB({ 516,-308 }, 200, 80);
 
 	//Most stuff are only needed to be init in level 1;
-	if (level.curr_level == level_1) 
+	if (level.curr_level == level_1)
 	{
-		
+
 		enemies[0] = Enemy(big_rat, big_rat_texture, "Big Rat", 1, 3);
 		enemies[0].set_position_and_aabb(enemy_position[0]);
 
@@ -179,7 +179,7 @@ void GameStateAlchemiceInit() {
 		enemies[2].set_position_and_aabb(enemy_position[2]);
 
 	}
-	else if (level.curr_level == level_2) 
+	else if (level.curr_level == level_2)
 	{
 		enemies[0] = Enemy(big_rat, big_rat_texture, "Level:2 Rat", 1, 3);
 		enemies[0].set_position_and_aabb(enemy_position[0]);
@@ -190,7 +190,7 @@ void GameStateAlchemiceInit() {
 		enemies[2] = Enemy(base_rat, rat, "Rat", 1, 2);
 		enemies[2].set_position_and_aabb(enemy_position[2]);
 	}
-	else if (level.curr_level == level_3) 
+	else if (level.curr_level == level_3)
 	{
 		enemies[0] = Enemy(big_rat, big_rat_texture, "Level:3 Rat", 1, 3);
 		enemies[0].set_position_and_aabb(enemy_position[0]);
@@ -220,7 +220,7 @@ void GameStateAlchemiceUpdate() {
 
 	for (int i{}; i < sizeof(pause_buttons) / sizeof(pause_buttons[0]); ++i) //for every iteration of pause menu buttons
 	{
-		if (aabbbutton(&pause_buttons[i],mouse_pos) &&
+		if (aabbbutton(&pause_buttons[i], mouse_pos) &&
 			AEInputCheckTriggered(AEVK_LBUTTON) && //check if left button is clicked
 			pause_mode == true) //only runs during pause mode
 		{
@@ -279,7 +279,7 @@ void GameStateAlchemiceUpdate() {
 			}
 		}
 	}
-	
+
 
 	//Particle Update
 	for (int i = 0; i < particle_vector.size(); i++)
@@ -290,7 +290,7 @@ void GameStateAlchemiceUpdate() {
 		}
 		else
 		{
-			particle_vector[i].lifespan -= AEFrameRateControllerGetFrameTime();
+			particle_vector[i].lifespan -= g_dt;
 			particle_vector[i].position.x += particle_vector[i].velocity.x;
 			particle_vector[i].position.y += particle_vector[i].velocity.y;
 		}
@@ -306,7 +306,8 @@ void GameStateAlchemiceUpdate() {
 			{
 				for (int i = 0; i <= max_spells; i++)
 				{
-					if (aabbbutton(spellbook.spell_array[i].spell_dragdrop, mouse_pos))
+					if (aabbbutton(spellbook.spell_array[i].spell_dragdrop, mouse_pos) && crafting_table.get_spell1() != spellbook.spell_array[i].id
+						&& crafting_table.get_spell2() != spellbook.spell_array[i].id)
 					{
 						for (int i = 0; i <= max_spells; i++)
 						{
@@ -328,12 +329,12 @@ void GameStateAlchemiceUpdate() {
 				if (spellbook.spell_array[i].spell_dragdrop->getmouse())
 				{
 					spellbook.spell_array[i].spell_dragdrop->moveto(temp);
-
 				}
 			}
 
 			if (AEInputCheckReleased(AEVK_LBUTTON))
 			{
+				// redudneant 
 				for (int i = 0; i < max_spells; i++)
 				{
 					for (int j = 0; j < TOTAL_ENEMY; ++j)
@@ -344,7 +345,6 @@ void GameStateAlchemiceUpdate() {
 							{
 								enemies[j].take_damage(spellbook.spell_array[i].base_damage);
 								enemies[j].set_bleeding(true);
-
 								alchemice->mp -= 1;
 								if (spellbook.spell_array[i].id > tier3_last) {
 									spellbook.spell_array[i].reset_spell();
@@ -354,17 +354,18 @@ void GameStateAlchemiceUpdate() {
 						}
 
 					}
-				}
 
-				for (int i = 0; i <= max_spells; i++)
-				{
+
 					if (spellbook.spell_array[i].spell_dragdrop->getmouse())
 					{
 						std::cout << "RELEASE" << std::endl;
 						if (aabbbutton(crafting_table.get_dragdrop(), spellbook.spell_array[i].spell_dragdrop) == 1 && alchemice->mp > 0) {
-							if (crafting_table.crafting_table_update(spellbook, spellbook.spell_array[i].id) == 3) {
-								alchemice->mp -= 1;
+							crafting_table.crafting_table_snap(spellbook, spellbook.spell_array[i].id);
+							/*if (num of card > 2)
+							{
+								timer increases;
 							}
+							bool result = fn();*/
 						}
 						else {
 							if (crafting_table.get_spell1() == spellbook.spell_array[i].id) {
@@ -374,6 +375,13 @@ void GameStateAlchemiceUpdate() {
 							spellbook.spell_array[i].spell_dragdrop->mousechange(false);
 						}
 					}
+				}
+
+			}
+
+			if (crafting_table.get_flag() == true) {
+				if (crafting_table.crafting_table_update(spellbook) == 2) {
+					alchemice->mp -= 1;
 				}
 			}
 
@@ -410,10 +418,10 @@ void GameStateAlchemiceUpdate() {
 		}//End of player turn logic
 
 		//Enemy turn; runs all the enemy functions and animations
-		else if (turn == enemy_turn) 
+		else if (turn == enemy_turn)
 		{
 			//Enemy turn duration
-			//curr_time -= AEFrameRateControllerGetFrameTime();
+			//curr_time -= g_dt;
 
 			//When turn ends
 			if (is_enemy_turn == false) {
@@ -423,7 +431,7 @@ void GameStateAlchemiceUpdate() {
 				//Variables to update when switching back to Player Turn.
 				//is_enemy_turn = false;
 				//curr_time = frame_time;
-				
+
 				//Player Mana System
 				alchemice->max_mp = (alchemice->max_mp == 5) ? 5 : alchemice->max_mp + 1;
 				alchemice->mp = alchemice->max_mp;
@@ -431,7 +439,7 @@ void GameStateAlchemiceUpdate() {
 			//WORK IN PROGRESS
 			else
 			{
-				if (s_enemy_turn < TOTAL_ENEMY) 
+				if (s_enemy_turn < TOTAL_ENEMY)
 				{
 					//Is a one time check when it becomes enemy then run animations
 					if (enemies[s_enemy_turn].get_finish_attack())
@@ -449,7 +457,7 @@ void GameStateAlchemiceUpdate() {
 						if (enemies[s_enemy_turn].is_alive())
 						{
 							//update_animation will switch enemy object's animation to be finished when it ends.
-							enemies[s_enemy_turn].update_animation(AEFrameRateControllerGetFrameTime());
+							enemies[s_enemy_turn].update_animation(g_dt);
 						}
 						else
 						{
@@ -466,8 +474,8 @@ void GameStateAlchemiceUpdate() {
 	}//End of Main Gameplay Loop.
 	else if (!enemies_alive)
 	{
-	level.next_level();
-	gGameStateNext = GS_RESTART;
+		level.next_level();
+		gGameStateNext = GS_RESTART;
 	}
 }
 
@@ -524,9 +532,9 @@ void GameStateAlchemiceDraw() {
 	player_hp += "/";
 	player_hp += std::to_string(alchemice->max_hp);
 	name_bar(player_hp, player_position, font);
-	
-	for (int i{0}; i < alchemice->max_mp; ++i) {
-		AEVec2 mana_draw_position{ (f32)(-AEGetWindowWidth()/2.5 ) + (i * 40), (f32)(-AEGetWindowHeight() / 4) };
+
+	for (int i{ 0 }; i < alchemice->max_mp; ++i) {
+		AEVec2 mana_draw_position{ (f32)(-AEGetWindowWidth() / 2.5) + (i * 40), (f32)(-AEGetWindowHeight() / 4) };
 		AEGfxTextureSet(mana_full, 0, 0);
 		AEMtx33Trans(&translate, mana_draw_position.x, mana_draw_position.y);
 		AEMtx33Rot(&rotate, 0);
@@ -537,9 +545,9 @@ void GameStateAlchemiceDraw() {
 		AEGfxMeshDraw(pMesh, AE_GFX_MDM_TRIANGLES);
 
 		if (alchemice->mp < alchemice->max_mp) {
-			for (int j{alchemice->mp}; j < alchemice->max_mp; ++j) {
+			for (int j{ alchemice->mp }; j < alchemice->max_mp; ++j) {
 				AEGfxTextureSet(mana_empty, 0, 0);
-				AEVec2 mana_draw_position{ (f32)(-AEGetWindowWidth()/2.5) + (j * 40), (f32)(-AEGetWindowHeight() / 4) };
+				AEVec2 mana_draw_position{ (f32)(-AEGetWindowWidth() / 2.5) + (j * 40), (f32)(-AEGetWindowHeight() / 4) };
 				AEMtx33Trans(&translate, mana_draw_position.x, mana_draw_position.y);
 				AEMtx33Concat(&transform, &rotate, &scale);
 				AEMtx33Concat(&transform, &translate, &transform);
@@ -598,7 +606,7 @@ void GameStateAlchemiceDraw() {
 		if (enemies[s_enemy_turn].is_alive())
 		{
 			//Ensure 4th frame which is the delay frame does not get drawn and crash
-			if (enemies[s_enemy_turn].get_frame_num() < enemies[s_enemy_turn].get_total_frame()) 
+			if (enemies[s_enemy_turn].get_frame_num() < enemies[s_enemy_turn].get_total_frame())
 			{
 				AEGfxTextureSet(blast[enemies[s_enemy_turn].get_frame_num()], 0, 0);
 				AEMtx33Trans(&translate, (f32)(enemies[s_enemy_turn].get_pos().x), (f32)(enemies[s_enemy_turn].get_pos().y));
@@ -695,7 +703,7 @@ void GameStateAlchemiceUnload() {
 	AEGfxTextureUnload(mana_full);
 	AEGfxTextureUnload(mana_empty);
 	unload_spells(spellbook);
-	
+
 
 	//Animations
 	AEGfxTextureUnload(blast[0]);

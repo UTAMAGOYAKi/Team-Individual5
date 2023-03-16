@@ -136,7 +136,7 @@ void update_particle(std::vector<particle> particle_vector)
         }
         else
         {
-            particle_vector[i].lifespan -= AEFrameRateControllerGetFrameTime();
+            particle_vector[i].lifespan -= g_dt;
             particle_vector[i].position.x += particle_vector[i].velocity.x;
             particle_vector[i].position.y += particle_vector[i].velocity.y;
         }
@@ -144,7 +144,7 @@ void update_particle(std::vector<particle> particle_vector)
 }
 
 void Enemy::update_bleed_timer() {
-    bleed_timer -= AEFrameRateControllerGetFrameTime();
+    bleed_timer -= g_dt;
 }
 
 void Enemy::reset_bleed_time() {

@@ -1,4 +1,5 @@
 #pragma once
+#include "Main.h"
 #include "Elements.h"
 #include "Buttons.h"
 #include "AEengine.h"
@@ -25,6 +26,13 @@ enum class spells {
 	INVALID_SPELL
 };
 
+//Table Widths and Heights
+enum class crafting {
+	ONE_SPELL = 1,
+	INVALID_COMBO,
+	SUCCESFUL_COMBO
+};
+
 //Spells Bounds
 //Based on tier & max and min
 const enum spells first_spell = spells::TOXIC_DELUGE;
@@ -33,16 +41,42 @@ const enum spells tier2_last = spells::FLAME_BURST;
 const enum spells tier1_last = spells::BUBONIC_BLAZE;
 const enum spells last_spell = spells::BUBONIC_BLAZE;
 
-enum class crafting {
-	ONE_SPELL = 1,
-	INVALID_COMBO,
-	SUCCESFUL_COMBO
-};
-
-
 //Declare total number of spells that can be created
 //including invalid spells
 const size_t max_spells = 9;
+
+//---------------------------------------
+//Set Spell Damage Values
+
+//Base Damage
+const int base_low = 2;
+const int base_mid = 3;
+const int base_high = 5;
+
+//AOE Damage
+const int aoe_low = 1;
+const int aoe_mid = 2;
+const int aoe_high = 3;
+
+//Lingering Damage 
+const int lingering_low = 1;
+const int lingering_mid = 2;
+const int lingering_high = 3;
+
+//Lingering Rounds
+const int lingering_rounds_mid = 2;
+
+//Crafting Table properties
+const float table_width_const = 180;
+const float table_height_const = 180;
+//Spell Properties
+const float card_width_const = 102.0f;
+const float card_height_const = 128.0f;
+//Space between crafting table centre and spell centre when crafting
+const float crafting_table_buffer = (table_width_const / 4);
+
+//Buffer Float
+const float crafting_time_buffer = 2;
 
 
 
@@ -72,8 +106,8 @@ struct Spell {
 	AEGfxTexture* texture;
 	dragdrop* spell_dragdrop{};
 	// card size
-	const float			card_width = 102.0f;
-	const float			card_height = 128.0f;
+	const float			card_width = card_width_const;
+	const float			card_height = card_height_const;
 
 	//Set a Spells' AABB and Coords when called
 	void init_spells_draw(Spell& spell, AEVec2 coord);
@@ -101,12 +135,14 @@ struct spell_book {
 
 class craftingtable {
 public:
-	//Returns state of the crafting table
-	// State 1: When only 1 spell is input
-	// State 2: When 2 spells has been input but invalid combo
-	// State 3: When 2 spells has been input and spell is unlocked
-	int crafting_table_update(spell_book& spellbook, spells spell_id);
 
+	void crafting_table_snap(spell_book& spellbook, spells spell_id);
+
+	//Returns 1 when crafting table is in buffer time (crafting)
+	//Returns 2 when crafting table unlocked a spell succesfully
+	//Returns 3 when invalid combination
+	//Only to be called when two spells are input (see two_spells_flag)
+	int crafting_table_update(spell_book& spellbook);
 	//Returns a pointer to the crafting table's dragdrop object
 	dragdrop* get_dragdrop();
 	//Default Ctor
@@ -118,9 +154,14 @@ public:
 	void reset_spells();
 	//Get Spell2 id
 	spells get_spell2();
+
+	//Set 2 spell flag to true or false
+	void set_flag(bool);
+	//Get status of flag
+	bool get_flag();
 private:
-	const float table_width{ 128 };
-	const float table_height{ 128 };
+	const float table_width{ table_width_const };
+	const float table_height{ table_height_const };
 	//Spell 1 hold
 	spells spell1_id = spells::INVALID_SPELL;
 
@@ -129,6 +170,9 @@ private:
 
 	//Crafting table snap
 	dragdrop table_dragdrop{};
+
+	// Two Spell Flag
+	bool two_spell_flag;
 };
 
 

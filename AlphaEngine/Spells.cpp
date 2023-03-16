@@ -1,32 +1,13 @@
 #include "Spells.h"
 
-//---------------------------------------
-//Set Spell Damage Values
-
-//Base Damage
-const int base_low = 2;
-const int base_mid = 3;
-const int base_high = 5;
-
-//AOE Damage
-const int aoe_low = 1;
-const int aoe_mid = 2;
-const int aoe_high = 3;
-
-//Lingering Damage 
-const int lingering_low = 1;
-const int lingering_mid = 2;
-const int lingering_high = 3;
-
-//Lingering Rounds
-const int lingering_rounds_mid = 2;
-
-
-
-
 //Declare textures for spells
 AEGfxTexture* toxic_deluge{}, * inferno_blast{}, * umbral_tendrils{}, * maelstrom_surge{}, * venemous_bite{},
 * shadow_cloak{}, * flame_burst{}, * rat_swarm{}, * bubonic_blaze{};
+
+// crafting table timer for combination spell delay
+f64 timer{};
+
+
 
 spell_book init_all_spells()
 {
@@ -44,13 +25,13 @@ spell_book init_all_spells()
 	std::cout << "shame MemLoc: " << maelstrom_surge << std::endl;
 	venemous_bite = AEGfxTextureLoad("Assets/Card-Sprite-Venemous.png");
 	std::cout << "venemous_bite MemLoc: " << venemous_bite << std::endl;
-	shadow_cloak = AEGfxTextureLoad("Assets/shadow_cloak.png");
+	shadow_cloak = AEGfxTextureLoad("Assets/Card-Sprite-shadow-cloak.png");
 	std::cout << "shadow_cloak MemLoc: " << shadow_cloak << std::endl;
-	flame_burst = AEGfxTextureLoad("Assets/flame_burst.png");
+	flame_burst = AEGfxTextureLoad("Assets/Card-Sprite-flame-burst.png");
 	std::cout << "flame_burst MemLoc: " << flame_burst << std::endl;
-	rat_swarm = AEGfxTextureLoad("Assets/rat_swarm.png");
+	rat_swarm = AEGfxTextureLoad("Assets/Card-Sprite-Rat-Swarm.png");
 	std::cout << "rat_swarm MemLoc: " << rat_swarm << std::endl;
-	bubonic_blaze = AEGfxTextureLoad("Assets/bubonic_blaze.png");
+	bubonic_blaze = AEGfxTextureLoad("Assets/Card-Sprite-Bubonic-Blaze.png");
 	std::cout << "bubonic_blaze MemLoc: " << bubonic_blaze << std::endl;
 	std::cout << "Creating All " << max_spells << " Spells" << std::endl;
 
@@ -115,18 +96,30 @@ bool combine_spells(spell_book& spellbook, spells id1, spells id2) {
 		if (spellbook.spell_array[(int)id1].element == FIRE && spellbook.spell_array[(int)id2].element == SHADOW ||
 			spellbook.spell_array[(int)id2].element == FIRE && spellbook.spell_array[(int)id1].element == SHADOW) {
 			// combine inferno blast and umbral tendrils to create flame burst
+			if (spellbook.spell_array[(int)spells::FLAME_BURST].unlocked) {
+				return false;
+			}
 			spellbook.spell_array[(int)spells::FLAME_BURST].unlocked = true;
 			return true;
 		}
 		else if (spellbook.spell_array[(int)id1].element == POISON && spellbook.spell_array[(int)id2].element == SHADOW ||
 			spellbook.spell_array[(int)id2].element == POISON && spellbook.spell_array[(int)id1].element == SHADOW) {
 			// combine toxic deluge and umbral tendrils to create venomous bite
+			if (spellbook.spell_array[(int)spells::VENOMOUS_BITE].unlocked) {
+				return false;
+			}
+
 			spellbook.spell_array[(int)spells::VENOMOUS_BITE].unlocked = true;
 			return true;
 		}
 		else if (spellbook.spell_array[(int)id1].element == WATER && spellbook.spell_array[(int)id2].element == SHADOW ||
 			spellbook.spell_array[(int)id2].element == WATER && spellbook.spell_array[(int)id1].element == SHADOW) {
 			// combine maelstrom surge and umbral tendrils to create shadow cloak
+
+			if (spellbook.spell_array[(int)spells::SHADOW_CLOAK].unlocked) {
+				return false;
+			}
+
 			spellbook.spell_array[(int)spells::SHADOW_CLOAK].unlocked = true;;
 			return true;
 
@@ -141,12 +134,22 @@ bool combine_spells(spell_book& spellbook, spells id1, spells id2) {
 		if (spellbook.spell_array[(int)id1].element == POISON && spellbook.spell_array[(int)id2].element == SHADOW ||
 			spellbook.spell_array[(int)id2].element == POISON && spellbook.spell_array[(int)id1].element == SHADOW) {
 			// combine shadow cloak and venemous bite to create rat swarm
-			spellbook.spell_array[(int)spells::RAT_SWARM].unlocked = true;;
+
+			if (spellbook.spell_array[(int)spells::RAT_SWARM].unlocked) {
+				return false;
+			}
+
+			spellbook.spell_array[(int)spells::RAT_SWARM].unlocked = true;
 			return true;
 		}
 		if (spellbook.spell_array[(int)id1].element == FIRE && spellbook.spell_array[(int)id2].element == POISON ||
 			spellbook.spell_array[(int)id2].element == FIRE && spellbook.spell_array[(int)id1].element == POISON) {
 			// combine flame burst and venemous bite to create bubonic blaze
+
+			if (spellbook.spell_array[(int)spells::BUBONIC_BLAZE].unlocked) {
+				return false;
+			}
+
 			spellbook.spell_array[(int)spells::BUBONIC_BLAZE].unlocked = true;
 			return true;
 		}
@@ -176,33 +179,48 @@ void unload_spells(spell_book& spellbook) {
 }
 
 
-int craftingtable::crafting_table_update(spell_book& spellbook, spells spell_id)
+void craftingtable::crafting_table_snap(spell_book& spellbook, spells spell_id)
 {
 	assert((spellbook.array_size <= max_spells) || (spellbook.array_size >= (size_t)first_spell));
 	spellbook.spell_array[(int)spell_id].spell_dragdrop->mousechange(false);
 	spellbook.spell_array[(int)spell_id].spell_dragdrop->moveto(this->table_dragdrop.getcoord());
-	if (this->spell1_id == spells::INVALID_SPELL) {
+
+	//Only run when crafting table is empty
+	if (this->spell1_id == spells::INVALID_SPELL && two_spell_flag == false) {
+		spellbook.spell_array[(int)spell_id].spell_dragdrop->move(crafting_table_buffer, 0);
 		this->spell1_id = spell_id;
-		return 1;
 	}
 	else if (this->spell1_id != spells::INVALID_SPELL && this->spell2_id == spells::INVALID_SPELL) {
+		two_spell_flag = true;
 		this->spell2_id = spell_id;
+		spellbook.spell_array[(int)spell_id].spell_dragdrop->move(-crafting_table_buffer, 0);
+	}
+}
+
+int craftingtable::crafting_table_update(spell_book& spellbook)
+{
+	timer += g_dt;
+	if (timer >= crafting_time_buffer) {
 		if (combine_spells(spellbook, this->spell1_id, this->spell2_id) == true) {
 			spellbook.spell_array[(int)this->spell1_id].spell_dragdrop->resetaabb();
 			spellbook.spell_array[(int)this->spell2_id].spell_dragdrop->resetaabb();
 			this->spell1_id = spells::INVALID_SPELL;
 			this->spell2_id = spells::INVALID_SPELL;
-			return 3;
+			timer = NULL;
+			two_spell_flag = false;
+			return 2;
 		}
 		else {
 			spellbook.spell_array[(int)this->spell1_id].spell_dragdrop->resetaabb();
 			spellbook.spell_array[(int)this->spell2_id].spell_dragdrop->resetaabb();
 			this->spell1_id = spells::INVALID_SPELL;
 			this->spell2_id = spells::INVALID_SPELL;
-			return 2;
+			timer = NULL;
+			two_spell_flag = false;
+			return 3;
 		}
 	}
-	return 2;
+	return 1;
 }
 
 dragdrop* craftingtable::get_dragdrop()
@@ -239,6 +257,7 @@ craftingtable::craftingtable()
 	AEVec2Set(&zero, 1, 1);
 	table_dragdrop.moveto(zero);
 	table_dragdrop.changeaabb(table_width, table_height);
+	two_spell_flag = false;
 }
 
 spells craftingtable::get_spell1()
@@ -256,6 +275,17 @@ spells craftingtable::get_spell2()
 {
 	return spell2_id;
 }
+
+void craftingtable::set_flag(bool quantum)
+{
+	two_spell_flag = quantum;
+}
+
+bool craftingtable::get_flag()
+{
+	return two_spell_flag;
+}
+
 
 spell_book::spell_book(spell_book const& rhs)
 {

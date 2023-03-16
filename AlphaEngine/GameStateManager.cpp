@@ -28,6 +28,7 @@ void GameStateManagerInit(unsigned int gameStateInit) {
 
 void GameStateManagerUpdate() {
 
+	g_dt = AEFrameRateControllerGetFrameTime();
 	if ((gGameStateCurr == GS_RESTART) || (gGameStateCurr == GS_QUIT))
 		return;
 

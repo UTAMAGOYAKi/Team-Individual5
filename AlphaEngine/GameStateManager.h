@@ -25,5 +25,7 @@ extern void (*GameStateDraw)();
 extern void (*GameStateFree)();
 extern void (*GameStateUnload)();
 
+extern f64 g_dt;
+
 void GameStateManagerInit(unsigned int gameStateInit);
 void GameStateManagerUpdate();

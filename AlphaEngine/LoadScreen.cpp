@@ -6,7 +6,6 @@ AEGfxTexture *load_screen;
 float load_screen_time{};
 const float load_screen_timer{ 3 };
 
-
 void LoadScreenLoad() {
 	pMesh_Loadscreen = 0;
 	AEGfxMeshStart();
@@ -29,7 +28,7 @@ void LoadScreenInit() {
 
 void LoadScreenUpdate() {
 	if (load_screen_time > 0) {
-		load_screen_time -= (f32)AEFrameRateControllerGetFrameTime();
+		load_screen_time -= (f32)g_dt;
 	}
 	if (load_screen_time <= 0 || AEInputCheckTriggered(AEVK_LBUTTON)) {
 		gGameStateNext = GS_MENU;
