@@ -78,6 +78,19 @@ AEGfxVertexList* particle_mesh;
 aabb pause_buttons[3];
 aabb end_turn_button;
 
+AEVec2 pause_scale{ 400,600 };
+AEVec2 pause_button_scale{ 300,80 };
+int pause_start_y = 190;
+int pause_space_y = 180;
+int pause_length = 300;
+int pause_width = 80;
+
+AEVec2 end_scale{ 180,300 };
+AEVec2 end_mid{ 516,-308 };
+int end_length = 200;
+int end_width = 80;
+int end_offset = FONT_SIZE / 3;
+
 void GameStateAlchemiceLoad() {
 	pMesh = 0;
 	// Informing the library that we're about to start adding triangles
@@ -140,7 +153,7 @@ void GameStateAlchemiceInit() {
 
 	//
 	turn = player_turn;
-
+	pause_mode = false;
 
 	//Draw all spells that are active at beginning
 	AEVec2Zero(&cards);
@@ -157,11 +170,11 @@ void GameStateAlchemiceInit() {
 	}
 	//creates the button from top to bottom top most button [0]
 	for (int i = 0; i < sizeof(pause_buttons) / sizeof(pause_buttons[0]); ++i) {
-		pause_buttons[i] = CreateAABB({ 0,(f32)-190 + i * 180 }, 300, 80);
+		pause_buttons[i] = CreateAABB({ 0,(f32)-pause_start_y + i * pause_space_y }, pause_length, pause_width);
 	}
 
 	cards.x = -50;
-	end_turn_button = CreateAABB({ 516,-308 }, 200, 80);
+	end_turn_button = CreateAABB(end_mid, end_length, end_width);
 
 	//Most stuff are only needed to be init in level 1;
 	if (level.curr_level == level_1)
@@ -626,9 +639,9 @@ void GameStateAlchemiceDraw() {
 	f32 middle = (end_turn_button.mid.x / (AEGetWindowWidth() / 2));
 	f32 offset = -((float)strlen(End_Turn_Text) / 2) / (AEGetWindowWidth() / FONT_SIZE);
 	AEGfxTextureSet(end_turn_box, 0.f, 0.f);
-	AEMtx33Trans(&translate, end_turn_button.mid.x, -end_turn_button.mid.y);
+	AEMtx33Trans(&translate, end_turn_button.mid.x, -end_turn_button.mid.y+end_offset);
 	AEMtx33Rot(&rotate, 0);
-	AEMtx33Scale(&scale, 180, 300);
+	AEMtx33Scale(&scale, end_scale.x, end_scale.y);
 	AEMtx33Concat(&transform, &rotate, &scale);
 	AEMtx33Concat(&transform, &translate, &transform);
 	AEGfxSetTransform(transform.m);
@@ -650,7 +663,7 @@ void GameStateAlchemiceDraw() {
 		AEGfxTextureSet(pause_box, 0, 0);
 		AEMtx33Trans(&translate, 0, 0);
 		AEMtx33Rot(&rotate, 0);
-		AEMtx33Scale(&scale, 400, 600);
+		AEMtx33Scale(&scale, pause_scale.x, pause_scale.y);
 		AEMtx33Concat(&transform, &rotate, &scale);
 		AEMtx33Concat(&transform, &translate, &transform);
 		AEGfxSetTransform(transform.m);
@@ -664,11 +677,11 @@ void GameStateAlchemiceDraw() {
 		for (int i = 0; i < ARRAYSIZE(Pause_Text); ++i) {
 			f32 middle = -(((float)strlen(Pause_Text[i]) / 2) / (AEGetWindowWidth() / FONT_SIZE));
 			f32 textY = ((float)(AEGetWindowHeight() - i * AEGetWindowHeight()) / 2) / AEGetWindowHeight();
-			f32 boxY = (float)(190 - i * 180);
+			f32 boxY = (float)(pause_start_y - i * pause_space_y);
 			AEGfxTextureSet(pause_box, 0.f, 0.f);
 			AEMtx33Trans(&translate, 0, boxY);
 			AEMtx33Rot(&rotate, 0);
-			AEMtx33Scale(&scale, 300, 80);
+			AEMtx33Scale(&scale, pause_button_scale.x, pause_button_scale.y);
 			AEMtx33Concat(&transform, &rotate, &scale);
 			AEMtx33Concat(&transform, &translate, &transform);
 			AEGfxSetTransform(transform.m);
@@ -682,9 +695,6 @@ void GameStateAlchemiceFree() {
 }
 
 void GameStateAlchemiceUnload() {
-
-	AEGfxMeshFree(pMesh);
-
 	delete_player(alchemice);
 
 	//Character texture
@@ -710,4 +720,5 @@ void GameStateAlchemiceUnload() {
 	AEGfxTextureUnload(blast[3]);
 
 	AEGfxMeshFree(particle_mesh);
+	AEGfxMeshFree(pMesh);
 }
