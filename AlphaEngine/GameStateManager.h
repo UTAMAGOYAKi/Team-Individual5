@@ -1,6 +1,6 @@
 #pragma once
 #include "Main.h"
-//#include "GameStateList.h"
+
 enum
 {
 	// list of all game states
@@ -10,6 +10,7 @@ enum
 	// special game state. Do not change
 	GS_RESTART,
 	GS_QUIT,
+	GS_CREDITS,
 	GS_NONE
 };
 
@@ -24,8 +25,6 @@ extern void (*GameStateUpdate)();
 extern void (*GameStateDraw)();
 extern void (*GameStateFree)();
 extern void (*GameStateUnload)();
-
-extern f64 g_dt;
 
 void GameStateManagerInit(unsigned int gameStateInit);
 void GameStateManagerUpdate();

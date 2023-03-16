@@ -64,10 +64,9 @@ void LoadScreenDraw() {
 	AEGfxMeshDraw(pMesh_Loadscreen, AE_GFX_MDM_TRIANGLES);
 }
 
-void LoadScreenFree() {
-	AEGfxMeshFree(pMesh_Loadscreen);
-}
+void LoadScreenFree() {}
 
 void LoadScreenUnload() {
+	AEGfxMeshFree(pMesh_Loadscreen);
 	AEGfxTextureUnload(load_screen);
 }

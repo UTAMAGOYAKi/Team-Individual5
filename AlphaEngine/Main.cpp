@@ -1,9 +1,12 @@
 #pragma once
 #include "Main.h"
 
+const u32 FRAMERATE = 60;
+
 int FONT_SIZE = 30;
 AEVec2 mouse_pos;
 s8 font;
+f64 g_dt;
 
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	_In_opt_ HINSTANCE hPrevInstance,
@@ -19,7 +22,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	#endif
 
 	// Using custom window procedure
-	AESysInit(hInstance, nCmdShow, 1280, 720, 1, 60, true, NULL);
+	AESysInit(hInstance, nCmdShow, 1280, 720, 1, FRAMERATE, true, NULL);
 	AESysToggleFullScreen(true);
 
 	// Changing the window title
@@ -46,6 +49,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
 		while (gGameStateCurr == gGameStateNext)
 		{
+
+			g_dt = AEFrameRateControllerGetFrameTime();
 			// Updates global mouse pos
 			int x, y;
 			AEInputGetCursorPosition(&x, &y);

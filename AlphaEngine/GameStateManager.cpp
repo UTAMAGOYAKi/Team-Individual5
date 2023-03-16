@@ -27,8 +27,6 @@ void GameStateManagerInit(unsigned int gameStateInit) {
 }
 
 void GameStateManagerUpdate() {
-
-	g_dt = AEFrameRateControllerGetFrameTime();
 	if ((gGameStateCurr == GS_RESTART) || (gGameStateCurr == GS_QUIT))
 		return;
 
@@ -57,6 +55,14 @@ void GameStateManagerUpdate() {
 			GameStateDraw = MenuDraw;
 			GameStateFree = MenuFree;
 			GameStateUnload = MenuUnload;
+			break;
+		case GS_CREDITS:
+			GameStateLoad = CreditsLoad;
+			GameStateInit = CreditsInit;
+			GameStateUpdate = CreditsUpdate;
+			GameStateDraw = CreditsDraw;
+			GameStateFree = CreditsFree;
+			GameStateUnload = CreditsUnload;
 			break;
 		case GS_RESTART:
 			break;

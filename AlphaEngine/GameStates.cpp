@@ -78,8 +78,6 @@ AEGfxVertexList* particle_mesh;
 aabb pause_buttons[3];
 aabb end_turn_button;
 
-f64  g_dt;
-
 void GameStateAlchemiceLoad() {
 	pMesh = 0;
 	// Informing the library that we're about to start adding triangles
@@ -218,7 +216,7 @@ void GameStateAlchemiceUpdate() {
 		pause_mode = !pause_mode;
 	}
 
-	for (int i{}; i < sizeof(pause_buttons) / sizeof(pause_buttons[0]); ++i) //for every iteration of pause menu buttons
+	for (int i{}; i < ARRAYSIZE(pause_buttons); ++i) //for every iteration of pause menu buttons
 	{
 		if (aabbbutton(&pause_buttons[i], mouse_pos) &&
 			AEInputCheckTriggered(AEVK_LBUTTON) && //check if left button is clicked
@@ -624,9 +622,9 @@ void GameStateAlchemiceDraw() {
 	// 113 characters on screen, start to end, 113/2 =  56.5(left and right for scaling) Roboto
 	// 85 characters, 85/2 = 42.5 Gothic
 	// 1280W,720H, 640/HalfWidth, 360/HalfHeight
-	const char* mytext{ "End Turn" };
+	const char* End_Turn_Text{ "End Turn" };
 	f32 middle = (end_turn_button.mid.x / (AEGetWindowWidth() / 2));
-	f32 offset = -((float)strlen(mytext) / 2) / (AEGetWindowWidth() / FONT_SIZE);
+	f32 offset = -((float)strlen(End_Turn_Text) / 2) / (AEGetWindowWidth() / FONT_SIZE);
 	AEGfxTextureSet(end_turn_box, 0.f, 0.f);
 	AEMtx33Trans(&translate, end_turn_button.mid.x, -end_turn_button.mid.y);
 	AEMtx33Rot(&rotate, 0);
@@ -635,7 +633,7 @@ void GameStateAlchemiceDraw() {
 	AEMtx33Concat(&transform, &translate, &transform);
 	AEGfxSetTransform(transform.m);
 	AEGfxMeshDraw(pMesh, AE_GFX_MDM_TRIANGLES);
-	AEGfxPrint(font, (s8*)mytext, middle + offset, (f32)-(end_turn_button.mid.y / (AEGetWindowHeight() / 2)), 1, 0, 0, 0);
+	AEGfxPrint(font, (s8*)End_Turn_Text, middle + offset, (f32)-(end_turn_button.mid.y / (AEGetWindowHeight() / 2)), 1, 0, 0, 0);
 
 
 	AEGfxSetRenderMode(AE_GFX_RM_TEXTURE);
@@ -661,10 +659,10 @@ void GameStateAlchemiceDraw() {
 		// 113 characters on screen, start to end, 113/2 =  56.5(left and right for scaling) Roboto
 		// 85 characters, 85/2 = 42.5 Gothic
 		// 1280W,720H, 640/HalfWidth, 360/HalfHeight
-		const char* mytex[3]{ { "Continue" }, { "Options" }, {"Main Menu"} };
+		const char* Pause_Text[3]{ { "Continue" }, { "Options" }, {"Main Menu"} };
 
-		for (int i = 0; i < 3; ++i) {
-			f32 middle = -(((float)strlen(mytex[i]) / 2) / (AEGetWindowWidth() / FONT_SIZE));
+		for (int i = 0; i < ARRAYSIZE(Pause_Text); ++i) {
+			f32 middle = -(((float)strlen(Pause_Text[i]) / 2) / (AEGetWindowWidth() / FONT_SIZE));
 			f32 textY = ((float)(AEGetWindowHeight() - i * AEGetWindowHeight()) / 2) / AEGetWindowHeight();
 			f32 boxY = (float)(190 - i * 180);
 			AEGfxTextureSet(pause_box, 0.f, 0.f);
@@ -675,7 +673,7 @@ void GameStateAlchemiceDraw() {
 			AEMtx33Concat(&transform, &translate, &transform);
 			AEGfxSetTransform(transform.m);
 			AEGfxMeshDraw(pMesh, AE_GFX_MDM_TRIANGLES);
-			AEGfxPrint(font, (s8*)mytex[i], middle, textY, 1, 0, 0, 0);
+			AEGfxPrint(font, (s8*)Pause_Text[i], middle, textY, 1, 0, 0, 0);
 		}
 	}
 }
