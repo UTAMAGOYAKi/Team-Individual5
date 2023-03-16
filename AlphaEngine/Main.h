@@ -15,6 +15,7 @@
 #include "Mesh.h"
 #include "Player.h"
 #include "Spells.h"
+#include "Particles.h"
 
 #include <iostream>
 #include <fstream>

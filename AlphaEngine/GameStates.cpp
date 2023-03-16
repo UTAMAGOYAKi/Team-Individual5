@@ -70,9 +70,8 @@ bool enemy_bleeding{ false };
 int bleeding_enemy_no{ 0 };
 
 //Particles
-const int particle_max = 50;
-std::vector<particle>	particle_vector;
 AEGfxVertexList* particle_mesh;
+particle_manager enemy_part_manager(50);
 
 //Button AABB
 aabb pause_buttons[3];
@@ -153,7 +152,10 @@ void GameStateAlchemiceInit() {
 
 	//
 	turn = player_turn;
+<<<<<<< Updated upstream
 	pause_mode = false;
+=======
+>>>>>>> Stashed changes
 
 	//Draw all spells that are active at beginning
 	AEVec2Zero(&cards);
@@ -279,8 +281,9 @@ void GameStateAlchemiceUpdate() {
 	//TESTING PARTICLE SYSTEM
 	//Particle System Logic/ To spawn a particle each turn.
 	for (int i{}; i < TOTAL_ENEMY; i++) {
-		if (enemies[i].is_bleeding() == true) {
-			enemies[i].create_particle(particle_vector, particle_max);
+		if (enemies[i].is_bleeding() == true) 
+		{
+			create_particle(enemy_part_manager.particle_vector, enemy_part_manager.max_capacity, enemies[i].get_pos(), enemy_take_damage_particle);
 			enemies[i].update_bleed_timer();
 
 			if (enemies[i].get_bleed_timer() <= 0) {
@@ -291,21 +294,8 @@ void GameStateAlchemiceUpdate() {
 		}
 	}
 
-
-	//Particle Update
-	for (int i = 0; i < particle_vector.size(); i++)
-	{
-		if (particle_vector[i].lifespan < 0)
-		{
-			particle_vector.erase(particle_vector.begin() + i);
-		}
-		else
-		{
-			particle_vector[i].lifespan -= g_dt;
-			particle_vector[i].position.x += particle_vector[i].velocity.x;
-			particle_vector[i].position.y += particle_vector[i].velocity.y;
-		}
-	}
+	//Particles Update
+	update_particle(enemy_part_manager.particle_vector);
 
 	//MAIN GAMEPLAY LOOP
 	//Check if players or enemies or all enemies are all dead
@@ -591,25 +581,8 @@ void GameStateAlchemiceDraw() {
 		}
 	}
 
-	//Particle Drawing
-	AEMtx33 scale2, trans, matrix;
-
-	//Drawing of Particles
-	for (int i = 0; i < particle_vector.size(); ++i)
-	{
-		AEGfxTextureSet(blast[0], 0, 0);
-		//Apply scale
-		AEMtx33Scale(&scale2, particle_vector[i].size, particle_vector[i].size);
-		//Apply translation
-		AEMtx33Trans(&trans, particle_vector[i].position.x, particle_vector[i].position.y);
-		//Concatenate the scale and translation matrix
-		AEMtx33Concat(&matrix, &trans, &scale2);
-		//Concatenate the result with the particle's matrix
-		//Send the resultant matrix to the graphics manager using "AEGfxSetTransform"
-		AEGfxSetTransform(matrix.m);
-		//Draw the particle's mesh
-		AEGfxMeshDraw(particle_mesh, AE_GFX_MDM_TRIANGLES);
-	}
+	//Particles Drawing
+	draw_particles(enemy_part_manager.particle_vector, particle_mesh, blast[0]);
 
 	//Enemy Attack Animation
 	if (turn == enemy_turn) {

@@ -22,14 +22,6 @@ enum enemy_life_state_enum
     alive,
 };
 
-struct particle
-{
-    AEVec2 position;
-    AEVec2 velocity;
-    f64 lifespan;
-    float size;
-};
-
 class Enemy
 {
 private:
@@ -95,13 +87,13 @@ public:
     void update_animation(f64 dt); //Updates the frame number to draw the correct frame.
     void switch_finish_attack();      //switches true to false or false to true;
 
-    void create_particle(std::vector<particle>& particle_vector, int particle_max);
+    //void create_particle(std::vector<particle>& particle_vector, int particle_max);
     void set_bleeding(bool logic);
     void update_bleed_timer();
     void reset_bleed_time();
 };
 
 //Particles
-void update_particle();
+//void update_particle();
 
 #endif // ENEMY_H

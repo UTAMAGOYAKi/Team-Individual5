@@ -40,7 +40,11 @@
     <ClCompile Include="LoadScreen.cpp">
       <Filter>Source file</Filter>
     </ClCompile>
+<<<<<<< Updated upstream
     <ClCompile Include="Credits.cpp">
+=======
+    <ClCompile Include="Particles.cpp">
+>>>>>>> Stashed changes
       <Filter>Source file</Filter>
     </ClCompile>
   </ItemGroup>
@@ -87,7 +91,11 @@
     <ClInclude Include="LoadScreen.h">
       <Filter>Header file</Filter>
     </ClInclude>
+<<<<<<< Updated upstream
     <ClInclude Include="Credits.h">
+=======
+    <ClInclude Include="Particles.h">
+>>>>>>> Stashed changes
       <Filter>Header file</Filter>
     </ClInclude>
   </ItemGroup>
