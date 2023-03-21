@@ -90,6 +90,14 @@ int end_length = 200;
 int end_width = 80;
 int end_offset = FONT_SIZE / 3;
 
+
+AEAudio wow;
+
+AEAudioGroup pain;
+
+
+
+
 void GameStateAlchemiceLoad() {
 	pMesh = 0;
 	// Informing the library that we're about to start adding triangles
@@ -142,11 +150,14 @@ void GameStateAlchemiceLoad() {
 	alchemice = create_player();
 	//Init All Spells
 	spellbook = init_all_spells();
+
+	wow = AEAudioLoadMusic("Assets/toot.mp3");
+
 }
 
 // Initialization of your own variables go here
 void GameStateAlchemiceInit() {
-
+	pain = AEAudioCreateGroup();
 
 	//Contains all spells in a dynamically allocated array
 
@@ -214,6 +225,13 @@ void GameStateAlchemiceInit() {
 
 
 void GameStateAlchemiceUpdate() {
+
+	AEAudioUpdate();
+
+	if (AEInputCheckTriggered(AEVK_SPACE))
+	{
+		AEAudioPlay(wow, pain, 1.0f, 1.0f, 1);
+	}
 
 	AEVec2 temp;
 	temp = mouse_pos;
