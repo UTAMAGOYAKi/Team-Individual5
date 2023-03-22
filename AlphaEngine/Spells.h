@@ -189,5 +189,5 @@ void unload_spells(spell_book& spellbook);
 
 void draw_all_spells(spell_book& spellbook, AEGfxVertexList* pMesh);
 
-
+void draw_spell_combination(spell_book& spellbook, AEGfxVertexList* pMesh);
 

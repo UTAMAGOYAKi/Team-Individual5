@@ -121,7 +121,7 @@ void sub_menu_draw(AEGfxTexture* sub_menu, spell_book& spells, AEGfxVertexList* 
 
 	for (int i = 0; i < max_spells-1; i++) 
 	{
-		if (spells.spell_array[i].unlocked == true) 
+		if (spells.spell_array[i].unlocked == true && spells.spell_array[i].tier > tier3_last)
 		{
 			AEGfxTextureSet(spells.spell_array[i].texture, 0, 0);
 			AEMtx33Trans(&translate,(f32) - 590, (f32)300 - i * 50);
@@ -131,7 +131,7 @@ void sub_menu_draw(AEGfxTexture* sub_menu, spell_book& spells, AEGfxVertexList* 
 			AEMtx33Concat(&transform, &translate, &transform);
 			AEGfxSetTransform(transform.m);
 			AEGfxMeshDraw(mesh, AE_GFX_MDM_TRIANGLES);
-			AEGfxPrint(font, (s8*)"+", ((-540.0f / 640.0f) * 1.0f), (((300 - i * 50) / 360.0f) * 1.0f-0.025f), 1, 1.0f, 1.0f, 1.0f);
+			AEGfxPrint(font, (s8*)"=", ((-540.0f / 640.0f) * 1.0f), (((300 - i * 50) / 360.0f) * 1.0f-0.025f), 1, 1.0f, 1.0f, 1.0f);
 		}
 	}
 }
