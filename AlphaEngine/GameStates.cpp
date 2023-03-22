@@ -349,7 +349,6 @@ void GameStateAlchemiceUpdate() {
 								}
 							}
 						}
-
 					}
 
 
@@ -373,7 +372,6 @@ void GameStateAlchemiceUpdate() {
 						}
 					}
 				}
-
 			}
 
 			if (crafting_table.get_flag() == true) {
@@ -473,6 +471,9 @@ void GameStateAlchemiceUpdate() {
 	{
 		level.next_level();
 		gGameStateNext = GS_RESTART;
+	}
+	else if (alchemice->hp <= 0) {
+		gGameStateNext = GS_GAMEOVER;
 	}
 }
 

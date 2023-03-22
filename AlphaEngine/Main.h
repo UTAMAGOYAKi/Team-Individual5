@@ -8,6 +8,7 @@
 #include "Credits.h"
 #include "Elements.h"
 #include "EnemyObject.h"
+#include "GameOver.h"
 #include "GameStateManager.h"
 #include "GameStates.h"
 #include "LoadScreen.h"

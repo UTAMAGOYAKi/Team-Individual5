@@ -33,36 +33,44 @@ void GameStateManagerUpdate() {
 	switch (gGameStateCurr)
 	{
 		case GS_LOAD:
-			GameStateLoad = LoadScreenLoad;
-			GameStateInit = LoadScreenInit;
+			GameStateLoad	= LoadScreenLoad;
+			GameStateInit	= LoadScreenInit;
 			GameStateUpdate = LoadScreenUpdate;
-			GameStateDraw = LoadScreenDraw;
-			GameStateFree = LoadScreenFree;
+			GameStateDraw	= LoadScreenDraw;
+			GameStateFree	= LoadScreenFree;
 			GameStateUnload = LoadScreenUnload;
 		break;
 		case GS_ALCHEMICE:
-			GameStateLoad = GameStateAlchemiceLoad;
-			GameStateInit = GameStateAlchemiceInit;
+			GameStateLoad	= GameStateAlchemiceLoad;
+			GameStateInit	= GameStateAlchemiceInit;
 			GameStateUpdate = GameStateAlchemiceUpdate;
-			GameStateDraw = GameStateAlchemiceDraw;
-			GameStateFree = GameStateAlchemiceFree;
+			GameStateDraw	= GameStateAlchemiceDraw;
+			GameStateFree	= GameStateAlchemiceFree;
 			GameStateUnload = GameStateAlchemiceUnload;
 			break;
 		case GS_MENU:
-			GameStateLoad = MenuLoad;
-			GameStateInit = MenuInit;
+			GameStateLoad	= MenuLoad;
+			GameStateInit	= MenuInit;
 			GameStateUpdate = MenuUpdate;
-			GameStateDraw = MenuDraw;
-			GameStateFree = MenuFree;
+			GameStateDraw	= MenuDraw;
+			GameStateFree	= MenuFree;
 			GameStateUnload = MenuUnload;
 			break;
 		case GS_CREDITS:
-			GameStateLoad = CreditsLoad;
-			GameStateInit = CreditsInit;
+			GameStateLoad	= CreditsLoad;
+			GameStateInit	= CreditsInit;
 			GameStateUpdate = CreditsUpdate;
-			GameStateDraw = CreditsDraw;
-			GameStateFree = CreditsFree;
+			GameStateDraw	= CreditsDraw;
+			GameStateFree	= CreditsFree;
 			GameStateUnload = CreditsUnload;
+			break;
+		case GS_GAMEOVER:
+			GameStateLoad	= GameOverLoad;
+			GameStateInit	= GameOverInit;
+			GameStateUpdate	= GameOverUpdate;
+			GameStateDraw	= GameOverDraw;
+			GameStateFree	= GameOverFree;
+			GameStateUnload	= GameOverUnload;
 			break;
 		case GS_RESTART:
 			break;
