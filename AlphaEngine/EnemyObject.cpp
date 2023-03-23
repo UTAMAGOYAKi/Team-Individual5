@@ -62,8 +62,52 @@ void Enemy::set_position_and_aabb(AEVec2 input_pos) {
     enemy_aabb = CreateAABB(input_pos, size, size);
 }
 
+int Enemy::elemental_damage_calculator(Elements enemy_type, Elements input_element) 
+{
+    if (enemy_type == FIRE) 
+    {
+        if (input_element == POISON) 
+        {
+            return 1;
+        }
+        if (input_element == SHADOW)
+        {
+            return -1;
+        }
+    }
+    if (enemy_type == SHADOW)
+    {
+        if (input_element == FIRE)
+        {
+            return 1;
+        }
+        if (input_element == POISON)
+        {
+            return -1;
+        }
+    }
+
+    if (enemy_type == POISON)
+    {
+        if (input_element == SHADOW)
+        {
+            return 1;
+        }
+        if (input_element == FIRE)
+        {
+            return -1;
+        }
+    }
+
+    //Reaching here means it is neutral.
+    return 0;
+}
 //When enemy take damage, insert damage number there.
-void Enemy::take_damage(int val) {
+void Enemy::take_damage(int val, Elements input_element)
+{
+
+    val += elemental_damage_calculator(element_type,input_element);
+
     if (alive) { //if alive
         hp -= val;
         if (hp <= 0) {

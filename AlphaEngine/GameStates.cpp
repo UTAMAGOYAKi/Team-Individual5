@@ -179,36 +179,36 @@ void GameStateAlchemiceInit() {
 	if (level.curr_level == level_1)
 	{
 
-		enemies[0] = Enemy(big_rat, rat, "Rat", 4, 1);
+		enemies[0] = Enemy(big_rat, rat, "Rat", 4, 1, FIRE);
 		enemies[0].set_position_and_aabb(enemy_position[0]);
 		
-		enemies[1] = Enemy(base_rat, rat, "Rat", 4, 1);
+		enemies[1] = Enemy(base_rat, rat, "Rat", 4, 1, WATER);
 		enemies[1].set_position_and_aabb(enemy_position[1]);
 
-		enemies[2] = Enemy(base_rat, rat, "Rat", 4, 1);
+		enemies[2] = Enemy(base_rat, rat, "Rat", 4, 1, WATER);
 		enemies[2].set_position_and_aabb(enemy_position[2]);
 
 	}
 	else if (level.curr_level == level_2)
 	{
-		enemies[0] = Enemy(big_rat, big_rat_texture, "Big Rat", 8, 3);
+		enemies[0] = Enemy(big_rat, big_rat_texture, "Big Rat", 8, 3, INVALID_ELEMENT);
 		enemies[0].set_position_and_aabb(enemy_position[0]);
 
-		enemies[1] = Enemy(base_rat, rat, "Rat", 4, 2);
+		enemies[1] = Enemy(base_rat, rat, "Rat", 4, 2, INVALID_ELEMENT);
 		enemies[1].set_position_and_aabb(enemy_position[1]);
 
-		enemies[2] = Enemy(base_rat, rat, "Rat", 4, 2);
+		enemies[2] = Enemy(base_rat, rat, "Rat", 4, 2, INVALID_ELEMENT);
 		enemies[2].set_position_and_aabb(enemy_position[2]);
 	}
 	else if (level.curr_level == level_3)
 	{
-		enemies[0] = Enemy(big_rat, big_rat_texture, "Big Rat", 10, 3);
+		enemies[0] = Enemy(big_rat, big_rat_texture, "Big Rat", 10, 3, INVALID_ELEMENT);
 		enemies[0].set_position_and_aabb(enemy_position[0]);
 
-		enemies[1] = Enemy(base_rat, big_rat_texture, "Big Rat", 8, 2);
+		enemies[1] = Enemy(base_rat, big_rat_texture, "Big Rat", 8, 2, INVALID_ELEMENT);
 		enemies[1].set_position_and_aabb(enemy_position[1]);
 
-		enemies[2] = Enemy(base_rat, big_rat_texture, "Big Rat", 8, 2);
+		enemies[2] = Enemy(base_rat, big_rat_texture, "Big Rat", 8, 2, INVALID_ELEMENT);
 		enemies[2].set_position_and_aabb(enemy_position[2]);
 	}
 }
@@ -347,7 +347,7 @@ void GameStateAlchemiceUpdate() {
 						{
 							if (enemies[j].is_alive() && alchemice->mp > 0)
 							{
-								enemies[j].take_damage(spellbook.spell_array[i].base_damage);
+								enemies[j].take_damage(spellbook.spell_array[i].base_damage,static_cast<Elements>(spellbook.spell_array[i].element));
 								enemies[j].set_bleeding(true);
 								alchemice->mp -= 1;
 								if (spellbook.spell_array[i].id > tier3_last) {
@@ -407,11 +407,11 @@ void GameStateAlchemiceUpdate() {
 				sub_menu = !sub_menu;
 			}
 
-			//Debug for dealing damage, (put the dragging of spell onto enemy here)
-			if (AEInputCheckTriggered(AEVK_Q))
-			{
-				enemies[rand() % TOTAL_ENEMY].take_damage(1);
-			}
+			////Debug for dealing damage, (put the dragging of spell onto enemy here)
+			//if (AEInputCheckTriggered(AEVK_Q))
+			//{
+			//	enemies[rand() % TOTAL_ENEMY].take_damage(1);
+			//}
 		}//End of player turn logic
 
 		//Enemy turn; runs all the enemy functions and animations
