@@ -2,6 +2,7 @@
 
 #include "Main.h"
 #include "string"
+#include "vector"
 #include <AEVec2.h>
 
 //Particle object

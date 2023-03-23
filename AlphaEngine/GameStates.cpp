@@ -50,6 +50,7 @@ s32 pY{};
 bool alchemy_mode = 0;
 bool pause_mode = false;
 bool sub_menu = false;
+bool fullscreen = false;
 
 //Level Turn checks
 Turn turn;
@@ -227,6 +228,12 @@ void GameStateAlchemiceUpdate() {
 		pause_mode = !pause_mode;
 	}
 
+	if (AEInputCheckCurr(AEVK_LALT)) {
+		if (AEInputCheckTriggered(AEVK_RETURN)) {
+			fullscreen = !fullscreen;
+			AESysToggleFullScreen(fullscreen);
+		}
+	}
 	for (int i{}; i < ARRAYSIZE(pause_buttons); ++i) //for every iteration of pause menu buttons
 	{
 		if (aabbbutton(&pause_buttons[i], mouse_pos) &&
@@ -277,7 +284,7 @@ void GameStateAlchemiceUpdate() {
 	//TESTING PARTICLE SYSTEM
 	//Particle System Logic/ To spawn a particle each turn.
 	for (int i{}; i < TOTAL_ENEMY; i++) {
-		if (enemies[i].is_bleeding() == true) 
+		if (enemies[i].is_bleeding() == true)
 		{
 			create_particle(enemy_part_manager.particle_vector, enemy_part_manager.max_capacity, enemies[i].get_pos(), enemy_take_damage_particle);
 			enemies[i].update_bleed_timer();
@@ -609,7 +616,7 @@ void GameStateAlchemiceDraw() {
 	f32 middle = (end_turn_button.mid.x / (AEGetWindowWidth() / 2));
 	f32 offset = -((float)strlen(End_Turn_Text) / 2) / (AEGetWindowWidth() / FONT_SIZE);
 	AEGfxTextureSet(end_turn_box, 0.f, 0.f);
-	AEMtx33Trans(&translate, end_turn_button.mid.x, -end_turn_button.mid.y+end_offset);
+	AEMtx33Trans(&translate, end_turn_button.mid.x, -end_turn_button.mid.y + end_offset);
 	AEMtx33Rot(&rotate, 0);
 	AEMtx33Scale(&scale, end_scale.x, end_scale.y);
 	AEMtx33Concat(&transform, &rotate, &scale);
