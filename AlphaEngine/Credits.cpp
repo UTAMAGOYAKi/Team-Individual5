@@ -1,6 +1,5 @@
 #include "main.h"
 
-double click_offset;
 int linespace;
 double scroll_time_current;
 double scroll_time_max;
@@ -19,10 +18,11 @@ void CreditsUpdate()
 		scroll_time_current += g_dt * FRAMERATE;
 	}
 
-	click_offset -= g_dt;
 	if ((AEInputCheckTriggered(AEVK_LBUTTON) && click_offset <= 0) || scroll_time_current >= scroll_time_max) {
 		gGameStateNext = GS_MENU;
 	}
+
+	click_offset -= g_dt * FRAMERATE;
 }
 
 void CreditsDraw()

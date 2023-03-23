@@ -56,6 +56,14 @@ void GameStateManagerUpdate() {
 			GameStateFree	= MenuFree;
 			GameStateUnload = MenuUnload;
 			break;
+		case GS_TUTORIAL:
+			GameStateLoad	= TutorialLoad;
+			GameStateInit	= TutorialInit;
+			GameStateUpdate = TutorialUpdate;
+			GameStateDraw	= TutorialDraw;
+			GameStateFree	= TutorialFree;
+			GameStateUnload = TutorialUnload;
+			break;
 		case GS_CREDITS:
 			GameStateLoad	= CreditsLoad;
 			GameStateInit	= CreditsInit;

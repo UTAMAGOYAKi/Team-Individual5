@@ -10,6 +10,7 @@ enum
 	// special game state. Do not change
 	GS_RESTART,
 	GS_GAMEOVER,
+	GS_TUTORIAL,
 	GS_QUIT,
 	GS_CREDITS,
 	GS_NONE

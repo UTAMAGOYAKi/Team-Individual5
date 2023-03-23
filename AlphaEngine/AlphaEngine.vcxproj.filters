@@ -16,6 +16,7 @@
     <ClCompile Include="Spells.cpp" />
     <ClCompile Include="UI.cpp" />
     <ClCompile Include="GameOver.cpp" />
+    <ClCompile Include="Tutorial.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Battle_system.h" />
@@ -35,5 +36,6 @@
     <ClInclude Include="Spells.h" />
     <ClInclude Include="UI.h" />
     <ClInclude Include="GameOver.h" />
+    <ClInclude Include="Tutorial.h" />
   </ItemGroup>
 </Project>

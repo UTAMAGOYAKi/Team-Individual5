@@ -1,18 +1,18 @@
 #include "main.h"
 
-double click_offset_gameover;
 
 void GameOverLoad() {}
 
 void GameOverInit() {
-	click_offset_gameover = 0.1;
+	click_offset = 0.1;
 }
 
 void GameOverUpdate() {
-	click_offset_gameover -= g_dt;
-	if ((AEInputCheckTriggered(AEVK_LBUTTON) && click_offset_gameover <= 0)) {
+	if ((AEInputCheckTriggered(AEVK_LBUTTON) && click_offset <= 0)) {
 		gGameStateNext = GS_MENU;
 	}
+
+	click_offset -= g_dt * FRAMERATE;
 }
 
 void GameOverDraw() {

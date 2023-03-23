@@ -15,8 +15,9 @@
 #include "MainMenu.h"
 #include "Mesh.h"
 #include "Player.h"
-#include "Spells.h"
 #include "Particles.h"
+#include "Spells.h"
+#include "Tutorial.h"
 
 #include <iostream>
 #include <fstream>
@@ -27,7 +28,7 @@ extern const u32 FRAMERATE;
 extern s8 font;
 extern AEVec2 mouse_pos;
 extern f64 g_dt;
-
+extern double click_offset;
 
 #ifndef ARRAYSIZE
 #define ARRAYSIZE(x) (sizeof(x)/sizeof(x[0]))

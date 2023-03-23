@@ -2,7 +2,7 @@
 
 AEGfxVertexList* pMesh_MainMenu;
 AEGfxTexture *Menu_UI;
-aabb menu_buttons[4];
+aabb menu_buttons[5];
 
 void MenuLoad()
 {
@@ -32,7 +32,7 @@ void MenuInit()
 	for (int i{}; i < ARRAYSIZE(menu_buttons); ++i)
 	{
 		AEVec2 mid = { 0, -100.0f + 75.0f * i };
-		menu_buttons[i] = CreateAABB(mid, 128.0, 50.0);
+		menu_buttons[i] = CreateAABB(mid, 140.0, 50.0);
 	}
 
 }
@@ -55,10 +55,14 @@ void MenuUpdate()
 					break;
 
 				case 2:
-					gGameStateNext = GS_CREDITS;
+					gGameStateNext = GS_TUTORIAL;
 					break;
 
 				case 3:
+					gGameStateNext = GS_CREDITS;
+					break;
+
+				case 4:
 					gGameStateNext = GS_QUIT;
 					break;
 
@@ -85,9 +89,9 @@ void MenuDraw()
 	for (int i{}; i < ARRAYSIZE(menu_buttons); ++i)
 	{
 		AEGfxTextureSet(Menu_UI, 0, 0);
-		AEMtx33Trans(&translate, 0, -125.0f + (i * 75.0f));
+		AEMtx33Trans(&translate, 0, -200.0f + (i * 75.0f));
 		AEMtx33Rot(&rotate, 0);
-		AEMtx33Scale(&scale, 128, 100);
+		AEMtx33Scale(&scale, 140, 100);
 		AEMtx33Concat(&transform, &rotate, &scale);
 		AEMtx33Concat(&transform, &translate, &transform);
 		AEGfxSetTransform(transform.m);
@@ -95,7 +99,7 @@ void MenuDraw()
 	}
 
 	char strbuffer[100];
-	const char* words[4] = { "Play","Options", "Credits","Exit" };
+	const char* words[5] = { "Play","Options", "Tutorial" ,"Credits","Exit"};
 	memset(strbuffer, 0, 100 * sizeof(char));
 	AEGfxSetBlendMode(AE_GFX_BM_BLEND);
 	for (int i{}; i < ARRAYSIZE(menu_buttons); ++i)

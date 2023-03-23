@@ -19,6 +19,8 @@ AEMtx33 rotate = { 0 };
 AEMtx33 translate = { 0 };
 AEMtx33 transform = { 0 };
 
+float rotation_about_time{};
+
 //Crafting Table 
 
 
@@ -93,7 +95,7 @@ void draw_crafting_table( AEGfxVertexList* mesh, craftingtable& crafting_table, 
 	// Drawing textures
 	AEGfxTextureSet(table, crafting_table.get_dragdrop()->getcoord().mid.x, crafting_table.get_dragdrop()->getcoord().mid.y);
 	AEMtx33Trans(&translate, crafting_table.get_dragdrop()->getcoord().mid.x, crafting_table.get_dragdrop()->getcoord().mid.y);
-	AEMtx33Rot(&rotate, 0);
+	AEMtx33Rot(&rotate, rotation_about_time);
 	AEMtx33Scale(&scale, table_width_const, table_height_const);
 	AEMtx33Concat(&transform, &rotate, &scale);
 	AEMtx33Concat(&transform, &translate, &transform);
