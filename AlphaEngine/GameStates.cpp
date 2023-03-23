@@ -581,7 +581,7 @@ void GameStateAlchemiceDraw() {
 	}
 
 	//Particles Drawing
-	draw_particles(enemy_part_manager.particle_vector, particle_mesh, blast[0]);
+	draw_particles(enemy_part_manager.particle_vector, particle_mesh, mana_empty);
 
 	//Enemy Attack Animation
 	if (turn == enemy_turn) {

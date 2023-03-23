@@ -56,7 +56,7 @@ particle enemy_take_damage_particle(AEVec2 pos)
 {
     particle new_particle;
     //Contiune
-    new_particle.size = fmodf((float)rand(), 50.0f) + 30.0f;
+    new_particle.size = fmodf((float)rand(), 10.0f) + 8.0f;
     new_particle.lifespan = fmodf((float)rand(), .3f) + 0.2f;
     new_particle.position = pos;
 
