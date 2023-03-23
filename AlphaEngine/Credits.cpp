@@ -48,7 +48,7 @@ void CreditsDraw()
 	for (int i{}; i < ARRAYSIZE(Credits); ++i)
 	{
 		f32 middle = -(((float)strlen(Credits[i]) / 2) / (AEGetWindowWidth() / FONT_SIZE));
-		f32 textY = (0 - i*linespace + scroll_time_current)/((f32)AEGetWindowHeight()/2);
+		f32 textY = (float)((0 - i*linespace + scroll_time_current)/((f32)AEGetWindowHeight()/2));
 		AEMtx33Rot(&rotate, 0);
 		AEMtx33Scale(&scale, 300, 80);
 		AEMtx33Concat(&transform, &rotate, &scale);

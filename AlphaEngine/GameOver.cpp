@@ -27,7 +27,7 @@ void GameOverDraw() {
 	AEMtx33 translate{ 0 };
 	AEMtx33 transform{ 0 };
 
-	const char* Credits[] = { {"You DIED."}};
+	const char* Credits[] = { {"You DIED."} };
 
 	for (int i{}; i < ARRAYSIZE(Credits); ++i)
 	{
