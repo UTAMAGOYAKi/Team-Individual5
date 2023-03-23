@@ -257,18 +257,25 @@ void unload_spells(spell_book& spellbook) {
 void craftingtable::crafting_table_snap(spell_book& spellbook, spells spell_id)
 {
 	assert((spellbook.array_size <= max_spells) || (spellbook.array_size >= (size_t)first_spell));
-	spellbook.spell_array[(int)spell_id].spell_dragdrop->mousechange(false);
-	spellbook.spell_array[(int)spell_id].spell_dragdrop->moveto(this->table_dragdrop.getcoord());
+
 
 	//Only run when crafting table is empty
 	if (this->spell1_id == spells::INVALID_SPELL && two_spell_flag == false) {
+		spellbook.spell_array[(int)spell_id].spell_dragdrop->mousechange(false);
+		spellbook.spell_array[(int)spell_id].spell_dragdrop->moveto(this->table_dragdrop.getcoord());
 		spellbook.spell_array[(int)spell_id].spell_dragdrop->move(crafting_table_buffer, 0);
 		this->spell1_id = spell_id;
 	}
 	else if (this->spell1_id != spells::INVALID_SPELL && this->spell2_id == spells::INVALID_SPELL) {
+		spellbook.spell_array[(int)spell_id].spell_dragdrop->mousechange(false);
+		spellbook.spell_array[(int)spell_id].spell_dragdrop->moveto(this->table_dragdrop.getcoord());
+		spellbook.spell_array[(int)spell_id].spell_dragdrop->move(-crafting_table_buffer, 0);
 		two_spell_flag = true;
 		this->spell2_id = spell_id;
-		spellbook.spell_array[(int)spell_id].spell_dragdrop->move(-crafting_table_buffer, 0);
+	}
+	else {
+		spellbook.spell_array[(int)spell_id].spell_dragdrop->mousechange(false);
+		spellbook.spell_array[(int)spell_id].spell_dragdrop->resetaabb();
 	}
 }
 
