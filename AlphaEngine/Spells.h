@@ -49,9 +49,9 @@ const size_t max_spells = 9;
 //Set Spell Damage Values
 
 //Base Damage
-const int base_low = 2;
+const int base_low = 1;
 const int base_mid = 3;
-const int base_high = 5;
+const int base_high = 8;
 
 //AOE Damage
 const int aoe_low = 1;
