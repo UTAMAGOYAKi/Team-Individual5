@@ -364,11 +364,6 @@ void GameStateAlchemiceUpdate() {
 						std::cout << "RELEASE" << std::endl;
 						if (aabbbutton(crafting_table.get_dragdrop(), spellbook.spell_array[i].spell_dragdrop) == 1 && alchemice->mp > 0) {
 							crafting_table.crafting_table_snap(spellbook, spellbook.spell_array[i].id);
-							/*if (num of card > 2)
-							{
-								timer increases;
-							}
-							bool result = fn();*/
 						}
 						else {
 							if (crafting_table.get_spell1() == spellbook.spell_array[i].id) {
