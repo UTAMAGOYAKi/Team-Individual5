@@ -12,12 +12,12 @@ enum level_enum {
 };
 
 struct level_manager {
-	
 	level_enum curr_level = level_1;
 	std::string display_turn = "Player's Turn";
 	
 	void next_level() {
 		curr_level = static_cast<level_enum>(static_cast<int>(curr_level) + 1);
+		//curr_level = (curr_level == level_1) ? level_2 : (curr_level == leve)
 	}
 };
 

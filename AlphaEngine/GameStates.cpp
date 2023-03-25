@@ -92,6 +92,8 @@ int end_width = 80;
 int end_offset = FONT_SIZE / 3;
 
 void GameStateAlchemiceLoad() {
+	level.curr_level = level_1;
+
 	pMesh = 0;
 	// Informing the library that we're about to start adding triangles
 	AEGfxMeshStart();
