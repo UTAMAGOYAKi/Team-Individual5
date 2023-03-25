@@ -7,7 +7,7 @@ double scroll_time_max;
 void CreditsLoad() {}
 void CreditsInit() {
 	scroll_time_current = 0;
-	scroll_time_max = 40 * FRAMERATE;
+	scroll_time_max = 38 * FRAMERATE;
 	click_offset = 0.1;
 	linespace = 60;
 }
@@ -49,11 +49,6 @@ void CreditsDraw()
 	{
 		f32 middle = -(((float)strlen(Credits[i]) / 2) / (AEGetWindowWidth() / FONT_SIZE));
 		f32 textY = (float)((0 - i*linespace + scroll_time_current)/((f32)AEGetWindowHeight()/2));
-		AEMtx33Rot(&rotate, 0);
-		AEMtx33Scale(&scale, 300, 80);
-		AEMtx33Concat(&transform, &rotate, &scale);
-		AEMtx33Concat(&transform, &translate, &transform);
-		AEGfxSetTransform(transform.m);
 		AEGfxPrint(font, (s8*)Credits[i], middle, textY, 1, 1, 1, 1);
 	}
 }

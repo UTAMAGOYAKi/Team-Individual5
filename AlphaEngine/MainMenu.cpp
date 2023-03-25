@@ -1,11 +1,12 @@
 #include "main.h"
 
 AEGfxVertexList* pMesh_MainMenu;
-AEGfxTexture *Menu_UI;
+AEGfxTexture *Menu_BG, *Menu_UI;
 aabb menu_buttons[5];
 float const linespace_main = 75.0f;
-float const texture_start = -200.0f;
-float const text_start = 90.0f;
+float const texture_start = -250.0f;
+float const text_start = 40.0f;
+AEVec2 const main_button_size{ 140,50 };
 
 void MenuLoad()
 {
@@ -26,6 +27,7 @@ void MenuLoad()
 	// Saving the mesh (list of triangles) in pMesh_MainMenu
 	pMesh_MainMenu = AEGfxMeshEnd();
 
+	Menu_BG = AEGfxTextureLoad("Assets/MainMenu_Text.png");
 	Menu_UI = AEGfxTextureLoad("Assets/Menu_placeh.png");
 
 }
@@ -34,8 +36,8 @@ void MenuInit()
 {
 	for (int i{}; i < ARRAYSIZE(menu_buttons); ++i)
 	{
-		AEVec2 mid = { 0, -100.0f + 75.0f * i };
-		menu_buttons[i] = CreateAABB(mid, 140.0, 50.0);
+		AEVec2 mid = { 0, -text_start + linespace_main * i };
+		menu_buttons[i] = CreateAABB(mid, main_button_size.x, main_button_size.y);
 	}
 
 }
@@ -89,12 +91,21 @@ void MenuDraw()
 	AEMtx33 translate{ 0 };
 	AEMtx33 transform{ 0 };
 
+	AEGfxTextureSet(Menu_BG, 0, 0);
+	AEMtx33Trans(&translate, 0, 0);
+	AEMtx33Rot(&rotate, 0);
+	AEMtx33Scale(&scale, AEGetWindowWidth(), AEGetWindowHeight());
+	AEMtx33Concat(&transform, &rotate, &scale);
+	AEMtx33Concat(&transform, &translate, &transform);
+	AEGfxSetTransform(transform.m);
+	AEGfxMeshDraw(pMesh_MainMenu, AE_GFX_MDM_TRIANGLES);
+
 	for (int i{}; i < ARRAYSIZE(menu_buttons); ++i)
 	{
 		AEGfxTextureSet(Menu_UI, 0, 0);
 		AEMtx33Trans(&translate, 0, texture_start + (i * linespace_main));
 		AEMtx33Rot(&rotate, 0);
-		AEMtx33Scale(&scale, 140, 100);
+		AEMtx33Scale(&scale, main_button_size.x, main_button_size.y*2);
 		AEMtx33Concat(&transform, &rotate, &scale);
 		AEMtx33Concat(&transform, &translate, &transform);
 		AEGfxSetTransform(transform.m);
@@ -107,11 +118,6 @@ void MenuDraw()
 	{
 		f32 middle = -(((float)strlen(MainMenu[i]) / 2) / (AEGetWindowWidth() / FONT_SIZE));
 		f32 textY = (float)((text_start - i * linespace_main) / ((f32)AEGetWindowHeight() / 2));
-		AEMtx33Rot(&rotate, 0);
-		AEMtx33Scale(&scale, 300, 80);
-		AEMtx33Concat(&transform, &rotate, &scale);
-		AEMtx33Concat(&transform, &translate, &transform);
-		AEGfxSetTransform(transform.m);
 		AEGfxPrint(font, (s8*)MainMenu[i], middle, textY, 1, 0, 0, 0);
 	}
 
@@ -121,4 +127,5 @@ void MenuFree() {}
 void MenuUnload() {
 	AEGfxMeshFree(pMesh_MainMenu);
 	AEGfxTextureUnload(Menu_UI);
+	AEGfxTextureUnload(Menu_BG);
 }

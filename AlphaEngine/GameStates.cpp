@@ -306,6 +306,10 @@ void GameStateAlchemiceUpdate() {
 		//Checking for turns
 		if (turn == player_turn) {
 
+			if (AEInputCheckCurr(AEVK_F1)) {
+				alchemice->hp = 0;
+			}
+
 			if (AEInputCheckCurr(AEVK_LBUTTON))
 			{
 				for (int i = 0; i <= max_spells; i++)
@@ -469,8 +473,7 @@ void GameStateAlchemiceUpdate() {
 			}
 		}//End of enemy_turn logic
 	}//End of Main Gameplay Loop.
-	else if (!enemies_alive)
-	{
+	else if (!enemies_alive) {
 		level.next_level();
 		gGameStateNext = GS_RESTART;
 	}
