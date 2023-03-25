@@ -2,7 +2,10 @@
 
 AEGfxVertexList* pMesh_MainMenu;
 AEGfxTexture *Menu_UI;
-aabb menu_buttons[4];
+aabb menu_buttons[5];
+float const linespace_main = 75.0f;
+float const texture_start = -200.0f;
+float const text_start = 90.0f;
 
 void MenuLoad()
 {
@@ -32,7 +35,7 @@ void MenuInit()
 	for (int i{}; i < ARRAYSIZE(menu_buttons); ++i)
 	{
 		AEVec2 mid = { 0, -100.0f + 75.0f * i };
-		menu_buttons[i] = CreateAABB(mid, 128.0, 50.0);
+		menu_buttons[i] = CreateAABB(mid, 140.0, 50.0);
 	}
 
 }
@@ -55,10 +58,14 @@ void MenuUpdate()
 					break;
 
 				case 2:
-					gGameStateNext = GS_CREDITS;
+					gGameStateNext = GS_TUTORIAL;
 					break;
 
 				case 3:
+					gGameStateNext = GS_CREDITS;
+					break;
+
+				case 4:
 					gGameStateNext = GS_QUIT;
 					break;
 
@@ -85,23 +92,27 @@ void MenuDraw()
 	for (int i{}; i < ARRAYSIZE(menu_buttons); ++i)
 	{
 		AEGfxTextureSet(Menu_UI, 0, 0);
-		AEMtx33Trans(&translate, 0, -125.0f + (i * 75.0f));
+		AEMtx33Trans(&translate, 0, texture_start + (i * linespace_main));
 		AEMtx33Rot(&rotate, 0);
-		AEMtx33Scale(&scale, 128, 100);
+		AEMtx33Scale(&scale, 140, 100);
 		AEMtx33Concat(&transform, &rotate, &scale);
 		AEMtx33Concat(&transform, &translate, &transform);
 		AEGfxSetTransform(transform.m);
 		AEGfxMeshDraw(pMesh_MainMenu, AE_GFX_MDM_TRIANGLES);
 	}
 
-	char strbuffer[100];
-	const char* words[4] = { "Play","Options", "Credits","Exit" };
-	memset(strbuffer, 0, 100 * sizeof(char));
-	AEGfxSetBlendMode(AE_GFX_BM_BLEND);
-	for (int i{}; i < ARRAYSIZE(menu_buttons); ++i)
+	const char* MainMenu[] = { {"Play"}, {"Options"}, {"Tutorial"}, {"Credits"}, {"Exit"} };
+
+	for (int i{}; i < ARRAYSIZE(MainMenu); ++i)
 	{
-		sprintf_s(strbuffer, words[i]);
-		AEGfxPrint(font, strbuffer, -0.08f, 0.25f - i * 0.21f, 1.0f, 0.0f, 0.0f, 0.0f);
+		f32 middle = -(((float)strlen(MainMenu[i]) / 2) / (AEGetWindowWidth() / FONT_SIZE));
+		f32 textY = (float)((text_start - i * linespace_main) / ((f32)AEGetWindowHeight() / 2));
+		AEMtx33Rot(&rotate, 0);
+		AEMtx33Scale(&scale, 300, 80);
+		AEMtx33Concat(&transform, &rotate, &scale);
+		AEMtx33Concat(&transform, &translate, &transform);
+		AEGfxSetTransform(transform.m);
+		AEGfxPrint(font, (s8*)MainMenu[i], middle, textY, 1, 0, 0, 0);
 	}
 
 }

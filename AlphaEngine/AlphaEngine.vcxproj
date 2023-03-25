@@ -101,9 +101,9 @@ xcopy "$(SolutionDir)Extern\AlphaEngine_V3.08\lib\fmod.dll" "$(OutDir)" /s /r /y
     <ClCompile Include="Battle_system.cpp" />
     <ClCompile Include="Buttons.cpp" />
     <ClCompile Include="Credits.cpp" />
+    <ClCompile Include="GameOver.cpp" />
     <ClCompile Include="GameStates.cpp" />
     <ClCompile Include="GameStateManager.cpp" />
-    <ClCompile Include="Elements.cpp" />
     <ClCompile Include="LoadScreen.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="EnemyObject.cpp" />
@@ -112,12 +112,14 @@ xcopy "$(SolutionDir)Extern\AlphaEngine_V3.08\lib\fmod.dll" "$(OutDir)" /s /r /y
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Particles.cpp" />
     <ClCompile Include="Spells.cpp" />
+    <ClCompile Include="Tutorial.cpp" />
     <ClCompile Include="UI.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Battle_system.h" />
     <ClInclude Include="Buttons.h" />
     <ClInclude Include="Credits.h" />
+    <ClInclude Include="GameOver.h" />
     <ClInclude Include="GameStates.h" />
     <ClInclude Include="GameStateManager.h" />
     <ClInclude Include="EnemyObject.h" />
@@ -130,6 +132,7 @@ xcopy "$(SolutionDir)Extern\AlphaEngine_V3.08\lib\fmod.dll" "$(OutDir)" /s /r /y
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Spells.h" />
+    <ClInclude Include="Tutorial.h" />
     <ClInclude Include="UI.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

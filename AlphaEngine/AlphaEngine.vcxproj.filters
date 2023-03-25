@@ -1,110 +1,41 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="Battle_system.cpp">
-      <Filter>Source file</Filter>
-    </ClCompile>
-    <ClCompile Include="Buttons.cpp">
-      <Filter>Source file</Filter>
-    </ClCompile>
-    <ClCompile Include="EnemyObject.cpp">
-      <Filter>Source file</Filter>
-    </ClCompile>
-    <ClCompile Include="GameStates.cpp">
-      <Filter>Source file</Filter>
-    </ClCompile>
-    <ClCompile Include="GameStateManager.cpp">
-      <Filter>Source file</Filter>
-    </ClCompile>
-    <ClCompile Include="Elements.cpp">
-      <Filter>Source file</Filter>
-    </ClCompile>
-    <ClCompile Include="Main.cpp">
-      <Filter>Source file</Filter>
-    </ClCompile>
-    <ClCompile Include="Player.cpp">
-      <Filter>Source file</Filter>
-    </ClCompile>
-    <ClCompile Include="Spells.cpp">
-      <Filter>Source file</Filter>
-    </ClCompile>
-    <ClCompile Include="UI.cpp">
-      <Filter>Source file</Filter>
-    </ClCompile>
-    <ClCompile Include="Map.cpp">
-      <Filter>Source file</Filter>
-    </ClCompile>
-    <ClCompile Include="MainMenu.cpp">
-      <Filter>Source file</Filter>
-    </ClCompile>
-    <ClCompile Include="LoadScreen.cpp">
-      <Filter>Source file</Filter>
-    </ClCompile>
-<<<<<<< Updated upstream
-    <ClCompile Include="Credits.cpp">
-=======
-    <ClCompile Include="Particles.cpp">
->>>>>>> Stashed changes
-      <Filter>Source file</Filter>
-    </ClCompile>
+    <ClCompile Include="Battle_system.cpp" />
+    <ClCompile Include="Buttons.cpp" />
+    <ClCompile Include="Credits.cpp" />
+    <ClCompile Include="GameStates.cpp" />
+    <ClCompile Include="GameStateManager.cpp" />
+    <ClCompile Include="LoadScreen.cpp" />
+    <ClCompile Include="Main.cpp" />
+    <ClCompile Include="EnemyObject.cpp" />
+    <ClCompile Include="MainMenu.cpp" />
+    <ClCompile Include="Map.cpp" />
+    <ClCompile Include="Player.cpp" />
+    <ClCompile Include="Particles.cpp" />
+    <ClCompile Include="Spells.cpp" />
+    <ClCompile Include="UI.cpp" />
+    <ClCompile Include="GameOver.cpp" />
+    <ClCompile Include="Tutorial.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Battle_system.h">
-      <Filter>Header file</Filter>
-    </ClInclude>
-    <ClInclude Include="Buttons.h">
-      <Filter>Header file</Filter>
-    </ClInclude>
-    <ClInclude Include="EnemyObject.h">
-      <Filter>Header file</Filter>
-    </ClInclude>
-    <ClInclude Include="GameStates.h">
-      <Filter>Header file</Filter>
-    </ClInclude>
-    <ClInclude Include="GameStateManager.h">
-      <Filter>Header file</Filter>
-    </ClInclude>
-    <ClInclude Include="Elements.h">
-      <Filter>Header file</Filter>
-    </ClInclude>
-    <ClInclude Include="Main.h">
-      <Filter>Header file</Filter>
-    </ClInclude>
-    <ClInclude Include="Mesh.h">
-      <Filter>Header file</Filter>
-    </ClInclude>
-    <ClInclude Include="Player.h">
-      <Filter>Header file</Filter>
-    </ClInclude>
-    <ClInclude Include="Spells.h">
-      <Filter>Header file</Filter>
-    </ClInclude>
-    <ClInclude Include="UI.h">
-      <Filter>Header file</Filter>
-    </ClInclude>
-    <ClInclude Include="Map.h">
-      <Filter>Header file</Filter>
-    </ClInclude>
-    <ClInclude Include="MainMenu.h">
-      <Filter>Header file</Filter>
-    </ClInclude>
-    <ClInclude Include="LoadScreen.h">
-      <Filter>Header file</Filter>
-    </ClInclude>
-<<<<<<< Updated upstream
-    <ClInclude Include="Credits.h">
-=======
-    <ClInclude Include="Particles.h">
->>>>>>> Stashed changes
-      <Filter>Header file</Filter>
-    </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <Filter Include="Source file">
-      <UniqueIdentifier>{851a9ece-cc8d-4f16-b5db-c018f4088197}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header file">
-      <UniqueIdentifier>{f7f85252-cae8-4f31-b464-d6e09a9c5831}</UniqueIdentifier>
-    </Filter>
+    <ClInclude Include="Battle_system.h" />
+    <ClInclude Include="Buttons.h" />
+    <ClInclude Include="Credits.h" />
+    <ClInclude Include="GameStates.h" />
+    <ClInclude Include="GameStateManager.h" />
+    <ClInclude Include="EnemyObject.h" />
+    <ClInclude Include="Elements.h" />
+    <ClInclude Include="Particles.h" />
+    <ClInclude Include="LoadScreen.h" />
+    <ClInclude Include="Main.h" />
+    <ClInclude Include="MainMenu.h" />
+    <ClInclude Include="Map.h" />
+    <ClInclude Include="Mesh.h" />
+    <ClInclude Include="Player.h" />
+    <ClInclude Include="Spells.h" />
+    <ClInclude Include="UI.h" />
+    <ClInclude Include="GameOver.h" />
+    <ClInclude Include="Tutorial.h" />
   </ItemGroup>
 </Project>

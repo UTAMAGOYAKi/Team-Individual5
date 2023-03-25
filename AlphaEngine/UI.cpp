@@ -19,6 +19,8 @@ AEMtx33 rotate = { 0 };
 AEMtx33 translate = { 0 };
 AEMtx33 transform = { 0 };
 
+float rotation_about_time{};
+
 //Crafting Table 
 
 
@@ -93,7 +95,7 @@ void draw_crafting_table( AEGfxVertexList* mesh, craftingtable& crafting_table, 
 	// Drawing textures
 	AEGfxTextureSet(table, crafting_table.get_dragdrop()->getcoord().mid.x, crafting_table.get_dragdrop()->getcoord().mid.y);
 	AEMtx33Trans(&translate, crafting_table.get_dragdrop()->getcoord().mid.x, crafting_table.get_dragdrop()->getcoord().mid.y);
-	AEMtx33Rot(&rotate, 0);
+	AEMtx33Rot(&rotate, rotation_about_time);
 	AEMtx33Scale(&scale, table_width_const, table_height_const);
 	AEMtx33Concat(&transform, &rotate, &scale);
 	AEMtx33Concat(&transform, &translate, &transform);
@@ -121,7 +123,7 @@ void sub_menu_draw(AEGfxTexture* sub_menu, spell_book& spells, AEGfxVertexList* 
 
 	for (int i = 0; i < max_spells-1; i++) 
 	{
-		if (spells.spell_array[i].unlocked == true) 
+		if (spells.spell_array[i].unlocked == true && spells.spell_array[i].tier > tier3_last)
 		{
 			AEGfxTextureSet(spells.spell_array[i].texture, 0, 0);
 			AEMtx33Trans(&translate,(f32) - 590, (f32)300 - i * 50);
@@ -131,7 +133,7 @@ void sub_menu_draw(AEGfxTexture* sub_menu, spell_book& spells, AEGfxVertexList* 
 			AEMtx33Concat(&transform, &translate, &transform);
 			AEGfxSetTransform(transform.m);
 			AEGfxMeshDraw(mesh, AE_GFX_MDM_TRIANGLES);
-			AEGfxPrint(font, (s8*)"+", ((-540.0f / 640.0f) * 1.0f), (((300 - i * 50) / 360.0f) * 1.0f-0.025f), 1, 1.0f, 1.0f, 1.0f);
+			AEGfxPrint(font, (s8*)"=", ((-540.0f / 640.0f) * 1.0f), (((300 - i * 50) / 360.0f) * 1.0f-0.025f), 1, 1.0f, 1.0f, 1.0f);
 		}
 	}
 }

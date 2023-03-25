@@ -25,14 +25,15 @@ enum enemy_life_state_enum
 class Enemy
 {
 private:
-    std::string name;
-    int max_hp;
-    int hp;
-    int atk;
-    AEVec2 pos;
-    AEGfxTexture* texture;
+    std::string name{};
+    int max_hp{};
+    int hp{};
+    int atk{};
+    Elements element_type{};
+    AEVec2 pos{};
+    AEGfxTexture* texture{};
     int size = 1; //pixel size for AABB
-    aabb enemy_aabb;
+    aabb enemy_aabb{};
 
     //________________________ENEMY COMBAT SETTINGS____________________________
     bool life_state{alive}; //Uses enemy_life_state: either dead or alive
@@ -54,10 +55,10 @@ private:
     f64 bleed_timer{bleed_time};
     
 public:
-    Enemy(){};
+    Enemy() {};
 
-    Enemy(enemy_types type, AEGfxTexture* input_texture, std::string input_name, int input_hp, int input_atk) 
-        : texture{ input_texture }, life_state{alive} , name{input_name}, atk{input_atk}, max_hp{input_hp}
+    Enemy(enemy_types type, AEGfxTexture* input_texture, std::string input_name, int input_hp, int input_atk, Elements element) 
+        : texture{ input_texture }, life_state{alive} , name{input_name}, max_hp{ input_hp }, atk{input_atk}, element_type{element}
     {
         hp = max_hp; //Initialized hp will be same as max_hp;
     };
@@ -82,7 +83,8 @@ public:
     
     //Used to make changes to damage classes.
     void set_position_and_aabb(AEVec2 input_pos);
-    void take_damage(int val);
+    void take_damage(int val, Elements element);
+    int elemental_damage_calculator(Elements enemy_type, Elements input_element);
     void set_frame_num(int);        //Changes the frame number for the update animation
     void update_animation(f64 dt); //Updates the frame number to draw the correct frame.
     void switch_finish_attack();      //switches true to false or false to true;
@@ -94,6 +96,5 @@ public:
 };
 
 //Particles
-//void update_particle();
 
 #endif // ENEMY_H

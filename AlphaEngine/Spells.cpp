@@ -19,7 +19,7 @@ spell_book init_all_spells()
 	std::cout << "spell_g MemLoc: " << umbral_tendrils << std::endl;
 	inferno_blast = AEGfxTextureLoad("Assets/Card-Sprite-Inferno-Blast.png");
 	std::cout << "fire MemLoc: " << inferno_blast << std::endl;
-	toxic_deluge = AEGfxTextureLoad("Assets/not_posion.png");
+	toxic_deluge = AEGfxTextureLoad("Assets/Card-Sprite-Toxic-Deluge.png");
 	std::cout << "poison MemLoc: " << toxic_deluge << std::endl;
 	maelstrom_surge = AEGfxTextureLoad("Assets/Card-Sprite-Maelstrom.png");
 	std::cout << "shame MemLoc: " << maelstrom_surge << std::endl;
@@ -87,6 +87,81 @@ void Spell::reset_spell()
 	spell_dragdrop = new dragdrop;
 }
 
+bool draw_spell_combination(spell_book& spellbook, spells id1, spells id2) {
+	assert(spellbook.array_size <= max_spells);
+	assert(spellbook.array_size >= (size_t)first_spell);
+	if (spellbook.spell_array[(int)id1].tier == tier3_last && spellbook.spell_array[(int)id2].tier == tier3_last) {
+		// combine tier 3 spells
+		if (spellbook.spell_array[(int)id1].element == FIRE && spellbook.spell_array[(int)id2].element == SHADOW ||
+			spellbook.spell_array[(int)id2].element == FIRE && spellbook.spell_array[(int)id1].element == SHADOW) {
+			// combine inferno blast and umbral tendrils to create flame burst
+			if (spellbook.spell_array[(int)spells::FLAME_BURST].unlocked) {
+				return false;
+			}
+			spellbook.spell_array[(int)spells::FLAME_BURST].unlocked = true;
+			return true;
+		}
+		else if (spellbook.spell_array[(int)id1].element == POISON && spellbook.spell_array[(int)id2].element == SHADOW ||
+			spellbook.spell_array[(int)id2].element == POISON && spellbook.spell_array[(int)id1].element == SHADOW) {
+			// combine toxic deluge and umbral tendrils to create venomous bite
+			if (spellbook.spell_array[(int)spells::VENOMOUS_BITE].unlocked) {
+				return false;
+			}
+
+			spellbook.spell_array[(int)spells::VENOMOUS_BITE].unlocked = true;
+			return true;
+		}
+		else if (spellbook.spell_array[(int)id1].element == WATER && spellbook.spell_array[(int)id2].element == SHADOW ||
+			spellbook.spell_array[(int)id2].element == WATER && spellbook.spell_array[(int)id1].element == SHADOW) {
+			// combine maelstrom surge and umbral tendrils to create shadow cloak
+
+			if (spellbook.spell_array[(int)spells::SHADOW_CLOAK].unlocked) {
+				return false;
+			}
+
+			spellbook.spell_array[(int)spells::SHADOW_CLOAK].unlocked = true;;
+			return true;
+
+		}
+		else {
+			// invalid combination
+			return false;
+		}
+	}
+	else if (spellbook.spell_array[(int)id1].tier == tier2_last && spellbook.spell_array[(int)id2].tier == tier2_last) {
+		// combine tier 2 spells
+		if (spellbook.spell_array[(int)id1].element == POISON && spellbook.spell_array[(int)id2].element == SHADOW ||
+			spellbook.spell_array[(int)id2].element == POISON && spellbook.spell_array[(int)id1].element == SHADOW) {
+			// combine shadow cloak and venemous bite to create rat swarm
+
+			if (spellbook.spell_array[(int)spells::RAT_SWARM].unlocked) {
+				return false;
+			}
+
+			spellbook.spell_array[(int)spells::RAT_SWARM].unlocked = true;
+			return true;
+		}
+		if (spellbook.spell_array[(int)id1].element == FIRE && spellbook.spell_array[(int)id2].element == POISON ||
+			spellbook.spell_array[(int)id2].element == FIRE && spellbook.spell_array[(int)id1].element == POISON) {
+			// combine flame burst and venemous bite to create bubonic blaze
+
+			if (spellbook.spell_array[(int)spells::BUBONIC_BLAZE].unlocked) {
+				return false;
+			}
+
+			spellbook.spell_array[(int)spells::BUBONIC_BLAZE].unlocked = true;
+			return true;
+		}
+		else {
+			// invalid combination
+			return false;
+		}
+	}
+	else {
+		// invalid combination
+		return false;
+	}
+}
 
 bool combine_spells(spell_book& spellbook, spells id1, spells id2) {
 	assert(spellbook.array_size <= max_spells);
@@ -182,18 +257,25 @@ void unload_spells(spell_book& spellbook) {
 void craftingtable::crafting_table_snap(spell_book& spellbook, spells spell_id)
 {
 	assert((spellbook.array_size <= max_spells) || (spellbook.array_size >= (size_t)first_spell));
-	spellbook.spell_array[(int)spell_id].spell_dragdrop->mousechange(false);
-	spellbook.spell_array[(int)spell_id].spell_dragdrop->moveto(this->table_dragdrop.getcoord());
+
 
 	//Only run when crafting table is empty
 	if (this->spell1_id == spells::INVALID_SPELL && two_spell_flag == false) {
+		spellbook.spell_array[(int)spell_id].spell_dragdrop->mousechange(false);
+		spellbook.spell_array[(int)spell_id].spell_dragdrop->moveto(this->table_dragdrop.getcoord());
 		spellbook.spell_array[(int)spell_id].spell_dragdrop->move(crafting_table_buffer, 0);
 		this->spell1_id = spell_id;
 	}
 	else if (this->spell1_id != spells::INVALID_SPELL && this->spell2_id == spells::INVALID_SPELL) {
+		spellbook.spell_array[(int)spell_id].spell_dragdrop->mousechange(false);
+		spellbook.spell_array[(int)spell_id].spell_dragdrop->moveto(this->table_dragdrop.getcoord());
+		spellbook.spell_array[(int)spell_id].spell_dragdrop->move(-crafting_table_buffer, 0);
 		two_spell_flag = true;
 		this->spell2_id = spell_id;
-		spellbook.spell_array[(int)spell_id].spell_dragdrop->move(-crafting_table_buffer, 0);
+	}
+	else {
+		spellbook.spell_array[(int)spell_id].spell_dragdrop->mousechange(false);
+		spellbook.spell_array[(int)spell_id].spell_dragdrop->resetaabb();
 	}
 }
 
@@ -247,6 +329,25 @@ void draw_all_spells(spell_book& spellbook, AEGfxVertexList* pMesh)
 			AEGfxMeshDraw(pMesh, AE_GFX_MDM_TRIANGLES);
 		}
 	}
+}
+
+void draw_spell_combination(spell_book& spellbook, AEGfxVertexList* pMesh)
+{
+	//////////////////////////for (int i = 0; i < max_spells - 1; i++)
+	//////////////////////////{
+	//////////////////////////	if (spells.spell_array[i].unlocked == true && spells.spell_array[i].tier > tier3_last)
+	//////////////////////////	{
+	//////////////////////////		AEGfxTextureSet(spells.spell_array[i].texture, 0, 0);
+	//////////////////////////		AEMtx33Trans(&translate, (f32)-590, (f32)300 - i * 50);
+	//////////////////////////		AEMtx33Rot(&rotate, 0);
+	//////////////////////////		AEMtx33Scale(&scale, 50, 50);
+	//////////////////////////		AEMtx33Concat(&transform, &rotate, &scale);
+	//////////////////////////		AEMtx33Concat(&transform, &translate, &transform);
+	//////////////////////////		AEGfxSetTransform(transform.m);
+	//////////////////////////		AEGfxpMeshDraw(pMesh, AE_GFX_MDM_TRIANGLES);
+	//////////////////////////		AEGfxPrint(font, (s8*)"+", ((-540.0f / 640.0f) * 1.0f), (((300 - i * 50) / 360.0f) * 1.0f - 0.025f), 1, 1.0f, 1.0f, 1.0f);
+	//////////////////////////	}
+	//////////////////////////}
 }
 
 craftingtable::craftingtable()

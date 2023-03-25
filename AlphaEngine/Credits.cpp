@@ -1,6 +1,5 @@
 #include "main.h"
 
-double click_offset;
 int linespace;
 double scroll_time_current;
 double scroll_time_max;
@@ -19,10 +18,11 @@ void CreditsUpdate()
 		scroll_time_current += g_dt * FRAMERATE;
 	}
 
-	click_offset -= g_dt;
 	if ((AEInputCheckTriggered(AEVK_LBUTTON) && click_offset <= 0) || scroll_time_current >= scroll_time_max) {
 		gGameStateNext = GS_MENU;
 	}
+
+	click_offset -= g_dt * FRAMERATE;
 }
 
 void CreditsDraw()
@@ -48,7 +48,7 @@ void CreditsDraw()
 	for (int i{}; i < ARRAYSIZE(Credits); ++i)
 	{
 		f32 middle = -(((float)strlen(Credits[i]) / 2) / (AEGetWindowWidth() / FONT_SIZE));
-		f32 textY = (0 - i*linespace + scroll_time_current)/((f32)AEGetWindowHeight()/2);
+		f32 textY = (float)((0 - i*linespace + scroll_time_current)/((f32)AEGetWindowHeight()/2));
 		AEMtx33Rot(&rotate, 0);
 		AEMtx33Scale(&scale, 300, 80);
 		AEMtx33Concat(&transform, &rotate, &scale);

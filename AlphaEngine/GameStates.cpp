@@ -50,6 +50,7 @@ s32 pY{};
 bool alchemy_mode = 0;
 bool pause_mode = false;
 bool sub_menu = false;
+bool fullscreen = false;
 
 //Level Turn checks
 Turn turn;
@@ -189,36 +190,36 @@ void GameStateAlchemiceInit() {
 	if (level.curr_level == level_1)
 	{
 
-		enemies[0] = Enemy(big_rat, big_rat_texture, "Big Rat", 1, 3);
+		enemies[0] = Enemy(big_rat, rat, "Rat", 4, 1, FIRE);
 		enemies[0].set_position_and_aabb(enemy_position[0]);
-
-		enemies[1] = Enemy(base_rat, rat, "Rat", 1, 2);
+		
+		enemies[1] = Enemy(base_rat, rat, "Rat", 4, 1, WATER);
 		enemies[1].set_position_and_aabb(enemy_position[1]);
 
-		enemies[2] = Enemy(base_rat, rat, "Rat", 1, 2);
+		enemies[2] = Enemy(base_rat, rat, "Rat", 4, 1, WATER);
 		enemies[2].set_position_and_aabb(enemy_position[2]);
 
 	}
 	else if (level.curr_level == level_2)
 	{
-		enemies[0] = Enemy(big_rat, big_rat_texture, "Level:2 Rat", 1, 3);
+		enemies[0] = Enemy(big_rat, big_rat_texture, "Big Rat", 8, 3, INVALID_ELEMENT);
 		enemies[0].set_position_and_aabb(enemy_position[0]);
 
-		enemies[1] = Enemy(base_rat, rat, "Rat", 1, 2);
+		enemies[1] = Enemy(base_rat, rat, "Rat", 4, 2, INVALID_ELEMENT);
 		enemies[1].set_position_and_aabb(enemy_position[1]);
 
-		enemies[2] = Enemy(base_rat, rat, "Rat", 1, 2);
+		enemies[2] = Enemy(base_rat, rat, "Rat", 4, 2, INVALID_ELEMENT);
 		enemies[2].set_position_and_aabb(enemy_position[2]);
 	}
 	else if (level.curr_level == level_3)
 	{
-		enemies[0] = Enemy(big_rat, big_rat_texture, "Level:3 Rat", 1, 3);
+		enemies[0] = Enemy(big_rat, big_rat_texture, "Big Rat", 10, 3, INVALID_ELEMENT);
 		enemies[0].set_position_and_aabb(enemy_position[0]);
 
-		enemies[1] = Enemy(base_rat, rat, "Rat", 1, 2);
+		enemies[1] = Enemy(base_rat, big_rat_texture, "Big Rat", 8, 2, INVALID_ELEMENT);
 		enemies[1].set_position_and_aabb(enemy_position[1]);
 
-		enemies[2] = Enemy(base_rat, rat, "Rat", 1, 2);
+		enemies[2] = Enemy(base_rat, big_rat_texture, "Big Rat", 8, 2, INVALID_ELEMENT);
 		enemies[2].set_position_and_aabb(enemy_position[2]);
 	}
 }
@@ -245,6 +246,12 @@ void GameStateAlchemiceUpdate() {
 		pause_mode = !pause_mode;
 	}
 
+	if (AEInputCheckCurr(AEVK_LALT)) {
+		if (AEInputCheckTriggered(AEVK_RETURN)) {
+			fullscreen = !fullscreen;
+			AESysToggleFullScreen(fullscreen);
+		}
+	}
 	for (int i{}; i < ARRAYSIZE(pause_buttons); ++i) //for every iteration of pause menu buttons
 	{
 		if (aabbbutton(&pause_buttons[i], mouse_pos) &&
@@ -295,7 +302,7 @@ void GameStateAlchemiceUpdate() {
 	//TESTING PARTICLE SYSTEM
 	//Particle System Logic/ To spawn a particle each turn.
 	for (int i{}; i < TOTAL_ENEMY; i++) {
-		if (enemies[i].is_bleeding() == true) 
+		if (enemies[i].is_bleeding() == true)
 		{
 			create_particle(enemy_part_manager.particle_vector, enemy_part_manager.max_capacity, enemies[i].get_pos(), enemy_take_damage_particle);
 			enemies[i].update_bleed_timer();
@@ -358,7 +365,7 @@ void GameStateAlchemiceUpdate() {
 						{
 							if (enemies[j].is_alive() && alchemice->mp > 0)
 							{
-								enemies[j].take_damage(spellbook.spell_array[i].base_damage);
+								enemies[j].take_damage(spellbook.spell_array[i].base_damage,static_cast<Elements>(spellbook.spell_array[i].element));
 								enemies[j].set_bleeding(true);
 								alchemice->mp -= 1;
 								if (spellbook.spell_array[i].id > tier3_last) {
@@ -367,7 +374,6 @@ void GameStateAlchemiceUpdate() {
 								}
 							}
 						}
-
 					}
 
 
@@ -376,11 +382,6 @@ void GameStateAlchemiceUpdate() {
 						std::cout << "RELEASE" << std::endl;
 						if (aabbbutton(crafting_table.get_dragdrop(), spellbook.spell_array[i].spell_dragdrop) == 1 && alchemice->mp > 0) {
 							crafting_table.crafting_table_snap(spellbook, spellbook.spell_array[i].id);
-							/*if (num of card > 2)
-							{
-								timer increases;
-							}
-							bool result = fn();*/
 						}
 						else {
 							if (crafting_table.get_spell1() == spellbook.spell_array[i].id) {
@@ -391,7 +392,6 @@ void GameStateAlchemiceUpdate() {
 						}
 					}
 				}
-
 			}
 
 			if (crafting_table.get_flag() == true) {
@@ -425,11 +425,11 @@ void GameStateAlchemiceUpdate() {
 				sub_menu = !sub_menu;
 			}
 
-			//Debug for dealing damage, (put the dragging of spell onto enemy here)
-			if (AEInputCheckTriggered(AEVK_Q))
-			{
-				enemies[rand() % TOTAL_ENEMY].take_damage(1);
-			}
+			////Debug for dealing damage, (put the dragging of spell onto enemy here)
+			//if (AEInputCheckTriggered(AEVK_Q))
+			//{
+			//	enemies[rand() % TOTAL_ENEMY].take_damage(1);
+			//}
 		}//End of player turn logic
 
 		//Enemy turn; runs all the enemy functions and animations
@@ -491,6 +491,9 @@ void GameStateAlchemiceUpdate() {
 	{
 		level.next_level();
 		gGameStateNext = GS_RESTART;
+	}
+	else if (alchemice->hp <= 0) {
+		gGameStateNext = GS_GAMEOVER;
 	}
 }
 
@@ -596,7 +599,7 @@ void GameStateAlchemiceDraw() {
 	}
 
 	//Particles Drawing
-	draw_particles(enemy_part_manager.particle_vector, particle_mesh, blast[0]);
+	draw_particles(enemy_part_manager.particle_vector, particle_mesh, mana_empty);
 
 	//Enemy Attack Animation
 	if (turn == enemy_turn) {
@@ -626,7 +629,7 @@ void GameStateAlchemiceDraw() {
 	f32 middle = (end_turn_button.mid.x / (AEGetWindowWidth() / 2));
 	f32 offset = -((float)strlen(End_Turn_Text) / 2) / (AEGetWindowWidth() / FONT_SIZE);
 	AEGfxTextureSet(end_turn_box, 0.f, 0.f);
-	AEMtx33Trans(&translate, end_turn_button.mid.x, -end_turn_button.mid.y+end_offset);
+	AEMtx33Trans(&translate, end_turn_button.mid.x, -end_turn_button.mid.y + end_offset);
 	AEMtx33Rot(&rotate, 0);
 	AEMtx33Scale(&scale, end_scale.x, end_scale.y);
 	AEMtx33Concat(&transform, &rotate, &scale);
