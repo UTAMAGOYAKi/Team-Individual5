@@ -1,8 +1,8 @@
 #include "main.h"
 
 AEGfxVertexList* pMesh_Tutorialscreen;
-AEGfxTexture* Tutorial_screen1, * Tutorial_screen2, ** pointer_to_texutre;
-int TutorialPage;
+AEGfxTexture *Tutorial_screen[2], **pointer_to_texutre;
+size_t TutorialPage, TotalPages;
 
 void TutorialLoad() {
 	pMesh_Tutorialscreen = 0;
@@ -17,21 +17,21 @@ void TutorialLoad() {
 		0.5f, -0.5f, 0x00000000, 1.0f, 1.0f);
 	pMesh_Tutorialscreen = AEGfxMeshEnd();
 
-	Tutorial_screen1 = AEGfxTextureLoad("Assets/tutorial1.png");
-	Tutorial_screen2 = AEGfxTextureLoad("Assets/tutorial2.png");
+	Tutorial_screen[0] = AEGfxTextureLoad("Assets/tutorial1.png");
+	Tutorial_screen[1] = AEGfxTextureLoad("Assets/tutorial2.png");
 }
 
 void TutorialInit() {
 	click_offset = 0.1;
 	TutorialPage = 2;
-	pointer_to_texutre = &Tutorial_screen1;
+	pointer_to_texutre = &Tutorial_screen[0];
 }
 void TutorialUpdate() {
 	
 	if (click_offset <= 0 && AEInputCheckTriggered(AEVK_LBUTTON)) {
 		TutorialPage -= 1;
 		click_offset = 0.1;
-		pointer_to_texutre = &Tutorial_screen2;
+		pointer_to_texutre = &Tutorial_screen[1];
 	}
 	if (TutorialPage <= 0) {
 		gGameStateNext = GS_MENU;
@@ -54,7 +54,7 @@ void TutorialDraw() {
 	AEGfxTextureSet(*pointer_to_texutre, 0, 0);
 	AEMtx33Trans(&translate, 0, 0);
 	AEMtx33Rot(&rotate, 0);
-	AEMtx33Scale(&scale, AEGetWindowWidth(), AEGetWindowHeight());
+	AEMtx33Scale(&scale, (f32)AEGetWindowWidth(), (f32)AEGetWindowHeight());
 	AEMtx33Concat(&transform, &rotate, &scale);
 	AEMtx33Concat(&transform, &translate, &transform);
 	AEGfxSetTransform(transform.m);
@@ -64,6 +64,6 @@ void TutorialDraw() {
 void TutorialFree() {}
 void TutorialUnload() {
 	AEGfxMeshFree(pMesh_Tutorialscreen);
-	AEGfxTextureUnload(Tutorial_screen1);
-	AEGfxTextureUnload(Tutorial_screen2);
+	AEGfxTextureUnload(Tutorial_screen[0]);
+	AEGfxTextureUnload(Tutorial_screen[1]);
 }
