@@ -55,11 +55,21 @@ f64 Enemy::get_bleed_timer() {
     return bleed_timer;
 };
 
+AEVec2 Enemy::get_element_icon_pos() {
+    return element_icon_pos;
+}
+
+Elements Enemy::get_element() {
+    return element_type;
+}
+
+
 //Actions
 void Enemy::set_position_and_aabb(AEVec2 input_pos) {
     pos.x = input_pos.x;
     pos.y = input_pos.y;
     enemy_aabb = CreateAABB(input_pos, size, size);
+    element_icon_pos = {pos.x - 20.0f , pos.y + 60.0f};
 }
 
 int Enemy::elemental_damage_calculator(Elements enemy_type, Elements input_element) 
@@ -155,5 +165,20 @@ void Enemy::set_bleeding(bool logic) {
     bleeding = logic;
 }
 
-//Bleeding
+//Loading and unloading of textures
+//void load_enemy_texture() 
+//{
+//    fire_icon = AEGfxTextureLoad("Assets/fire_icon.png");
+//    water_icon = AEGfxTextureLoad("Assets/water_icon.png");
+//    shadow_icon = AEGfxTextureLoad("Assets/shadow_icon.png");
+//    poison_icon = AEGfxTextureLoad("Assets/poison_icon.png");
+//}
+//
+//void unload_enemy_texture() 
+//{
+//    AEGfxTextureUnload(fire_icon);
+//    AEGfxTextureUnload(water_icon);
+//    AEGfxTextureUnload(shadow_icon);
+//    AEGfxTextureUnload(poison_icon);
+//}
 

@@ -10,6 +10,9 @@
 #define TOTAL_ENEMY 3
 const int animation_time = 1;
 
+//Element Icons
+//AEGfxTexture * fire_icon, * water_icon, * poison_icon, * shadow_icon;
+
 enum enemy_types 
 {
     base_rat,
@@ -30,7 +33,11 @@ private:
     int hp{};
     int atk{};
     Elements element_type{};
+
+    //______________________ENEMY PLACEMENTS_________________________
     AEVec2 pos{};
+    AEVec2 element_icon_pos{};
+    AEGfxTexture* icon_texture{};
     AEGfxTexture* texture{};
     int size = 1; //pixel size for AABB
     aabb enemy_aabb{};
@@ -61,6 +68,8 @@ public:
         : texture{ input_texture }, life_state{alive} , name{input_name}, max_hp{ input_hp }, atk{input_atk}, element_type{element}
     {
         hp = max_hp; //Initialized hp will be same as max_hp;
+
+        //Sets icon
     };
 
     ~Enemy() {};//deconstructor
@@ -80,6 +89,8 @@ public:
     bool get_finish_attack();
     bool is_bleeding();
     f64 get_bleed_timer();
+    AEVec2 get_element_icon_pos();
+    Elements get_element();
     
     //Used to make changes to damage classes.
     void set_position_and_aabb(AEVec2 input_pos);
@@ -93,8 +104,11 @@ public:
     void set_bleeding(bool logic);
     void update_bleed_timer();
     void reset_bleed_time();
+
+    //Loading and unloading
 };
 
-//Particles
+//void load_enemy_texture();
+//void unload_enemy_texture();
 
 #endif // ENEMY_H

@@ -38,7 +38,7 @@ craftingtable crafting_table;
 //Loading of Mesh and Texture
 AEGfxVertexList* pMesh;
 AEGfxTexture* chara{}, * rat{}, * big_rat_texture{}, * spell_g{}, * pause_box{}, * sub{}, * crafting_test{}, * bg{}, * end_turn_box{}, * mana_full{}, * mana_empty{}, * Menu_ui,
-* base_mid_pipe, * base_cap_pipe, * unlocked_spell_slot;
+* base_mid_pipe, * base_cap_pipe, * unlocked_spell_slot, * fire_icon, * water_icon, * poison_icon, * shadow_icon;
 
 aabb* chara_pos;
 aabb* Enemy_pos_1;
@@ -148,6 +148,13 @@ void GameStateAlchemiceLoad() {
 	blast[1] = AEGfxTextureLoad("Assets/blast2.png");
 	blast[2] = AEGfxTextureLoad("Assets/blast3.png");
 	blast[3] = AEGfxTextureLoad("Assets/blast4.png");
+
+	//Icon Loading
+	//load_enemy_texture();
+	fire_icon = AEGfxTextureLoad("Assets/fire_icon.png");
+	water_icon = AEGfxTextureLoad("Assets/water_icon.png");
+	shadow_icon = AEGfxTextureLoad("Assets/shadow_icon.png");
+	poison_icon = AEGfxTextureLoad("Assets/poison_icon.png");
 
 	PositionInit();
 	alchemice = create_player();
@@ -582,6 +589,60 @@ void GameStateAlchemiceDraw() {
 			AEGfxMeshDraw(pMesh, AE_GFX_MDM_TRIANGLES);
 
 			enemy_info(enemies[i], font, pMesh);
+
+			//Drawing Icon
+			//Might cause memory leak
+
+			switch (enemies[i].get_element())
+			{
+			case FIRE:
+				AEGfxTextureSet(fire_icon, 0, 0);
+				AEMtx33Trans(&translate, (f32)(enemies[i].get_element_icon_pos().x), (f32)(enemies[i].get_element_icon_pos().y));
+				AEMtx33Rot(&rotate, 0);
+				AEMtx33Scale(&scale, 25.f, 25.f);
+				AEMtx33Concat(&transform, &rotate, &scale);
+				AEMtx33Concat(&transform, &translate, &transform);
+				AEGfxSetTransform(transform.m);
+				AEGfxMeshDraw(pMesh, AE_GFX_MDM_TRIANGLES);
+			case WATER:
+				AEGfxTextureSet(water_icon, 0, 0);
+				AEMtx33Trans(&translate, (f32)(enemies[i].get_element_icon_pos().x), (f32)(enemies[i].get_element_icon_pos().y));
+				AEMtx33Rot(&rotate, 0);
+				AEMtx33Scale(&scale, 25.f, 25.f);
+				AEMtx33Concat(&transform, &rotate, &scale);
+				AEMtx33Concat(&transform, &translate, &transform);
+				AEGfxSetTransform(transform.m);
+				AEGfxMeshDraw(pMesh, AE_GFX_MDM_TRIANGLES);
+			case POISON:
+				AEGfxTextureSet(poison_icon, 0, 0);
+				AEMtx33Trans(&translate, (f32)(enemies[i].get_element_icon_pos().x), (f32)(enemies[i].get_element_icon_pos().y));
+				AEMtx33Rot(&rotate, 0);
+				AEMtx33Scale(&scale, 25.f, 25.f);
+				AEMtx33Concat(&transform, &rotate, &scale);
+				AEMtx33Concat(&transform, &translate, &transform);
+				AEGfxSetTransform(transform.m);
+				AEGfxMeshDraw(pMesh, AE_GFX_MDM_TRIANGLES);
+			case SHADOW:
+				AEGfxTextureSet(shadow_icon, 0, 0);
+				AEMtx33Trans(&translate, (f32)(enemies[i].get_element_icon_pos().x), (f32)(enemies[i].get_element_icon_pos().y));
+				AEMtx33Rot(&rotate, 0);
+				AEMtx33Scale(&scale, 25.f, 25.f);
+				AEMtx33Concat(&transform, &rotate, &scale);
+				AEMtx33Concat(&transform, &translate, &transform);
+				AEGfxSetTransform(transform.m);
+				AEGfxMeshDraw(pMesh, AE_GFX_MDM_TRIANGLES);
+			default:
+				AEGfxTextureSet(water_icon, 0, 0);
+				AEMtx33Trans(&translate, (f32)(enemies[i].get_element_icon_pos().x), (f32)(enemies[i].get_element_icon_pos().y));
+				AEMtx33Rot(&rotate, 0);
+				AEMtx33Scale(&scale, 25.f, 25.f);
+				AEMtx33Concat(&transform, &rotate, &scale);
+				AEMtx33Concat(&transform, &translate, &transform);
+				AEGfxSetTransform(transform.m);
+				AEGfxMeshDraw(pMesh, AE_GFX_MDM_TRIANGLES);
+
+			}
+
 		}
 	}
 
@@ -701,6 +762,10 @@ void GameStateAlchemiceUnload() {
 	AEGfxTextureUnload(base_mid_pipe);
 	AEGfxTextureUnload(base_cap_pipe);
 	AEGfxTextureUnload(unlocked_spell_slot);
+
+	//Elemental Icons
+	//unload_enemy_texture();
+
 
 	AEGfxMeshFree(particle_mesh);
 	AEGfxMeshFree(pMesh);
