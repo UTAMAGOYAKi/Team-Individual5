@@ -76,6 +76,7 @@ int bleeding_enemy_no{ 0 };
 //Particles
 AEGfxVertexList* particle_mesh;
 particle_manager enemy_part_manager(50);
+particle_manager crafting_part_manager(50);
 
 //Button AABB
 aabb pause_buttons[3];
@@ -287,6 +288,7 @@ void GameStateAlchemiceUpdate() {
 
 	//Particles Update
 	update_particle(enemy_part_manager.particle_vector);
+	update_particle(crafting_part_manager.particle_vector);
 	rotation_about_time += (f32)g_dt * FRAMERATE;
 
 	//MAIN GAMEPLAY LOOP
@@ -561,7 +563,7 @@ void GameStateAlchemiceDraw() {
 	draw_unlocked_spell_slots(pMesh, spellbook,unlocked_spell_slot);
 
 	//Crafting Table
-	draw_crafting_table(pMesh, crafting_table, crafting_test);
+	draw_crafting_table(pMesh, crafting_table, crafting_part_manager, enemy_take_damage_particle, crafting_test);
 
 	//Card Drawing
 	draw_all_spells(spellbook, pMesh);
@@ -585,6 +587,7 @@ void GameStateAlchemiceDraw() {
 
 	//Particles Drawing
 	draw_particles(enemy_part_manager.particle_vector, particle_mesh, mana_empty);
+	draw_particles(crafting_part_manager.particle_vector, particle_mesh, blast[2]);
 
 	//Enemy Attack Animation
 	if (turn == enemy_turn) {

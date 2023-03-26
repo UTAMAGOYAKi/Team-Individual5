@@ -97,8 +97,15 @@ void name_bar(std::string name, AEVec2 place, s8 font)
 	//remeber to check for centering offset %
 }
 
-void draw_crafting_table(AEGfxVertexList* mesh, craftingtable& crafting_table, AEGfxTexture* table) {	 
+void draw_crafting_table(AEGfxVertexList* mesh, craftingtable& crafting_table,particle_manager& particle_manager, particle (*callback)(AEVec2 pos), AEGfxTexture* table)
+{
 	rotation_about_time = (timer <= 0) ? 0 : rotation_about_time;
+
+	
+	AEVec2 table_coord = { crafting_table.get_dragdrop()->getcoord().mid.x, crafting_table.get_dragdrop()->getcoord().mid.y };
+	// Creating particles
+	if (timer != rotation_about_time)
+	create_particle(particle_manager.particle_vector, particle_manager.max_capacity, table_coord, enemy_take_damage_particle);
 	// Drawing textures
 	AEGfxTextureSet(table, crafting_table.get_dragdrop()->getcoord().mid.x, crafting_table.get_dragdrop()->getcoord().mid.y);
 	AEMtx33Trans(&translate, crafting_table.get_dragdrop()->getcoord().mid.x, crafting_table.get_dragdrop()->getcoord().mid.y);

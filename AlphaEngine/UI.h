@@ -20,7 +20,7 @@ void enemy_info(Enemy enemy, s8 font, AEGfxVertexList* mesh);
 
 void sub_menu_draw(AEGfxTexture* sub_menu, spell_book& spells, AEGfxVertexList* mesh, s8 font);
 
-void draw_crafting_table( AEGfxVertexList* mesh, craftingtable& crafting_table, AEGfxTexture* table = nullptr );
+void draw_crafting_table( AEGfxVertexList* mesh, craftingtable& crafting_table, particle_manager& particle_manager, particle(*callback)(AEVec2 pos), AEGfxTexture* table = nullptr);
 
 void draw_base_spell_slots(AEGfxVertexList* mesh, AEGfxTexture * base_spell, AEGfxTexture * base_spell_cap);
 
