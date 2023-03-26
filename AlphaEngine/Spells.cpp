@@ -11,7 +11,7 @@ f64 timer{};
 
 spell_book init_all_spells()
 {
-	AEVec2 cards;
+
 	spell_book x;
 
 	//Currently Textures are used as placeholder, ignore the meaning
@@ -53,16 +53,14 @@ spell_book init_all_spells()
 		Spell(spells::INVALID_SPELL,spells::INVALID_SPELL , INVALID_ELEMENT, "",nullptr,false, NULL, NULL, NULL,NULL),
 	};
 
-	x.spell_array = spellbook;
 
-	AEVec2Zero(&cards);
-	for (int i = 0; i <= max_spells; i++) {
-		//Set >tier 3 midpoint coords to 0
-		if (x.spell_array[i].tier > tier3_last) {
-			x.spell_array[i].spell_dragdrop->moveto(cards);
-			x.spell_array[i].spell_dragdrop->changeref((int)x.spell_array[i].id);
-		}
-	}
+	// Set all spells coords
+
+	//Starting coords for all spells
+	//AEVec2Zero(&cards);
+
+
+	x.spell_array = spellbook;
 
 	return x;
 }
@@ -72,12 +70,37 @@ Spell::~Spell()
 	delete spell_dragdrop;
 }
 
-void Spell::init_spells_draw(Spell& spell, AEVec2 coords)
+void init_spells_draw(spell_book& spellbook)
 {
-	//Set spells boundingbox
-	spell.spell_dragdrop->changeaabb(spell.card_width, spell.card_height);
-	//Move spells to coords be drawn
-	spell.spell_dragdrop->moveto(coords);
+	assert(spellbook.array_size <= max_spells);
+	assert(spellbook.array_size >= (size_t)first_spell);
+	AEVec2 cards;
+	AEVec2Set(&cards, (f32)-(AEGetWindowWidth() / 2) + 80, -((f32)-(AEGetWindowHeight() / 2) + 82));
+
+	//All Tier 3 spells
+	for (int i = (int)first_spell; i <= (int)tier3_last; ++i) {
+		spellbook.spell_array[i].spell_dragdrop->moveto(cards);
+		spellbook.spell_array[i].spell_dragdrop->set_origin();
+		cards.x += card_width_const + spell_buffer;
+	}
+	cards.x += spell_tier_buffer;
+	//All Tier 2 spells
+	for (int i = (int)tier3_last + 1; i <= (int)tier2_last; ++i) {
+		spellbook.spell_array[i].spell_dragdrop->moveto(cards);
+		spellbook.spell_array[i].spell_dragdrop->set_origin();
+		cards.x += card_width_const + spell_buffer;
+	}
+	cards.x += spell_tier_buffer;
+	//All Tier 1 spells
+	for (int i = (int)tier2_last + 1; i <= (int)tier1_last; ++i) {
+		spellbook.spell_array[i].spell_dragdrop->moveto(cards);
+		spellbook.spell_array[i].spell_dragdrop->set_origin();
+		cards.x += card_width_const + spell_buffer;
+	}
+
+	for (int i = 0; i <= spellbook.array_size - 1; i++) {
+		spellbook.spell_array[i].spell_dragdrop->changeaabb(card_width_const, card_height_const);
+	}
 }
 
 void Spell::reset_spell()
@@ -257,8 +280,6 @@ void unload_spells(spell_book& spellbook) {
 void craftingtable::crafting_table_snap(spell_book& spellbook, spells spell_id)
 {
 	assert((spellbook.array_size <= max_spells) || (spellbook.array_size >= (size_t)first_spell));
-
-
 	//Only run when crafting table is empty
 	if (this->spell1_id == spells::INVALID_SPELL && two_spell_flag == false) {
 		spellbook.spell_array[(int)spell_id].spell_dragdrop->mousechange(false);
@@ -273,7 +294,11 @@ void craftingtable::crafting_table_snap(spell_book& spellbook, spells spell_id)
 		two_spell_flag = true;
 		this->spell2_id = spell_id;
 	}
-	else {
+	else if (spell_id == this->spell1_id && two_spell_flag == false) {
+		spellbook.spell_array[(int)spell_id].spell_dragdrop->mousechange(true);
+	}
+	else
+	{
 		spellbook.spell_array[(int)spell_id].spell_dragdrop->mousechange(false);
 		spellbook.spell_array[(int)spell_id].spell_dragdrop->resetaabb();
 	}
@@ -282,27 +307,35 @@ void craftingtable::crafting_table_snap(spell_book& spellbook, spells spell_id)
 int craftingtable::crafting_table_update(spell_book& spellbook)
 {
 	timer += g_dt;
+
 	if (timer >= crafting_time_buffer) {
-		if (combine_spells(spellbook, this->spell1_id, this->spell2_id) == true) {
-			spellbook.spell_array[(int)this->spell1_id].spell_dragdrop->resetaabb();
-			spellbook.spell_array[(int)this->spell2_id].spell_dragdrop->resetaabb();
-			this->spell1_id = spells::INVALID_SPELL;
-			this->spell2_id = spells::INVALID_SPELL;
-			timer = NULL;
-			two_spell_flag = false;
-			return 2;
+		if (this->spell1_id >= first_spell && this->spell1_id <= last_spell &&
+			this->spell2_id >= first_spell && this->spell2_id <= last_spell) {
+			if (combine_spells(spellbook, this->spell1_id, this->spell2_id)) {
+				spellbook.spell_array[(int)this->spell1_id].spell_dragdrop->resetaabb();
+				spellbook.spell_array[(int)this->spell2_id].spell_dragdrop->resetaabb();
+				if (spellbook.spell_array[(int)this->spell1_id].tier > tier3_last)
+					spellbook.spell_array[(int)this->spell1_id].unlocked = false;
+				if (spellbook.spell_array[(int)this->spell2_id].tier > tier3_last)
+					spellbook.spell_array[(int)this->spell2_id].unlocked = false;
+				this->spell1_id = spells::INVALID_SPELL;
+				this->spell2_id = spells::INVALID_SPELL;
+				timer = NULL;
+				two_spell_flag = false;
+				return 2;
+			}
+			else {
+				spellbook.spell_array[(int)this->spell1_id].spell_dragdrop->resetaabb();
+				spellbook.spell_array[(int)this->spell2_id].spell_dragdrop->resetaabb();
+				this->spell1_id = spells::INVALID_SPELL;
+				this->spell2_id = spells::INVALID_SPELL;
+				timer = NULL;
+				two_spell_flag = false;
+				return 3;
+			}
 		}
-		else {
-			spellbook.spell_array[(int)this->spell1_id].spell_dragdrop->resetaabb();
-			spellbook.spell_array[(int)this->spell2_id].spell_dragdrop->resetaabb();
-			this->spell1_id = spells::INVALID_SPELL;
-			this->spell2_id = spells::INVALID_SPELL;
-			timer = NULL;
-			two_spell_flag = false;
-			return 3;
-		}
+		return 1;
 	}
-	return 1;
 }
 
 dragdrop* craftingtable::get_dragdrop()
