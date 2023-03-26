@@ -92,7 +92,7 @@ int end_width = 80;
 int end_offset = FONT_SIZE / 3;
 
 
-AEAudio wow;
+AEAudio wow , gun;
 
 AEAudioGroup pain;
 
@@ -155,6 +155,7 @@ void GameStateAlchemiceLoad() {
 	spellbook = init_all_spells();
 
 	wow = AEAudioLoadMusic("Assets/toot.mp3");
+	gun = AEAudioLoadMusic("Assets/gun.wav");
 
 }
 
@@ -467,7 +468,14 @@ void GameStateAlchemiceUpdate() {
 					{
 
 						alchemice->hp -= enemies[s_enemy_turn].get_atk();
+						if (enemies[s_enemy_turn].get_max_hp() >= 8)
+						{
+						}
+						else
+						{
+							AEAudioPlay(gun, pain, 1.0f, 1.0f, 1);
 
+						}
 						enemies[s_enemy_turn].switch_finish_attack();
 						s_enemy_turn++;
 						//is_enemy_turn = false;
@@ -477,6 +485,7 @@ void GameStateAlchemiceUpdate() {
 						//To update animations(it will auto switch)
 						if (enemies[s_enemy_turn].is_alive())
 						{
+							
 							//update_animation will switch enemy object's animation to be finished when it ends.
 							enemies[s_enemy_turn].update_animation(g_dt);
 						}
