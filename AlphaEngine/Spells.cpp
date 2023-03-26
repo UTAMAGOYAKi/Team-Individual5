@@ -332,8 +332,8 @@ int craftingtable::crafting_table_update(spell_book& spellbook)
 				return 3;
 			}
 		}
-		return 1;
 	}
+	return 1;
 }
 
 dragdrop* craftingtable::get_dragdrop()
