@@ -17,7 +17,6 @@ struct level_manager {
 	
 	void next_level() {
 		curr_level = static_cast<level_enum>(static_cast<int>(curr_level) + 1);
-		//curr_level = (curr_level == level_1) ? level_2 : (curr_level == leve)
 	}
 };
 

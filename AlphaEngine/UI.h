@@ -26,6 +26,8 @@ void draw_base_spell_slots(AEGfxVertexList* mesh, AEGfxTexture * base_spell, AEG
 
 void draw_unlocked_spell_slots(AEGfxVertexList* mesh, spell_book & spellbook, AEGfxTexture* unlocked_spell = nullptr);
 
+extern float rotation_about_time;
+
 #endif //UI_h
 
 

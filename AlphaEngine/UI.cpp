@@ -57,7 +57,7 @@ void enemy_info(Enemy ref, s8 font, AEGfxVertexList* mesh)
 		AEGfxTextureSet(NULL, 0, 0);
 		AEGfxSetTintColor(1.0f, .0f, .0f, 1.0f);
 		AEMtx33Trans(&translate, ref.get_pos().x - (hp_bar_enemy_width * (((float)ref.get_max_hp() - (float)ref.get_hp()) / (float)ref.get_max_hp()) * 10) / 2, ref.get_pos().y - name_offset);
-		AEMtx33Rot(&rotate, PI);
+		AEMtx33Rot(&rotate, 0);
 		AEMtx33Scale(&scale, hp_bar_enemy_width * ((float)ref.get_hp() / (float)ref.get_max_hp()) * 10, hp_bar_height);
 
 		AEMtx33Concat(&transform, &rotate, &scale);
@@ -81,7 +81,7 @@ void player_hp_bar(player ref, AEVec2 pos, AEGfxVertexList* mesh)
 	AEGfxTextureSet(NULL, 0, 0);
 	AEGfxSetTintColor(1.0f, .0f, .0f, 1.0f);
 	AEMtx33Trans(&translate, pos.x - (hp_bar_enemy_width * (((float)ref.max_hp - (float)ref.hp) / (float)ref.max_hp) * 10) / 2, pos.y - name_offset);
-	AEMtx33Rot(&rotate, PI);
+	AEMtx33Rot(&rotate, 0);
 	AEMtx33Scale(&scale, hp_bar_enemy_width * ((float)ref.hp / (float)ref.max_hp) * 10, hp_bar_height);
 	AEMtx33Concat(&transform, &rotate, &scale);
 	AEMtx33Concat(&transform, &translate, &transform);
@@ -97,7 +97,8 @@ void name_bar(std::string name, AEVec2 place, s8 font)
 	//remeber to check for centering offset %
 }
 
-void draw_crafting_table(AEGfxVertexList* mesh, craftingtable& crafting_table, AEGfxTexture* table) {
+void draw_crafting_table(AEGfxVertexList* mesh, craftingtable& crafting_table, AEGfxTexture* table) {	 
+	rotation_about_time = (timer <= 0) ? 0 : rotation_about_time;
 	// Drawing textures
 	AEGfxTextureSet(table, crafting_table.get_dragdrop()->getcoord().mid.x, crafting_table.get_dragdrop()->getcoord().mid.y);
 	AEMtx33Trans(&translate, crafting_table.get_dragdrop()->getcoord().mid.x, crafting_table.get_dragdrop()->getcoord().mid.y);

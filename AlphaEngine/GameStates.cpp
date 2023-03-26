@@ -57,6 +57,7 @@ bool fullscreen = false;
 //Level Turn checks
 Turn turn;
 level_manager level;
+bool transiton = false;
 
 //GameObject Creations
 player* alchemice{};
@@ -286,6 +287,7 @@ void GameStateAlchemiceUpdate() {
 
 	//Particles Update
 	update_particle(enemy_part_manager.particle_vector);
+	rotation_about_time += (f32)g_dt * FRAMERATE;
 
 	//MAIN GAMEPLAY LOOP
 	//Check if players or enemies or all enemies are all dead
@@ -293,9 +295,9 @@ void GameStateAlchemiceUpdate() {
 		//Checking for turns
 		if (turn == player_turn) {
 
-			if (AEInputCheckCurr(AEVK_F1)) {
+			/*if (AEInputCheckCurr(AEVK_F1)) {
 				alchemice->hp = 0;
-			}
+			}*/
 
 			if (AEInputCheckCurr(AEVK_LBUTTON))
 			{
