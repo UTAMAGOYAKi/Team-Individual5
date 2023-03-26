@@ -32,11 +32,13 @@ spell_book spellbook;
 AEVec2 cards;
 //Crafting table for magic
 craftingtable crafting_table;
+
 //---------------------------------------------------------------------------------
 
 //Loading of Mesh and Texture
 AEGfxVertexList* pMesh;
-AEGfxTexture* chara{}, * rat{}, * big_rat_texture{}, * spell_g{}, * pause_box{}, * sub{}, * crafting_test{}, * bg{}, * end_turn_box{}, * mana_full{}, * mana_empty{}, * Menu_ui;
+AEGfxTexture* chara{}, * rat{}, * big_rat_texture{}, * spell_g{}, * pause_box{}, * sub{}, * crafting_test{}, * bg{}, * end_turn_box{}, * mana_full{}, * mana_empty{}, * Menu_ui,
+* base_mid_pipe, * base_cap_pipe, * unlocked_spell_slot;
 
 aabb* chara_pos;
 aabb* Enemy_pos_1;
@@ -134,6 +136,10 @@ void GameStateAlchemiceLoad() {
 	mana_full = AEGfxTextureLoad("Assets/mana_full.png");
 	mana_empty = AEGfxTextureLoad("Assets/mana_empty.png");
 
+	base_mid_pipe = AEGfxTextureLoad("Assets/midpipe.png");
+	base_cap_pipe = AEGfxTextureLoad("Assets/side_ui.png");
+	unlocked_spell_slot = AEGfxTextureLoad("Assets/box_ui.png");
+
 	blast[0] = AEGfxTextureLoad("Assets/blast1.png");
 	blast[1] = AEGfxTextureLoad("Assets/blast2.png");
 	blast[2] = AEGfxTextureLoad("Assets/blast3.png");
@@ -155,24 +161,27 @@ void GameStateAlchemiceInit() {
 	pause_mode = false;
 
 	//Draw all spells that are active at beginning
-	AEVec2Zero(&cards);
-	AEVec2Set(&cards, (f32)-(AEGetWindowWidth() / 2) + 100, -((f32)-(AEGetWindowHeight() / 2) + 100));
+	//AEVec2Zero(&cards);
+	//AEVec2Set(&cards, (f32)-(AEGetWindowWidth() / 2) +80, -((f32)-(AEGetWindowHeight() / 2) + 75));
 
+	init_spells_draw(spellbook);
 	for (int i = 0; i <= spellbook.array_size; i++) {
 		if (spellbook.spell_array[i].unlocked == true) {
-			if (spellbook.spell_array[i].spell_dragdrop->getcoord().mid.x == 0 && spellbook.spell_array[i].spell_dragdrop->getcoord().mid.y == 0) {
-				spellbook.spell_array[i].init_spells_draw(spellbook.spell_array[i], cards);
-				cards.x += 100;
-				spellbook.spell_array[i].spell_dragdrop->set_origin();
-			}
+			std::cout << spellbook.spell_array[i].spell_name << spellbook.spell_array[i].spell_dragdrop->getcoord().mid.x << spellbook.spell_array[i].spell_dragdrop->getcoord().mid.y << std::endl;
+			//spellbook.spell_array[i].init_spells_draw(spellbook.spell_array[i], cards);
+			//cards.x += card_width_const+buffer;
+			//spellbook.spell_array[i].spell_dragdrop->set_origin();
+
 		}
 	}
+
+
 	//creates the button from top to bottom top most button [0]
 	for (int i = 0; i < sizeof(pause_buttons) / sizeof(pause_buttons[0]); ++i) {
 		pause_buttons[i] = CreateAABB({ 0,(f32)-pause_start_y + i * pause_space_y }, pause_length, pause_width);
 	}
 
-	cards.x = -50;
+	//cards.x = -50;
 	end_turn_button = CreateAABB(end_mid, end_length, end_width);
 
 	//Most stuff are only needed to be init in level 1;
@@ -181,7 +190,7 @@ void GameStateAlchemiceInit() {
 
 		enemies[0] = Enemy(big_rat, rat, "Rat", 4, 1, FIRE);
 		enemies[0].set_position_and_aabb(enemy_position[0]);
-		
+
 		enemies[1] = Enemy(base_rat, rat, "Rat", 4, 1, WATER);
 		enemies[1].set_position_and_aabb(enemy_position[1]);
 
@@ -256,16 +265,15 @@ void GameStateAlchemiceUpdate() {
 	}
 
 	//Draw spells player unlocks / combines
-	for (int i = 4; i <= max_spells; i++) {
-		if (spellbook.spell_array[i].unlocked == true) {
-			//Checks if 2 spells are colliding for combination
-			if (spellbook.spell_array[i].spell_dragdrop->getcoord().mid.x == 0 && spellbook.spell_array[i].spell_dragdrop->getcoord().mid.y == 0) {
-				spellbook.spell_array[i].init_spells_draw(spellbook.spell_array[i], cards);
-				cards.x += 110;
-				spellbook.spell_array[i].spell_dragdrop->set_origin();
-			}
-		}
-	}
+	//for (int i = 4; i <= max_spells; i++) {
+	//	if (spellbook.spell_array[i].unlocked == true) {
+	//		//Checks if 2 spells are colliding for combination
+	//		if (spellbook.spell_array[i].spell_dragdrop->getcoord().mid.x == 0 && spellbook.spell_array[i].spell_dragdrop->getcoord().mid.y == 0) {
+	//			//spellbook.spell_array[i].init_spells_draw(spellbook.spell_array[i], cards);
+	//			//spellbook.spell_array[i].spell_dragdrop->set_origin();
+	//		}
+	//	}
+	//}
 
 	//Mouse Debug
 	if (AEInputCheckTriggered(AEVK_E))
@@ -310,19 +318,21 @@ void GameStateAlchemiceUpdate() {
 			{
 				for (int i = 0; i <= max_spells; i++)
 				{
-					if (aabbbutton(spellbook.spell_array[i].spell_dragdrop, mouse_pos) && crafting_table.get_spell1() != spellbook.spell_array[i].id
-						&& crafting_table.get_spell2() != spellbook.spell_array[i].id)
-					{
-						for (int i = 0; i <= max_spells; i++)
+					if (spellbook.spell_array[i].unlocked == true) {
+						if (aabbbutton(spellbook.spell_array[i].spell_dragdrop, mouse_pos) && crafting_table.get_spell1() != spellbook.spell_array[i].id
+							&& crafting_table.get_spell2() != spellbook.spell_array[i].id)
 						{
-							if (spellbook.spell_array[i].spell_dragdrop->getmouse())
+							for (int i = 0; i <= max_spells; i++)
 							{
-								drag = false;
+								if (spellbook.spell_array[i].spell_dragdrop->getmouse())
+								{
+									drag = false;
+								}
 							}
-						}
-						if (drag)
-						{
-							spellbook.spell_array[i].spell_dragdrop->mousechange(true);
+							if (drag)
+							{
+								spellbook.spell_array[i].spell_dragdrop->mousechange(true);
+							}
 						}
 					}
 				}
@@ -347,12 +357,12 @@ void GameStateAlchemiceUpdate() {
 						{
 							if (enemies[j].is_alive() && alchemice->mp > 0)
 							{
-								enemies[j].take_damage(spellbook.spell_array[i].base_damage,static_cast<Elements>(spellbook.spell_array[i].element));
+								enemies[j].take_damage(spellbook.spell_array[i].base_damage, static_cast<Elements>(spellbook.spell_array[i].element));
 								enemies[j].set_bleeding(true);
 								alchemice->mp -= 1;
 								if (spellbook.spell_array[i].id > tier3_last) {
-									spellbook.spell_array[i].reset_spell();
-									cards.x -= 110;
+									spellbook.spell_array[i].unlocked = false;
+									/*cards.x -= 110;*/
 								}
 							}
 						}
@@ -557,6 +567,10 @@ void GameStateAlchemiceDraw() {
 		}
 	}
 
+	//Spell Slot Drawing
+	draw_base_spell_slots(pMesh, base_mid_pipe, base_cap_pipe);
+	draw_unlocked_spell_slots(pMesh, spellbook,unlocked_spell_slot);
+
 	//Crafting Table
 	draw_crafting_table(pMesh, crafting_table, crafting_test);
 
@@ -690,6 +704,11 @@ void GameStateAlchemiceUnload() {
 	AEGfxTextureUnload(blast[1]);
 	AEGfxTextureUnload(blast[2]);
 	AEGfxTextureUnload(blast[3]);
+
+	//Spell Slot 
+	AEGfxTextureUnload(base_mid_pipe);
+	AEGfxTextureUnload(base_cap_pipe);
+	AEGfxTextureUnload(unlocked_spell_slot);
 
 	AEGfxMeshFree(particle_mesh);
 	AEGfxMeshFree(pMesh);
