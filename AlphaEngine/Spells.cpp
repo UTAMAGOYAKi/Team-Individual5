@@ -4,9 +4,7 @@
 AEGfxTexture* toxic_deluge{}, * inferno_blast{}, * umbral_tendrils{}, * maelstrom_surge{}, * venemous_bite{},
 * shadow_cloak{}, * flame_burst{}, * rat_swarm{}, * bubonic_blaze{};
 
-// crafting table timer for combination spell delay
 f64 timer{};
-
 
 
 spell_book init_all_spells()

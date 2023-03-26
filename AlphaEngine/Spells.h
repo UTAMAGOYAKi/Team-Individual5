@@ -84,6 +84,10 @@ const int spell_buffer = 20;
 //Spell X coord tier buffer
 const int spell_tier_buffer = 40;
 
+// crafting table timer for combination spell delay
+extern f64 timer;
+
+
 //A single spell object
 struct Spell {
 	Spell(spells id, spells tier, int element, std::string spell_name, AEGfxTexture* texture, bool unlocked, int base_damage,
