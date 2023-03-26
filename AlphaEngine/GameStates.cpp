@@ -297,24 +297,26 @@ void GameStateAlchemiceUpdate() {
 				{
 					if (spellbook.spell_array[i].unlocked == true) {
 						if (aabbbutton(spellbook.spell_array[i].spell_dragdrop, mouse_pos) 
-							&& crafting_table.get_spell2() != spellbook.spell_array[i].id
-							&& crafting_table.get_spell1() != spellbook.spell_array[i].id)
+							&& !crafting_table.get_flag())
 						{
 							for (int i = 0; i <= max_spells; i++)
 							{
-								if (spellbook.spell_array[i].spell_dragdrop->getmouse()) //?????? Whats getmouse??
+								if (spellbook.spell_array[i].spell_dragdrop->getmouse()) 
 								{
 									drag = false;
 								}
 							}
 							if (drag)
 							{
-								spellbook.spell_array[i].spell_dragdrop->mousechange(true); //??
+								spellbook.spell_array[i].spell_dragdrop->mousechange(true); 
 							}
 						}
 					}
 				}
 			}
+
+			/*crafting_table.get_spell2() != spellbook.spell_array[i].id
+				&& crafting_table.get_spell1() != spellbook.spell_array[i].id*/
 			for (int i = 0; i <= max_spells; i++)
 			{
 				if (spellbook.spell_array[i].spell_dragdrop->getmouse())
