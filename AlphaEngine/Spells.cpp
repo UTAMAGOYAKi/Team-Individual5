@@ -280,8 +280,6 @@ void unload_spells(spell_book& spellbook) {
 void craftingtable::crafting_table_snap(spell_book& spellbook, spells spell_id)
 {
 	assert((spellbook.array_size <= max_spells) || (spellbook.array_size >= (size_t)first_spell));
-
-
 	//Only run when crafting table is empty
 	if (this->spell1_id == spells::INVALID_SPELL && two_spell_flag == false) {
 		spellbook.spell_array[(int)spell_id].spell_dragdrop->mousechange(false);
@@ -296,7 +294,11 @@ void craftingtable::crafting_table_snap(spell_book& spellbook, spells spell_id)
 		two_spell_flag = true;
 		this->spell2_id = spell_id;
 	}
-	else {
+	else if (spell_id == this->spell1_id && two_spell_flag == false) {
+		spellbook.spell_array[(int)spell_id].spell_dragdrop->mousechange(true);
+	}
+	else
+	{
 		spellbook.spell_array[(int)spell_id].spell_dragdrop->mousechange(false);
 		spellbook.spell_array[(int)spell_id].spell_dragdrop->resetaabb();
 	}

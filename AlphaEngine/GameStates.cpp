@@ -154,24 +154,13 @@ void GameStateAlchemiceLoad() {
 // Initialization of your own variables go here
 void GameStateAlchemiceInit() {
 
-
-	//Contains all spells in a dynamically allocated array
-
 	turn = player_turn;
 	pause_mode = false;
-
-	//Draw all spells that are active at beginning
-	//AEVec2Zero(&cards);
-	//AEVec2Set(&cards, (f32)-(AEGetWindowWidth() / 2) +80, -((f32)-(AEGetWindowHeight() / 2) + 75));
 
 	init_spells_draw(spellbook);
 	for (int i = 0; i <= spellbook.array_size; i++) {
 		if (spellbook.spell_array[i].unlocked == true) {
 			std::cout << spellbook.spell_array[i].spell_name << spellbook.spell_array[i].spell_dragdrop->getcoord().mid.x << spellbook.spell_array[i].spell_dragdrop->getcoord().mid.y << std::endl;
-			//spellbook.spell_array[i].init_spells_draw(spellbook.spell_array[i], cards);
-			//cards.x += card_width_const+buffer;
-			//spellbook.spell_array[i].spell_dragdrop->set_origin();
-
 		}
 	}
 
@@ -264,17 +253,6 @@ void GameStateAlchemiceUpdate() {
 		}
 	}
 
-	//Draw spells player unlocks / combines
-	//for (int i = 4; i <= max_spells; i++) {
-	//	if (spellbook.spell_array[i].unlocked == true) {
-	//		//Checks if 2 spells are colliding for combination
-	//		if (spellbook.spell_array[i].spell_dragdrop->getcoord().mid.x == 0 && spellbook.spell_array[i].spell_dragdrop->getcoord().mid.y == 0) {
-	//			//spellbook.spell_array[i].init_spells_draw(spellbook.spell_array[i], cards);
-	//			//spellbook.spell_array[i].spell_dragdrop->set_origin();
-	//		}
-	//	}
-	//}
-
 	//Mouse Debug
 	if (AEInputCheckTriggered(AEVK_E))
 	{
@@ -296,7 +274,6 @@ void GameStateAlchemiceUpdate() {
 		{
 			create_particle(enemy_part_manager.particle_vector, enemy_part_manager.max_capacity, enemies[i].get_pos(), enemy_take_damage_particle);
 			enemies[i].update_bleed_timer();
-
 			if (enemies[i].get_bleed_timer() <= 0) {
 				enemies[i].reset_bleed_time();
 				f64 j = enemies[i].get_bleed_timer();
@@ -319,25 +296,25 @@ void GameStateAlchemiceUpdate() {
 				for (int i = 0; i <= max_spells; i++)
 				{
 					if (spellbook.spell_array[i].unlocked == true) {
-						if (aabbbutton(spellbook.spell_array[i].spell_dragdrop, mouse_pos) && crafting_table.get_spell1() != spellbook.spell_array[i].id
-							&& crafting_table.get_spell2() != spellbook.spell_array[i].id)
+						if (aabbbutton(spellbook.spell_array[i].spell_dragdrop, mouse_pos) 
+							&& crafting_table.get_spell2() != spellbook.spell_array[i].id
+							&& crafting_table.get_spell1() != spellbook.spell_array[i].id)
 						{
 							for (int i = 0; i <= max_spells; i++)
 							{
-								if (spellbook.spell_array[i].spell_dragdrop->getmouse())
+								if (spellbook.spell_array[i].spell_dragdrop->getmouse()) //?????? Whats getmouse??
 								{
 									drag = false;
 								}
 							}
 							if (drag)
 							{
-								spellbook.spell_array[i].spell_dragdrop->mousechange(true);
+								spellbook.spell_array[i].spell_dragdrop->mousechange(true); //??
 							}
 						}
 					}
 				}
 			}
-
 			for (int i = 0; i <= max_spells; i++)
 			{
 				if (spellbook.spell_array[i].spell_dragdrop->getmouse())
@@ -348,7 +325,6 @@ void GameStateAlchemiceUpdate() {
 
 			if (AEInputCheckReleased(AEVK_LBUTTON))
 			{
-				// redudneant 
 				for (int i = 0; i < max_spells; i++)
 				{
 					for (int j = 0; j < TOTAL_ENEMY; ++j)
@@ -362,7 +338,6 @@ void GameStateAlchemiceUpdate() {
 								alchemice->mp -= 1;
 								if (spellbook.spell_array[i].id > tier3_last) {
 									spellbook.spell_array[i].unlocked = false;
-									/*cards.x -= 110;*/
 								}
 							}
 						}
@@ -372,6 +347,10 @@ void GameStateAlchemiceUpdate() {
 					if (spellbook.spell_array[i].spell_dragdrop->getmouse())
 					{
 						std::cout << "RELEASE" << std::endl;
+						if (spellbook.spell_array[i].id == crafting_table.get_spell1()) {
+							crafting_table.crafting_table_snap(spellbook, spellbook.spell_array[i].id);
+							spellbook.spell_array[i].spell_dragdrop->mousechange(true);
+						}
 						if (aabbbutton(crafting_table.get_dragdrop(), spellbook.spell_array[i].spell_dragdrop) == 1 && alchemice->mp > 0) {
 							crafting_table.crafting_table_snap(spellbook, spellbook.spell_array[i].id);
 						}
@@ -398,6 +377,7 @@ void GameStateAlchemiceUpdate() {
 				for (int i = 0; i <= max_spells; i++) {
 					if (aabbbutton(spellbook.spell_array[i].spell_dragdrop, mouse_pos)) {
 						std::cout << "Clicking " << spellbook.spell_array[i].spell_name << std::endl;
+						
 					}
 				}
 
