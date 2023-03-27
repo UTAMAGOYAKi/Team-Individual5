@@ -57,7 +57,8 @@ bool fullscreen = false;
 //Level Turn checks
 Turn turn;
 level_manager level;
-bool transiton = false;
+bool transition = false;
+double transition_timer = 1;
 
 //GameObject Creations
 player* alchemice{};
@@ -239,7 +240,7 @@ void GameStateAlchemiceUpdate() {
 
 	drag = true;
 	//Pause button, switch state of pause_mode
-	if (AEInputCheckTriggered(AEVK_ESCAPE)) {
+	if (AEInputCheckTriggered(AEVK_ESCAPE) && !transition) {
 		pause_mode = !pause_mode;
 	}
 
@@ -270,7 +271,7 @@ void GameStateAlchemiceUpdate() {
 		}
 	}
 
-	//Mouse Debug
+	//Mouse Debug, remove
 	if (AEInputCheckTriggered(AEVK_E))
 	{
 		printf("mouse x is %f\n", mouse_pos.x);
@@ -304,15 +305,22 @@ void GameStateAlchemiceUpdate() {
 	update_particle(crafting_part_manager.particle_vector);
 	rotation_about_time += (f32)g_dt * FRAMERATE;
 
+	//remove
+	if (AEInputCheckTriggered(AEVK_F2)) {
+		transition = !transition;
+		std::cout << transition << std::endl;
+	}
+
 	//MAIN GAMEPLAY LOOP
 	//Check if players or enemies or all enemies are all dead
-	if (alchemice->hp > 0 && enemies_alive && !pause_mode) {
+	if (alchemice->hp > 0 && enemies_alive && !pause_mode && transition == false) {
 		//Checking for turns
 		if (turn == player_turn) {
 
-			/*if (AEInputCheckCurr(AEVK_F1)) {
+			//remove
+			if (AEInputCheckTriggered(AEVK_F1)) {
 				alchemice->hp = 0;
-			}*/
+			}
 
 			if (AEInputCheckCurr(AEVK_LBUTTON))
 			{
@@ -485,15 +493,23 @@ void GameStateAlchemiceUpdate() {
 		}//End of enemy_turn logic
 	}//End of Main Gameplay Loop.
 	else if (!enemies_alive) {
-		level.next_level();
-		gGameStateNext = GS_RESTART;
+		transition = true;
+		//level.next_level();
+		//gGameStateNext = GS_RESTART;
 	}
 	else if (alchemice->hp <= 0) {
 		gGameStateNext = GS_GAMEOVER;
 	}
+	if (transition) {
+		transition_timer -= g_dt;
+		if (transition_timer < 0) {
+			level_transition(level.curr_level);
+		}
+	}
 }
 
 void GameStateAlchemiceDraw() {
+	
 	// Your own rendering logic goes here
 	// Set the background to black.
 	AEGfxSetBackgroundColor(.2f, .2f, .2f);
@@ -505,7 +521,18 @@ void GameStateAlchemiceDraw() {
 	// Set blend mode to AE_GFX_BM_BLEND
 	// This will allow transparency.
 	AEGfxSetBlendMode(AE_GFX_BM_BLEND);
-	AEGfxSetTransparency(1.0f);
+
+	if (transition) {
+		AEGfxSetBackgroundColor(.0f, .0f, .0f);
+		if (transition_timer > 0) {
+			AEGfxSetTransparency((f32)transition_timer);
+		}
+		else {
+			AEGfxSetTransparency(0.0f);
+		}
+	}
+	else
+		AEGfxSetTransparency(1.0f);
 
 	AEMtx33 scale{ 0 };
 	AEMtx33 rotate{ 0 };
@@ -522,8 +549,10 @@ void GameStateAlchemiceDraw() {
 	AEGfxMeshDraw(pMesh, AE_GFX_MDM_TRIANGLES);
 
 	//UI Drawing
-	AEGfxPrint(font, (s8*)level.display_turn.c_str(), -.1f, .9f, 1.0f, 1.0f, 1.0f, 1.0f);
-	AEGfxPrint(font, (s8*)level.display_level.c_str(), -.9f, .9f, 1.0f, 1.0f, 1.0f, 1.0f);
+	if (!transition) {
+		AEGfxPrint(font, (s8*)level.display_turn.c_str(), -.1f, .9f, 1.0f, 1.0f, 1.0f, 1.0f);
+		AEGfxPrint(font, (s8*)level.display_level.c_str(), -.9f, .9f, 1.0f, 1.0f, 1.0f, 1.0f);
+	}
 
 	//Character drawing
 	AEGfxTextureSet(chara, 0, 0);
@@ -535,18 +564,21 @@ void GameStateAlchemiceDraw() {
 	AEGfxSetTransform(transform.m);
 	AEGfxMeshDraw(pMesh, AE_GFX_MDM_TRIANGLES);
 	std::string player_hp;
-	if (alchemice->hp)
-	{
-		player_hp += std::to_string(alchemice->hp);
-		player_hp_bar(*alchemice, player_position, pMesh);
+	
+	if (!transition) {
+		if (alchemice->hp)
+		{
+			player_hp += std::to_string(alchemice->hp);
+			player_hp_bar(*alchemice, player_position, pMesh);
+		}
+		else
+		{
+			player_hp += "0";
+		}
+		player_hp += "/";
+		player_hp += std::to_string(alchemice->max_hp);
+		name_bar(player_hp, player_position, font);
 	}
-	else
-	{
-		player_hp += "0";
-	}
-	player_hp += "/";
-	player_hp += std::to_string(alchemice->max_hp);
-	name_bar(player_hp, player_position, font);
 
 	for (int i{ 0 }; i < alchemice->max_mp; ++i) {
 		AEVec2 mana_draw_position{ (f32)(-AEGetWindowWidth() / 2.5) + (i * 40), (f32)(-AEGetWindowHeight() / 4) };
@@ -595,7 +627,8 @@ void GameStateAlchemiceDraw() {
 			AEGfxSetTransform(transform.m);
 			AEGfxMeshDraw(pMesh, AE_GFX_MDM_TRIANGLES);
 
-			enemy_info(enemies[i], font, pMesh);
+			if (!transition)
+				enemy_info(enemies[i], font, pMesh);
 
 			//Choosing Icon
 			AEGfxTexture* element;
@@ -669,7 +702,8 @@ void GameStateAlchemiceDraw() {
 	AEMtx33Concat(&transform, &translate, &transform);
 	AEGfxSetTransform(transform.m);
 	AEGfxMeshDraw(pMesh, AE_GFX_MDM_TRIANGLES);
-	AEGfxPrint(font, (s8*)End_Turn_Text, middle + offset, (f32)-(end_turn_button.mid.y / (AEGetWindowHeight() / 2)), 1, 0, 0, 0);
+	if (!transition)
+		AEGfxPrint(font, (s8*)End_Turn_Text, middle + offset, (f32)-(end_turn_button.mid.y / (AEGetWindowHeight() / 2)), 1, 0, 0, 0);
 
 
 	AEGfxSetRenderMode(AE_GFX_RM_TEXTURE);

@@ -191,3 +191,14 @@ void sub_menu_draw(AEGfxTexture* sub_menu, spell_book& spells, AEGfxVertexList* 
 		}
 	}
 }
+
+void level_transition(level_enum const& num) {
+	/*const char* transition_text[] = { {"L"}, {"E"}, {"V"}, {"E"}, {"L"}, {":"} };
+	const char* level_text = (num == level_1) ? "1" : (num == level_2) ? "2" : (num == level_3) ? "3" : "";
+	for (int i{}; i < ARRAYSIZE(transition_text); ++i)
+	{
+		f32 middle = -(((float)strlen(transition_text[i]) / 2) / (AEGetWindowWidth() / FONT_SIZE));
+		f32 textY = (float)((0 - i * linespace + scroll_time_current) / ((f32)AEGetWindowHeight() / 2));
+		AEGfxPrint(font, (s8*)Credits[i], middle, textY, 1, 1, 1, 1);
+	}*/
+}
