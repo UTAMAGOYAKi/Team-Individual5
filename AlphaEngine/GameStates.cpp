@@ -115,6 +115,7 @@ void GameStateAlchemiceLoad() {
 	// Saving the mesh (list of triangles) in pMesh
 	pMesh = AEGfxMeshEnd();
 
+	particle_mesh = 0;
 	//Creating the particle object
 	AEGfxMeshStart();
 	AEGfxTriAdd(
@@ -747,9 +748,13 @@ void GameStateAlchemiceUnload() {
 	AEGfxTextureUnload(unlocked_spell_slot);
 
 	//Elemental Icons
+	AEGfxTextureUnload(fire_icon);
+	AEGfxTextureUnload(water_icon);
+	AEGfxTextureUnload(shadow_icon);
+	AEGfxTextureUnload(poison_icon);
 	//unload_enemy_texture();
 
 
-	AEGfxMeshFree(particle_mesh);
 	AEGfxMeshFree(pMesh);
+	AEGfxMeshFree(particle_mesh);
 }
