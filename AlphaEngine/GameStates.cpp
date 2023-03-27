@@ -377,7 +377,7 @@ void GameStateAlchemiceUpdate() {
 				}
 			}
 
-			if (crafting_table.get_flag() == true) {
+			if (crafting_table.get_flag()) {
 				if (crafting_table.crafting_table_update(spellbook) == 2) {
 					alchemice->mp -= 1;
 				}
