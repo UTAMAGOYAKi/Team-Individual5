@@ -493,9 +493,9 @@ void GameStateAlchemiceUpdate() {
 		}//End of enemy_turn logic
 	}//End of Main Gameplay Loop.
 	else if (!enemies_alive) {
-		transition = true;
-		//level.next_level();
-		//gGameStateNext = GS_RESTART;
+		//transition = true;
+		level.next_level();
+		gGameStateNext = GS_RESTART;
 	}
 	else if (alchemice->hp <= 0) {
 		gGameStateNext = GS_GAMEOVER;
