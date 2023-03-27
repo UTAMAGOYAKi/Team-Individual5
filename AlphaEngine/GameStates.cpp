@@ -197,6 +197,7 @@ void GameStateAlchemiceInit() {
 		enemies[2] = Enemy(base_rat, rat, "Rat", 4, 1, WATER);
 		enemies[2].set_position_and_aabb(enemy_position[2]);
 
+		level.display_level = "Level 1";
 	}
 	else if (level.curr_level == level_2)
 	{
@@ -208,6 +209,8 @@ void GameStateAlchemiceInit() {
 
 		enemies[2] = Enemy(base_rat, rat, "Rat", 4, 2, INVALID_ELEMENT);
 		enemies[2].set_position_and_aabb(enemy_position[2]);
+
+		level.display_level = "Level 2";
 	}
 	else if (level.curr_level == level_3)
 	{
@@ -219,6 +222,8 @@ void GameStateAlchemiceInit() {
 
 		enemies[2] = Enemy(base_rat, big_rat_texture, "Big Rat", 8, 2, INVALID_ELEMENT);
 		enemies[2].set_position_and_aabb(enemy_position[2]);
+
+		level.display_level = "Level 3";
 	}
 }
 
@@ -517,6 +522,7 @@ void GameStateAlchemiceDraw() {
 
 	//UI Drawing
 	AEGfxPrint(font, (s8*)level.display_turn.c_str(), -.1f, .9f, 1.0f, 1.0f, 1.0f, 1.0f);
+	AEGfxPrint(font, (s8*)level.display_level.c_str(), -.9f, .9f, 1.0f, 1.0f, 1.0f, 1.0f);
 
 	//Character drawing
 	AEGfxTextureSet(chara, 0, 0);
@@ -590,59 +596,36 @@ void GameStateAlchemiceDraw() {
 
 			enemy_info(enemies[i], font, pMesh);
 
-			//Drawing Icon
-			//Might cause memory leak
+			//Choosing Icon
+			AEGfxTexture* element;
 
 			switch (enemies[i].get_element())
 			{
-			case FIRE:
-				AEGfxTextureSet(fire_icon, 0, 0);
-				AEMtx33Trans(&translate, (f32)(enemies[i].get_element_icon_pos().x), (f32)(enemies[i].get_element_icon_pos().y));
-				AEMtx33Rot(&rotate, 0);
-				AEMtx33Scale(&scale, 25.f, 25.f);
-				AEMtx33Concat(&transform, &rotate, &scale);
-				AEMtx33Concat(&transform, &translate, &transform);
-				AEGfxSetTransform(transform.m);
-				AEGfxMeshDraw(pMesh, AE_GFX_MDM_TRIANGLES);
 			case WATER:
-				AEGfxTextureSet(water_icon, 0, 0);
-				AEMtx33Trans(&translate, (f32)(enemies[i].get_element_icon_pos().x), (f32)(enemies[i].get_element_icon_pos().y));
-				AEMtx33Rot(&rotate, 0);
-				AEMtx33Scale(&scale, 25.f, 25.f);
-				AEMtx33Concat(&transform, &rotate, &scale);
-				AEMtx33Concat(&transform, &translate, &transform);
-				AEGfxSetTransform(transform.m);
-				AEGfxMeshDraw(pMesh, AE_GFX_MDM_TRIANGLES);
+				element = water_icon;
+				break;
 			case POISON:
-				AEGfxTextureSet(poison_icon, 0, 0);
-				AEMtx33Trans(&translate, (f32)(enemies[i].get_element_icon_pos().x), (f32)(enemies[i].get_element_icon_pos().y));
-				AEMtx33Rot(&rotate, 0);
-				AEMtx33Scale(&scale, 25.f, 25.f);
-				AEMtx33Concat(&transform, &rotate, &scale);
-				AEMtx33Concat(&transform, &translate, &transform);
-				AEGfxSetTransform(transform.m);
-				AEGfxMeshDraw(pMesh, AE_GFX_MDM_TRIANGLES);
+				element = poison_icon;
+				break;
 			case SHADOW:
-				AEGfxTextureSet(shadow_icon, 0, 0);
-				AEMtx33Trans(&translate, (f32)(enemies[i].get_element_icon_pos().x), (f32)(enemies[i].get_element_icon_pos().y));
-				AEMtx33Rot(&rotate, 0);
-				AEMtx33Scale(&scale, 25.f, 25.f);
-				AEMtx33Concat(&transform, &rotate, &scale);
-				AEMtx33Concat(&transform, &translate, &transform);
-				AEGfxSetTransform(transform.m);
-				AEGfxMeshDraw(pMesh, AE_GFX_MDM_TRIANGLES);
+				element = shadow_icon;
+				break;
+
+			case FIRE:
+				element = fire_icon;
+				break;
 			default:
-				AEGfxTextureSet(water_icon, 0, 0);
-				AEMtx33Trans(&translate, (f32)(enemies[i].get_element_icon_pos().x), (f32)(enemies[i].get_element_icon_pos().y));
-				AEMtx33Rot(&rotate, 0);
-				AEMtx33Scale(&scale, 25.f, 25.f);
-				AEMtx33Concat(&transform, &rotate, &scale);
-				AEMtx33Concat(&transform, &translate, &transform);
-				AEGfxSetTransform(transform.m);
-				AEGfxMeshDraw(pMesh, AE_GFX_MDM_TRIANGLES);
-
+				element = water_icon;
 			}
-
+			//Drawing Icon
+			AEGfxTextureSet(element, 0, 0);
+			AEMtx33Trans(&translate, (f32)(enemies[i].get_element_icon_pos().x), (f32)(enemies[i].get_element_icon_pos().y));
+			AEMtx33Rot(&rotate, 0);
+			AEMtx33Scale(&scale, 25.f, 25.f);
+			AEMtx33Concat(&transform, &rotate, &scale);
+			AEMtx33Concat(&transform, &translate, &transform);
+			AEGfxSetTransform(transform.m);
+			AEGfxMeshDraw(pMesh, AE_GFX_MDM_TRIANGLES);
 		}
 	}
 
