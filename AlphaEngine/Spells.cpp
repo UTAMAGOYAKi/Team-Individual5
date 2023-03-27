@@ -292,13 +292,16 @@ void craftingtable::crafting_table_snap(spell_book& spellbook, spells spell_id)
 		two_spell_flag = true;
 		this->spell2_id = spell_id;
 	}
-	else if (spell_id == this->spell1_id && two_spell_flag == false) {
-		spellbook.spell_array[(int)spell_id].spell_dragdrop->mousechange(true);
-	}
+	//Player dropped spell outside reset everything!
 	else
 	{
-		spellbook.spell_array[(int)spell_id].spell_dragdrop->mousechange(false);
-		spellbook.spell_array[(int)spell_id].spell_dragdrop->resetaabb();
+		spellbook.spell_array[(int)this->spell1_id].spell_dragdrop->mousechange(false);
+		spellbook.spell_array[(int)this->spell2_id].spell_dragdrop->mousechange(false);
+		spellbook.spell_array[(int)this->spell1_id].spell_dragdrop->resetaabb();
+		spellbook.spell_array[(int)this->spell2_id].spell_dragdrop->resetaabb();
+		this->spell1_id = spells::INVALID_SPELL;
+		this->spell2_id = spells::INVALID_SPELL;
+		two_spell_flag = false;
 	}
 }
 
