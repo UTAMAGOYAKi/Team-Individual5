@@ -190,10 +190,6 @@ void Enemy::set_bleeding(bool logic) {
 }
 
 AEVec2 Enemy::convert_pos(AEVec2 input_pos) {
-    /*input_pos.x = (input_pos.x - (AEGetWindowWidth() / 2)) / (AEGetWindowWidth() / 2);
-    std::cout << "Input_pos x :" << input_pos.x;
-    input_pos.y = (input_pos.y - (AEGetWindowHeight() / 2)) / (AEGetWindowHeight() / 2);
-    std::cout << "Input_pos y" << input_pos.y;*/
 
     input_pos.x = ((input_pos.x / AEGetWindowWidth()) * 2.0f);
     input_pos.y = ((input_pos.y / AEGetWindowHeight()) * 2.0f);
@@ -213,21 +209,4 @@ void Enemy::update_damage_timer()
         }
     }
 }
-
-//Loading and unloading of textures
-//void load_enemy_texture() 
-//{
-//    fire_icon = AEGfxTextureLoad("Assets/fire_icon.png");
-//    water_icon = AEGfxTextureLoad("Assets/water_icon.png");
-//    shadow_icon = AEGfxTextureLoad("Assets/shadow_icon.png");
-//    poison_icon = AEGfxTextureLoad("Assets/poison_icon.png");
-//}
-//
-//void unload_enemy_texture() 
-//{
-//    AEGfxTextureUnload(fire_icon);
-//    AEGfxTextureUnload(water_icon);
-//    AEGfxTextureUnload(shadow_icon);
-//    AEGfxTextureUnload(poison_icon);
-//}
 

@@ -431,11 +431,6 @@ void GameStateAlchemiceUpdate() {
 				sub_menu = !sub_menu;
 			}
 
-			////Debug for dealing damage, (put the dragging of spell onto enemy here)
-			//if (AEInputCheckTriggered(AEVK_Q))
-			//{
-			//	enemies[rand() % TOTAL_ENEMY].take_damage(1);
-			//}
 		}//End of player turn logic
 
 		//Enemy turn; runs all the enemy functions and animations
@@ -457,7 +452,6 @@ void GameStateAlchemiceUpdate() {
 				alchemice->max_mp = (alchemice->max_mp == 5) ? 5 : alchemice->max_mp + 1;
 				alchemice->mp = alchemice->max_mp;
 			}
-			//WORK IN PROGRESS
 			else
 			{
 				if (s_enemy_turn < TOTAL_ENEMY)

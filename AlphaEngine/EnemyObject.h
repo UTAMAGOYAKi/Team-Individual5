@@ -124,7 +124,4 @@ public:
     void update_damage_timer();
 };
 
-//void load_enemy_texture();
-//void unload_enemy_texture();
-
 #endif // ENEMY_H
