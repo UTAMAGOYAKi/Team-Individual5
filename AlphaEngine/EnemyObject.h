@@ -72,6 +72,9 @@ private:
     float damage_time{ 1.0f };
     float damage_timer{damage_time};
     
+    //_______________________FOR AUDIO_______________________________
+    bool audio{ false };
+
 public:
     Enemy() {};
 
@@ -122,6 +125,10 @@ public:
     //Damage Numbers
     AEVec2 convert_pos(AEVec2 input_pos);
     void update_damage_timer();
+
+    //Audio
+    bool get_audio();
+    void set_audio(bool input);
 };
 
 #endif // ENEMY_H

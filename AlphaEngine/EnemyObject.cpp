@@ -210,3 +210,14 @@ void Enemy::update_damage_timer()
     }
 }
 
+//For Audio
+bool Enemy::get_audio() 
+{
+    return audio;
+}
+
+void Enemy::set_audio(bool input)
+{
+    audio = input;
+}
+
