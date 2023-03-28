@@ -430,7 +430,6 @@ void GameStateAlchemiceUpdate() {
 			{
 				sub_menu = !sub_menu;
 			}
-
 		}//End of player turn logic
 
 		//Enemy turn; runs all the enemy functions and animations

@@ -48,7 +48,7 @@ private:
                
   //________________________FOR ANIMATIONS____________________________
   //Setting
-    int total_frame = 4;
+    int total_frame = 3;
     int frame_num = 0; //current frame
     double attack_animation_timer = 1.0f;
 
