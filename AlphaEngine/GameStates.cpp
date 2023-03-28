@@ -367,12 +367,13 @@ void GameStateAlchemiceUpdate() {
 						{
 							if (enemies[j].is_alive() && alchemice->mp > 0)
 							{
-								enemies[j].take_damage(spellbook.spell_array[i].base_damage, static_cast<Elements>(spellbook.spell_array[i].element));
-								enemies[j].set_bleeding(true);
-								alchemice->mp -= 1;
 								if (spellbook.spell_array[i].id > tier3_last) {
 									spellbook.spell_array[i].unlocked = false;
 								}
+								crafting_table.reset_spells();
+								enemies[j].take_damage(spellbook.spell_array[i].base_damage, static_cast<Elements>(spellbook.spell_array[i].element));
+								enemies[j].set_bleeding(true);
+								alchemice->mp -= 1;
 							}
 						}
 					}

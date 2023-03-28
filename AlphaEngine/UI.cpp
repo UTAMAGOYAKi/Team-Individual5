@@ -164,6 +164,9 @@ void sub_menu_draw(AEGfxTexture* sub_menu, spell_book& spells, AEGfxVertexList* 
 
 
 	std::string sub_words[]{ "Known spell lists" };
+	std::string tier_2[]{ "Tier 2:" };
+	std::string tier_1[]{ "Tier 1:" };
+
 	AEGfxTextureSet(sub_menu, 0, 0);
 	AEMtx33Trans(&translate, -440, 100);
 	AEMtx33Rot(&rotate, 0);
@@ -174,6 +177,10 @@ void sub_menu_draw(AEGfxTexture* sub_menu, spell_book& spells, AEGfxVertexList* 
 	AEGfxMeshDraw(mesh, AE_GFX_MDM_TRIANGLES);
 
 	AEGfxPrint(font, (s8*)sub_words[0].c_str(), -0.8f, 0.8f, 1.0f, 1.0f, 1.0f, 1.0f);
+
+	AEGfxPrint(font, (s8*)tier_2[0].c_str(), -0.8f, 0.70f, 1.0f, 1.0f, 1.0f, 1.0f);
+
+	AEGfxPrint(font, (s8*)tier_1[0].c_str(), -0.8f, 0.20f, 1.0f, 1.0f, 1.0f, 1.0f);
 
 	for (int i = 0; i < max_spells - 1; i++)
 	{

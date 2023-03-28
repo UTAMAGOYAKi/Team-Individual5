@@ -36,19 +36,19 @@ spell_book init_all_spells()
 	// +1 due to invalid spell
 	Spell* spellbook = new Spell[max_spells + 1]{
 		// Tier 3 spells
-		Spell(spells::TOXIC_DELUGE, tier3_last, POISON, "Toxic Deluge",toxic_deluge,true, base_low, NULL, lingering_low,NULL),
-		Spell(spells::INFERNO_BLAST,tier3_last, FIRE, "Inferno Blast",inferno_blast,true, base_low, NULL, lingering_low,NULL),
-		Spell(spells::UMBRAL_TENDRILS, tier3_last, SHADOW, "Umbral Tendrils",umbral_tendrils,true, base_low, NULL, lingering_low,NULL),
-		Spell(spells::MAELSTROM_SURGE, tier3_last, WATER, "Maelstrom Surge",maelstrom_surge,true, base_low, NULL, lingering_low,NULL),
+		Spell(spells::TOXIC_DELUGE, tier3_last, POISON, "Toxic Deluge",toxic_deluge,true, base_low, NILL),
+		Spell(spells::INFERNO_BLAST,tier3_last, FIRE, "Inferno Blast",inferno_blast,true, base_low, NILL),
+		Spell(spells::UMBRAL_TENDRILS, tier3_last, SHADOW, "Umbral Tendrils",umbral_tendrils,true,base_low, NILL),
+		Spell(spells::MAELSTROM_SURGE, tier3_last, WATER, "Maelstrom Surge",maelstrom_surge,true,base_low, NILL),
 		// Tier 2 spells
-		Spell(spells::VENOMOUS_BITE, tier2_last, POISON, "Venomous Bite",venemous_bite,false, base_mid, aoe_low, lingering_mid,lingering_rounds_mid),
-		Spell(spells::SHADOW_CLOAK, tier2_last, SHADOW, "Shadow Cloak",shadow_cloak,false, base_mid, aoe_low, lingering_mid,NULL),
-		Spell(spells::FLAME_BURST, tier2_last, FIRE, "Flame Burst",flame_burst,false, base_mid, aoe_low, lingering_mid,NULL),
+		Spell(spells::VENOMOUS_BITE, tier2_last, POISON, "Venomous Bite",venemous_bite,false, base_mid,LINGERING),
+		Spell(spells::SHADOW_CLOAK, tier2_last, SHADOW, "Shadow Cloak",shadow_cloak,false, base_mid, STUN),
+		Spell(spells::FLAME_BURST, tier2_last, FIRE, "Flame Burst",flame_burst,false, base_mid, AOE),
 		// Tier aoe_low spells
-		Spell(spells::RAT_SWARM, tier1_last, SHADOW, "Rat Swarm",rat_swarm,false, base_high, aoe_low,lingering_high,lingering_rounds_mid),
-		Spell(spells::BUBONIC_BLAZE,tier1_last, FIRE, "Bubonic Blaze",bubonic_blaze,false, base_high, aoe_low, lingering_high,lingering_rounds_mid),
+		Spell(spells::RAT_SWARM, tier1_last, SHADOW, "Rat Swarm",rat_swarm,false, base_high,STUN),
+		Spell(spells::BUBONIC_BLAZE,tier1_last, FIRE, "Bubonic Blaze",bubonic_blaze,false, base_high,LINGERING),
 		// Invalid Spell
-		Spell(spells::INVALID_SPELL,spells::INVALID_SPELL , INVALID_ELEMENT, "",nullptr,false, NULL, NULL, NULL,NULL),
+		Spell(spells::INVALID_SPELL,spells::INVALID_SPELL , INVALID_ELEMENT, "",nullptr, false,NULL,NILL)
 	};
 
 
