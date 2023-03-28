@@ -668,8 +668,8 @@ void GameStateAlchemiceDraw() {
 	{
 		if (enemies[i].get_bool_damage_num())
 		{
-			AEGfxPrint(font, (s8*)enemies[i].get_str_damage_number().c_str(), enemies[i].get_str_damage_pos_percent().x, enemies[i].get_str_damage_pos_percent().y, 1.0f, 1.0f, 1.0f, 1.0f);
 			enemies[i].update_damage_timer();
+			AEGfxPrint(font, (s8*)enemies[i].get_str_damage_number().c_str(), enemies[i].get_str_damage_pos_percent().x, enemies[i].get_str_damage_pos_percent().y, 1.0f, 1.0f, enemies[i].get_crit_colour(), enemies[i].get_crit_colour());
 		}
 	}
 

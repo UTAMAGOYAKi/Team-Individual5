@@ -78,6 +78,11 @@ bool Enemy::get_bool_damage_num()
     return bool_damage_num;
 }
 
+float Enemy::get_crit_colour() 
+{
+    return crit_colour;
+}
+
 
 //Actions
 void Enemy::set_position_and_aabb(AEVec2 input_pos) {
@@ -95,10 +100,12 @@ void Enemy::set_position_and_aabb(AEVec2 input_pos) {
 
 int Enemy::elemental_damage_calculator(Elements enemy_type, Elements input_element) 
 {
+    set_crit_colour(false);
     if (enemy_type == FIRE) 
     {
         if (input_element == POISON) 
         {
+            set_crit_colour(true);
             return 1;
         }
         if (input_element == SHADOW)
@@ -110,6 +117,7 @@ int Enemy::elemental_damage_calculator(Elements enemy_type, Elements input_eleme
     {
         if (input_element == FIRE)
         {
+            set_crit_colour(true);
             return 1;
         }
         if (input_element == POISON)
@@ -122,6 +130,7 @@ int Enemy::elemental_damage_calculator(Elements enemy_type, Elements input_eleme
     {
         if (input_element == SHADOW)
         {
+            set_crit_colour(true);
             return 1;
         }
         if (input_element == FIRE)
@@ -208,10 +217,22 @@ void Enemy::update_damage_timer()
 
         if (damage_timer < 0.f)
         {
-            bool_damage_num = false;
             damage_timer = damage_time; //Resets back to default time.
             str_damage_pos = default_str_damage_pos;
+            bool_damage_num = false;
         }
+    }
+}
+
+void Enemy::set_crit_colour(bool input)
+{
+    if (input)
+    {
+        crit_colour = 0.0f;
+    }
+    else
+    {
+        crit_colour = 1.0f;
     }
 }
 
