@@ -60,6 +60,17 @@ private:
     bool bleeding{false};
     float bleed_time{2.0f};
     f64 bleed_timer{bleed_time};
+
+    //Damage Number
+    std::string str_damage_number{};
+
+    AEVec2 default_str_damage_pos{}; 
+    AEVec2 str_damage_pos{};
+    AEVec2 str_damage_pos_percent{};
+    
+    bool bool_damage_num{ false };
+    float damage_time{ 1.0f };
+    float damage_timer{damage_time};
     
 public:
     Enemy() {};
@@ -91,6 +102,9 @@ public:
     f64 get_bleed_timer();
     AEVec2 get_element_icon_pos();
     Elements get_element();
+    std::string get_str_damage_number();
+    AEVec2 get_str_damage_pos_percent();
+    bool get_bool_damage_num();
     
     //Used to make changes to damage classes.
     void set_position_and_aabb(AEVec2 input_pos);
@@ -105,7 +119,9 @@ public:
     void update_bleed_timer();
     void reset_bleed_time();
 
-    //Loading and unloading
+    //Damage Numbers
+    AEVec2 convert_pos(AEVec2 input_pos);
+    void update_damage_timer();
 };
 
 //void load_enemy_texture();

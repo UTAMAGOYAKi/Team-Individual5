@@ -661,8 +661,20 @@ void GameStateAlchemiceDraw() {
 			AEMtx33Concat(&transform, &translate, &transform);
 			AEGfxSetTransform(transform.m);
 			AEGfxMeshDraw(pMesh, AE_GFX_MDM_TRIANGLES);
+
+		}	
+	}
+
+	//Damage Numbers Drawing
+	for (int i = 0; i < TOTAL_ENEMY; i++)
+	{
+		if (enemies[i].get_bool_damage_num())
+		{
+			AEGfxPrint(font, (s8*)enemies[i].get_str_damage_number().c_str(), enemies[i].get_str_damage_pos_percent().x, enemies[i].get_str_damage_pos_percent().y, 1.0f, 1.0f, 1.0f, 1.0f);
+			enemies[i].update_damage_timer();
 		}
 	}
+
 
 	//Particles Drawing
 	draw_particles(enemy_part_manager.particle_vector, particle_mesh, mana_empty);
@@ -687,6 +699,7 @@ void GameStateAlchemiceDraw() {
 			}
 		}
 	}
+
 
 	// End turn button
 	// 113 characters on screen, start to end, 113/2 =  56.5(left and right for scaling) Roboto

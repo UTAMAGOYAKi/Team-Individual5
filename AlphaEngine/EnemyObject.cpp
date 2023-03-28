@@ -63,6 +63,21 @@ Elements Enemy::get_element() {
     return element_type;
 }
 
+std::string Enemy::get_str_damage_number()
+{
+    return str_damage_number;
+}
+
+AEVec2 Enemy::get_str_damage_pos_percent()
+{
+    return str_damage_pos_percent;
+}
+
+bool Enemy::get_bool_damage_num()
+{
+    return bool_damage_num;
+}
+
 
 //Actions
 void Enemy::set_position_and_aabb(AEVec2 input_pos) {
@@ -70,6 +85,12 @@ void Enemy::set_position_and_aabb(AEVec2 input_pos) {
     pos.y = input_pos.y;
     enemy_aabb = CreateAABB(input_pos, size, size);
     element_icon_pos = {pos.x - 20.0f , pos.y + 60.0f};
+    default_str_damage_pos = {pos.x, pos.y + 20.0f};
+    str_damage_pos = default_str_damage_pos;
+    std::cout << " input_pox y: " << str_damage_pos.x << " input_pox y: " << str_damage_pos.y << std::endl;
+    str_damage_pos_percent = convert_pos(str_damage_pos);
+    std::cout << " input_pox y: " << str_damage_pos_percent.x << " input_pox y: " << str_damage_pos_percent.y << std::endl;
+
 }
 
 int Enemy::elemental_damage_calculator(Elements enemy_type, Elements input_element) 
@@ -115,7 +136,6 @@ int Enemy::elemental_damage_calculator(Elements enemy_type, Elements input_eleme
 //When enemy take damage, insert damage number there.
 void Enemy::take_damage(int val, Elements input_element)
 {
-
     val += elemental_damage_calculator(element_type,input_element);
 
     if (alive) { //if alive
@@ -125,6 +145,10 @@ void Enemy::take_damage(int val, Elements input_element)
             life_state = dead;
         }
     }
+
+    //storing the damage to text for display.
+    str_damage_number = std::to_string(val);
+    bool_damage_num = true;
 }
 
 void Enemy::set_frame_num(int frame_no){
@@ -163,6 +187,31 @@ void Enemy::reset_bleed_time() {
 
 void Enemy::set_bleeding(bool logic) {
     bleeding = logic;
+}
+
+AEVec2 Enemy::convert_pos(AEVec2 input_pos) {
+    /*input_pos.x = (input_pos.x - (AEGetWindowWidth() / 2)) / (AEGetWindowWidth() / 2);
+    std::cout << "Input_pos x :" << input_pos.x;
+    input_pos.y = (input_pos.y - (AEGetWindowHeight() / 2)) / (AEGetWindowHeight() / 2);
+    std::cout << "Input_pos y" << input_pos.y;*/
+
+    input_pos.x = ((input_pos.x / AEGetWindowWidth()) * 2.0f);
+    input_pos.y = ((input_pos.y / AEGetWindowHeight()) * 2.0f);
+    
+    return input_pos;
+}
+
+void Enemy::update_damage_timer()
+{
+    if (bool_damage_num)
+    {
+        damage_timer -= g_dt;
+        if (damage_timer < 0.f)
+        {
+            bool_damage_num = false;
+            damage_timer = damage_time; //Resets back to default time.
+        }
+    }
 }
 
 //Loading and unloading of textures
