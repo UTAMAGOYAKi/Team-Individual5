@@ -97,9 +97,10 @@ int end_width = 80;
 int end_offset = FONT_SIZE / 3;
 
 
-AEAudio wow , gun;
+AEAudio wow , gun, combi, death;
+AEAudio bgm;
 
-AEAudioGroup pain;
+AEAudioGroup pain,bgm_g;
 
 
 
@@ -172,9 +173,15 @@ void GameStateAlchemiceLoad() {
 	//Init All Spells
 	spellbook = init_all_spells();
 
-	wow = AEAudioLoadMusic("Assets/toot.mp3");
-	gun = AEAudioLoadMusic("Assets/gun.wav");
+	wow =	AEAudioLoadMusic("Assets/toot.mp3");
+	bgm =   AEAudioLoadMusic("Assets/bgm.wav");
+	bgm_g = AEAudioCreateGroup();
+	AEAudioPlay(bgm, bgm_g, 1.0f, 1.0f, -1);
 
+	
+	gun =	AEAudioLoadSound("Assets/gun.wav");
+	combi = AEAudioLoadSound("Assets/Magic-combinations-sfx.wav");
+	death = AEAudioLoadSound("Assets/pain-death-sfx.wav");
 	init_spells_draw(spellbook);
 }
 
@@ -252,7 +259,7 @@ void GameStateAlchemiceUpdate() {
 
 	if (AEInputCheckTriggered(AEVK_SPACE))
 	{
-		AEAudioPlay(wow, pain, 1.0f, 1.0f, 1);
+		AEAudioPlay(gun, pain, 1.0f, 1.0f, 0);
 	}
 
 	AEVec2 temp;
@@ -489,14 +496,7 @@ void GameStateAlchemiceUpdate() {
 					{
 
 						alchemice->hp -= enemies[s_enemy_turn].get_atk();
-						if (enemies[s_enemy_turn].get_max_hp() >= 8)
-						{
-						}
-						else
-						{
-							AEAudioPlay(gun, pain, 1.0f, 1.0f, 1);
-
-						}
+					
 						enemies[s_enemy_turn].switch_finish_attack();
 						s_enemy_turn++;
 						//is_enemy_turn = false;
@@ -509,6 +509,8 @@ void GameStateAlchemiceUpdate() {
 							
 							//update_animation will switch enemy object's animation to be finished when it ends.
 							enemies[s_enemy_turn].update_animation(g_dt);
+							
+
 						}
 						else
 						{
@@ -703,6 +705,8 @@ void GameStateAlchemiceDraw() {
 
 		if (enemies[s_enemy_turn].is_alive())
 		{
+			
+
 			//Ensure 4th frame which is the delay frame does not get drawn and crash
 			if (enemies[s_enemy_turn].get_frame_num() < enemies[s_enemy_turn].get_total_frame())
 			{
