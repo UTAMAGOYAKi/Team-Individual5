@@ -160,8 +160,10 @@ void GameStateAlchemiceLoad() {
 
 	PositionInit();
 	alchemice = create_player();
+	
 	//Init All Spells
 	spellbook = init_all_spells();
+	init_spells_draw(spellbook);
 }
 
 // Initialization of your own variables go here
@@ -170,7 +172,6 @@ void GameStateAlchemiceInit() {
 	turn = player_turn;
 	pause_mode = false;
 
-	init_spells_draw(spellbook);
 	for (int i = 0; i <= spellbook.array_size; i++) {
 		if (spellbook.spell_array[i].unlocked == true) {
 			std::cout << spellbook.spell_array[i].spell_name << spellbook.spell_array[i].spell_dragdrop->getcoord().mid.x << spellbook.spell_array[i].spell_dragdrop->getcoord().mid.y << std::endl;
