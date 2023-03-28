@@ -32,11 +32,6 @@ void CreditsDraw()
 	AEGfxSetTintColor(1.0f, 1.0f, 1.0f, 1.0f);
 	AEGfxSetBlendMode(AE_GFX_BM_BLEND);
 	AEGfxSetTransparency(1.0f);
-
-	AEMtx33 scale{ 0 };
-	AEMtx33 rotate{ 0 };
-	AEMtx33 translate{ 0 };
-	AEMtx33 transform{ 0 };
 	
 	const char* Credits[] = { {"Developers"}, {"Daniel Tee Ming Zhe"}, {"Liang HongJie"}, {"Low Ee Loong"}, {"Yeo Jun Jie"}, {""},
 		{"Instructors"}, {"Cheng Ding Xiang"}, {"Gerald Wong"}, {""},

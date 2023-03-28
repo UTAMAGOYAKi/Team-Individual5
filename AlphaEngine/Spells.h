@@ -76,8 +76,16 @@ const float card_height_const = 128.0f;
 const float crafting_table_buffer = (table_width_const / 4);
 
 //Buffer Float
-const float crafting_time_buffer = 2;
+const float crafting_time_buffer = 1.2f;
 
+//Individual Spell x coord buffer
+const int spell_buffer = 20;
+
+//Spell X coord tier buffer
+const int spell_tier_buffer = 40;
+
+// crafting table timer for combination spell delay
+extern f64 timer;
 
 
 //A single spell object
@@ -110,7 +118,7 @@ struct Spell {
 	const float			card_height = card_height_const;
 
 	//Set a Spells' AABB and Coords when called
-	void init_spells_draw(Spell& spell, AEVec2 coord);
+
 
 	//Reset a spells customisable stuff / variables
 	void reset_spell();
@@ -191,3 +199,4 @@ void draw_all_spells(spell_book& spellbook, AEGfxVertexList* pMesh);
 
 void draw_spell_combination(spell_book& spellbook, AEGfxVertexList* pMesh);
 
+void init_spells_draw(spell_book& spellbook);

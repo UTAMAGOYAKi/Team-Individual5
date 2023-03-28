@@ -32,11 +32,13 @@ spell_book spellbook;
 AEVec2 cards;
 //Crafting table for magic
 craftingtable crafting_table;
+
 //---------------------------------------------------------------------------------
 
 //Loading of Mesh and Texture
 AEGfxVertexList* pMesh;
-AEGfxTexture* chara{}, * rat{}, * big_rat_texture{}, * spell_g{}, * pause_box{}, * sub{}, * crafting_test{}, * bg{}, * end_turn_box{}, * mana_full{}, * mana_empty{}, * Menu_ui;
+AEGfxTexture* chara{}, * rat{}, * big_rat_texture{}, * spell_g{}, * pause_box{}, * sub{}, * crafting_test{}, * bg{}, * end_turn_box{}, * mana_full{}, * mana_empty{}, * Menu_ui,
+* base_mid_pipe, * base_cap_pipe, * unlocked_spell_slot, * fire_icon, * water_icon, * poison_icon, * shadow_icon;
 
 aabb* chara_pos;
 aabb* Enemy_pos_1;
@@ -55,6 +57,8 @@ bool fullscreen = false;
 //Level Turn checks
 Turn turn;
 level_manager level;
+bool transition = false;
+double transition_timer = 1;
 
 //GameObject Creations
 player* alchemice{};
@@ -73,6 +77,7 @@ int bleeding_enemy_no{ 0 };
 //Particles
 AEGfxVertexList* particle_mesh;
 particle_manager enemy_part_manager(50);
+particle_manager crafting_part_manager(50);
 
 //Button AABB
 aabb pause_buttons[3];
@@ -119,6 +124,7 @@ void GameStateAlchemiceLoad() {
 	// Saving the mesh (list of triangles) in pMesh
 	pMesh = AEGfxMeshEnd();
 
+	particle_mesh = 0;
 	//Creating the particle object
 	AEGfxMeshStart();
 	AEGfxTriAdd(
@@ -144,19 +150,32 @@ void GameStateAlchemiceLoad() {
 	mana_full = AEGfxTextureLoad("Assets/mana_full.png");
 	mana_empty = AEGfxTextureLoad("Assets/mana_empty.png");
 
+	base_mid_pipe = AEGfxTextureLoad("Assets/midpipe.png");
+	base_cap_pipe = AEGfxTextureLoad("Assets/side_ui.png");
+	unlocked_spell_slot = AEGfxTextureLoad("Assets/box_ui.png");
+
 	blast[0] = AEGfxTextureLoad("Assets/blast1.png");
 	blast[1] = AEGfxTextureLoad("Assets/blast2.png");
 	blast[2] = AEGfxTextureLoad("Assets/blast3.png");
 	blast[3] = AEGfxTextureLoad("Assets/blast4.png");
 
+	//Icon Loading
+	//load_enemy_texture();
+	fire_icon = AEGfxTextureLoad("Assets/fire_icon.png");
+	water_icon = AEGfxTextureLoad("Assets/water_icon.png");
+	shadow_icon = AEGfxTextureLoad("Assets/shadow_icon.png");
+	poison_icon = AEGfxTextureLoad("Assets/poison_icon.png");
+
 	PositionInit();
 	alchemice = create_player();
+	
 	//Init All Spells
 	spellbook = init_all_spells();
 
 	wow = AEAudioLoadMusic("Assets/toot.mp3");
 	gun = AEAudioLoadMusic("Assets/gun.wav");
 
+	init_spells_draw(spellbook);
 }
 
 // Initialization of your own variables go here
@@ -168,25 +187,19 @@ void GameStateAlchemiceInit() {
 	turn = player_turn;
 	pause_mode = false;
 
-	//Draw all spells that are active at beginning
-	AEVec2Zero(&cards);
-	AEVec2Set(&cards, (f32)-(AEGetWindowWidth() / 2) + 100, -((f32)-(AEGetWindowHeight() / 2) + 100));
-
 	for (int i = 0; i <= spellbook.array_size; i++) {
 		if (spellbook.spell_array[i].unlocked == true) {
-			if (spellbook.spell_array[i].spell_dragdrop->getcoord().mid.x == 0 && spellbook.spell_array[i].spell_dragdrop->getcoord().mid.y == 0) {
-				spellbook.spell_array[i].init_spells_draw(spellbook.spell_array[i], cards);
-				cards.x += 100;
-				spellbook.spell_array[i].spell_dragdrop->set_origin();
-			}
+			std::cout << spellbook.spell_array[i].spell_name << spellbook.spell_array[i].spell_dragdrop->getcoord().mid.x << spellbook.spell_array[i].spell_dragdrop->getcoord().mid.y << std::endl;
 		}
 	}
+
+
 	//creates the button from top to bottom top most button [0]
 	for (int i = 0; i < sizeof(pause_buttons) / sizeof(pause_buttons[0]); ++i) {
 		pause_buttons[i] = CreateAABB({ 0,(f32)-pause_start_y + i * pause_space_y }, pause_length, pause_width);
 	}
 
-	cards.x = -50;
+	//cards.x = -50;
 	end_turn_button = CreateAABB(end_mid, end_length, end_width);
 
 	//Most stuff are only needed to be init in level 1;
@@ -195,13 +208,14 @@ void GameStateAlchemiceInit() {
 
 		enemies[0] = Enemy(big_rat, rat, "Rat", 4, 1, FIRE);
 		enemies[0].set_position_and_aabb(enemy_position[0]);
-		
+
 		enemies[1] = Enemy(base_rat, rat, "Rat", 4, 1, WATER);
 		enemies[1].set_position_and_aabb(enemy_position[1]);
 
 		enemies[2] = Enemy(base_rat, rat, "Rat", 4, 1, WATER);
 		enemies[2].set_position_and_aabb(enemy_position[2]);
 
+		level.display_level = "Level 1";
 	}
 	else if (level.curr_level == level_2)
 	{
@@ -213,6 +227,8 @@ void GameStateAlchemiceInit() {
 
 		enemies[2] = Enemy(base_rat, rat, "Rat", 4, 2, INVALID_ELEMENT);
 		enemies[2].set_position_and_aabb(enemy_position[2]);
+
+		level.display_level = "Level 2";
 	}
 	else if (level.curr_level == level_3)
 	{
@@ -224,6 +240,8 @@ void GameStateAlchemiceInit() {
 
 		enemies[2] = Enemy(base_rat, big_rat_texture, "Big Rat", 8, 2, INVALID_ELEMENT);
 		enemies[2].set_position_and_aabb(enemy_position[2]);
+
+		level.display_level = "Level 3";
 	}
 }
 
@@ -245,7 +263,7 @@ void GameStateAlchemiceUpdate() {
 
 	drag = true;
 	//Pause button, switch state of pause_mode
-	if (AEInputCheckTriggered(AEVK_ESCAPE)) {
+	if (AEInputCheckTriggered(AEVK_ESCAPE) && !transition) {
 		pause_mode = !pause_mode;
 	}
 
@@ -276,19 +294,7 @@ void GameStateAlchemiceUpdate() {
 		}
 	}
 
-	//Draw spells player unlocks / combines
-	for (int i = 4; i <= max_spells; i++) {
-		if (spellbook.spell_array[i].unlocked == true) {
-			//Checks if 2 spells are colliding for combination
-			if (spellbook.spell_array[i].spell_dragdrop->getcoord().mid.x == 0 && spellbook.spell_array[i].spell_dragdrop->getcoord().mid.y == 0) {
-				spellbook.spell_array[i].init_spells_draw(spellbook.spell_array[i], cards);
-				cards.x += 110;
-				spellbook.spell_array[i].spell_dragdrop->set_origin();
-			}
-		}
-	}
-
-	//Mouse Debug
+	//Mouse Debug, remove
 	if (AEInputCheckTriggered(AEVK_E))
 	{
 		printf("mouse x is %f\n", mouse_pos.x);
@@ -309,7 +315,6 @@ void GameStateAlchemiceUpdate() {
 		{
 			create_particle(enemy_part_manager.particle_vector, enemy_part_manager.max_capacity, enemies[i].get_pos(), enemy_take_damage_particle);
 			enemies[i].update_bleed_timer();
-
 			if (enemies[i].get_bleed_timer() <= 0) {
 				enemies[i].reset_bleed_time();
 				f64 j = enemies[i].get_bleed_timer();
@@ -320,14 +325,23 @@ void GameStateAlchemiceUpdate() {
 
 	//Particles Update
 	update_particle(enemy_part_manager.particle_vector);
+	update_particle(crafting_part_manager.particle_vector);
+	rotation_about_time += (f32)g_dt * FRAMERATE;
+
+	//remove
+	if (AEInputCheckTriggered(AEVK_F2)) {
+		transition = !transition;
+		std::cout << transition << std::endl;
+	}
 
 	//MAIN GAMEPLAY LOOP
 	//Check if players or enemies or all enemies are all dead
-	if (alchemice->hp > 0 && enemies_alive && !pause_mode) {
+	if (alchemice->hp > 0 && enemies_alive && !pause_mode && transition == false) {
 		//Checking for turns
 		if (turn == player_turn) {
 
-			if (AEInputCheckCurr(AEVK_F1)) {
+			//remove
+			if (AEInputCheckTriggered(AEVK_F1)) {
 				alchemice->hp = 0;
 			}
 
@@ -335,24 +349,28 @@ void GameStateAlchemiceUpdate() {
 			{
 				for (int i = 0; i <= max_spells; i++)
 				{
-					if (aabbbutton(spellbook.spell_array[i].spell_dragdrop, mouse_pos) && crafting_table.get_spell1() != spellbook.spell_array[i].id
-						&& crafting_table.get_spell2() != spellbook.spell_array[i].id)
-					{
-						for (int i = 0; i <= max_spells; i++)
+					if (spellbook.spell_array[i].unlocked == true) {
+						if (aabbbutton(spellbook.spell_array[i].spell_dragdrop, mouse_pos) 
+							&& !crafting_table.get_flag())
 						{
-							if (spellbook.spell_array[i].spell_dragdrop->getmouse())
+							for (int i = 0; i <= max_spells; i++)
 							{
-								drag = false;
+								if (spellbook.spell_array[i].spell_dragdrop->getmouse()) 
+								{
+									drag = false;
+								}
 							}
-						}
-						if (drag)
-						{
-							spellbook.spell_array[i].spell_dragdrop->mousechange(true);
+							if (drag)
+							{
+								spellbook.spell_array[i].spell_dragdrop->mousechange(true); 
+							}
 						}
 					}
 				}
 			}
 
+			/*crafting_table.get_spell2() != spellbook.spell_array[i].id
+				&& crafting_table.get_spell1() != spellbook.spell_array[i].id*/
 			for (int i = 0; i <= max_spells; i++)
 			{
 				if (spellbook.spell_array[i].spell_dragdrop->getmouse())
@@ -363,7 +381,6 @@ void GameStateAlchemiceUpdate() {
 
 			if (AEInputCheckReleased(AEVK_LBUTTON))
 			{
-				// redudneant 
 				for (int i = 0; i < max_spells; i++)
 				{
 					for (int j = 0; j < TOTAL_ENEMY; ++j)
@@ -372,12 +389,11 @@ void GameStateAlchemiceUpdate() {
 						{
 							if (enemies[j].is_alive() && alchemice->mp > 0)
 							{
-								enemies[j].take_damage(spellbook.spell_array[i].base_damage,static_cast<Elements>(spellbook.spell_array[i].element));
+								enemies[j].take_damage(spellbook.spell_array[i].base_damage, static_cast<Elements>(spellbook.spell_array[i].element));
 								enemies[j].set_bleeding(true);
 								alchemice->mp -= 1;
 								if (spellbook.spell_array[i].id > tier3_last) {
-									spellbook.spell_array[i].reset_spell();
-									cards.x -= 110;
+									spellbook.spell_array[i].unlocked = false;
 								}
 							}
 						}
@@ -387,6 +403,10 @@ void GameStateAlchemiceUpdate() {
 					if (spellbook.spell_array[i].spell_dragdrop->getmouse())
 					{
 						std::cout << "RELEASE" << std::endl;
+						if (spellbook.spell_array[i].id == crafting_table.get_spell1()) {
+							crafting_table.crafting_table_snap(spellbook, spellbook.spell_array[i].id);
+							spellbook.spell_array[i].spell_dragdrop->mousechange(true);
+						}
 						if (aabbbutton(crafting_table.get_dragdrop(), spellbook.spell_array[i].spell_dragdrop) == 1 && alchemice->mp > 0) {
 							crafting_table.crafting_table_snap(spellbook, spellbook.spell_array[i].id);
 						}
@@ -401,7 +421,7 @@ void GameStateAlchemiceUpdate() {
 				}
 			}
 
-			if (crafting_table.get_flag() == true) {
+			if (crafting_table.get_flag()) {
 				if (crafting_table.crafting_table_update(spellbook) == 2) {
 					alchemice->mp -= 1;
 				}
@@ -413,6 +433,7 @@ void GameStateAlchemiceUpdate() {
 				for (int i = 0; i <= max_spells; i++) {
 					if (aabbbutton(spellbook.spell_array[i].spell_dragdrop, mouse_pos)) {
 						std::cout << "Clicking " << spellbook.spell_array[i].spell_name << std::endl;
+						
 					}
 				}
 
@@ -503,15 +524,23 @@ void GameStateAlchemiceUpdate() {
 		}//End of enemy_turn logic
 	}//End of Main Gameplay Loop.
 	else if (!enemies_alive) {
+		//transition = true;
 		level.next_level();
 		gGameStateNext = GS_RESTART;
 	}
 	else if (alchemice->hp <= 0) {
 		gGameStateNext = GS_GAMEOVER;
 	}
+	if (transition) {
+		transition_timer -= g_dt;
+		if (transition_timer < 0) {
+			level_transition(level.curr_level);
+		}
+	}
 }
 
 void GameStateAlchemiceDraw() {
+	
 	// Your own rendering logic goes here
 	// Set the background to black.
 	AEGfxSetBackgroundColor(.2f, .2f, .2f);
@@ -523,7 +552,18 @@ void GameStateAlchemiceDraw() {
 	// Set blend mode to AE_GFX_BM_BLEND
 	// This will allow transparency.
 	AEGfxSetBlendMode(AE_GFX_BM_BLEND);
-	AEGfxSetTransparency(1.0f);
+
+	if (transition) {
+		AEGfxSetBackgroundColor(.0f, .0f, .0f);
+		if (transition_timer > 0) {
+			AEGfxSetTransparency((f32)transition_timer);
+		}
+		else {
+			AEGfxSetTransparency(0.0f);
+		}
+	}
+	else
+		AEGfxSetTransparency(1.0f);
 
 	AEMtx33 scale{ 0 };
 	AEMtx33 rotate{ 0 };
@@ -540,7 +580,10 @@ void GameStateAlchemiceDraw() {
 	AEGfxMeshDraw(pMesh, AE_GFX_MDM_TRIANGLES);
 
 	//UI Drawing
-	AEGfxPrint(font, (s8*)level.display_turn.c_str(), -.1f, .9f, 1.0f, 1.0f, 1.0f, 1.0f);
+	if (!transition) {
+		AEGfxPrint(font, (s8*)level.display_turn.c_str(), -.1f, .9f, 1.0f, 1.0f, 1.0f, 1.0f);
+		AEGfxPrint(font, (s8*)level.display_level.c_str(), -.9f, .9f, 1.0f, 1.0f, 1.0f, 1.0f);
+	}
 
 	//Character drawing
 	AEGfxTextureSet(chara, 0, 0);
@@ -552,18 +595,21 @@ void GameStateAlchemiceDraw() {
 	AEGfxSetTransform(transform.m);
 	AEGfxMeshDraw(pMesh, AE_GFX_MDM_TRIANGLES);
 	std::string player_hp;
-	if (alchemice->hp)
-	{
-		player_hp += std::to_string(alchemice->hp);
-		player_hp_bar(*alchemice, player_position, pMesh);
+	
+	if (!transition) {
+		if (alchemice->hp)
+		{
+			player_hp += std::to_string(alchemice->hp);
+			player_hp_bar(*alchemice, player_position, pMesh);
+		}
+		else
+		{
+			player_hp += "0";
+		}
+		player_hp += "/";
+		player_hp += std::to_string(alchemice->max_hp);
+		name_bar(player_hp, player_position, font);
 	}
-	else
-	{
-		player_hp += "0";
-	}
-	player_hp += "/";
-	player_hp += std::to_string(alchemice->max_hp);
-	name_bar(player_hp, player_position, font);
 
 	for (int i{ 0 }; i < alchemice->max_mp; ++i) {
 		AEVec2 mana_draw_position{ (f32)(-AEGetWindowWidth() / 2.5) + (i * 40), (f32)(-AEGetWindowHeight() / 4) };
@@ -589,8 +635,12 @@ void GameStateAlchemiceDraw() {
 		}
 	}
 
+	//Spell Slot Drawing
+	draw_base_spell_slots(pMesh, base_mid_pipe, base_cap_pipe);
+	draw_unlocked_spell_slots(pMesh, spellbook,unlocked_spell_slot);
+
 	//Crafting Table
-	draw_crafting_table(pMesh, crafting_table, crafting_test);
+	draw_crafting_table(pMesh, crafting_table, crafting_part_manager, enemy_take_damage_particle, crafting_test);
 
 	//Card Drawing
 	draw_all_spells(spellbook, pMesh);
@@ -608,12 +658,45 @@ void GameStateAlchemiceDraw() {
 			AEGfxSetTransform(transform.m);
 			AEGfxMeshDraw(pMesh, AE_GFX_MDM_TRIANGLES);
 
-			enemy_info(enemies[i], font, pMesh);
+			if (!transition)
+				enemy_info(enemies[i], font, pMesh);
+
+			//Choosing Icon
+			AEGfxTexture* element;
+
+			switch (enemies[i].get_element())
+			{
+			case WATER:
+				element = water_icon;
+				break;
+			case POISON:
+				element = poison_icon;
+				break;
+			case SHADOW:
+				element = shadow_icon;
+				break;
+
+			case FIRE:
+				element = fire_icon;
+				break;
+			default:
+				element = water_icon;
+			}
+			//Drawing Icon
+			AEGfxTextureSet(element, 0, 0);
+			AEMtx33Trans(&translate, (f32)(enemies[i].get_element_icon_pos().x), (f32)(enemies[i].get_element_icon_pos().y));
+			AEMtx33Rot(&rotate, 0);
+			AEMtx33Scale(&scale, 25.f, 25.f);
+			AEMtx33Concat(&transform, &rotate, &scale);
+			AEMtx33Concat(&transform, &translate, &transform);
+			AEGfxSetTransform(transform.m);
+			AEGfxMeshDraw(pMesh, AE_GFX_MDM_TRIANGLES);
 		}
 	}
 
 	//Particles Drawing
 	draw_particles(enemy_part_manager.particle_vector, particle_mesh, mana_empty);
+	draw_particles(crafting_part_manager.particle_vector, particle_mesh, blast[2]);
 
 	//Enemy Attack Animation
 	if (turn == enemy_turn) {
@@ -650,7 +733,8 @@ void GameStateAlchemiceDraw() {
 	AEMtx33Concat(&transform, &translate, &transform);
 	AEGfxSetTransform(transform.m);
 	AEGfxMeshDraw(pMesh, AE_GFX_MDM_TRIANGLES);
-	AEGfxPrint(font, (s8*)End_Turn_Text, middle + offset, (f32)-(end_turn_button.mid.y / (AEGetWindowHeight() / 2)), 1, 0, 0, 0);
+	if (!transition)
+		AEGfxPrint(font, (s8*)End_Turn_Text, middle + offset, (f32)-(end_turn_button.mid.y / (AEGetWindowHeight() / 2)), 1, 0, 0, 0);
 
 
 	AEGfxSetRenderMode(AE_GFX_RM_TEXTURE);
@@ -723,6 +807,19 @@ void GameStateAlchemiceUnload() {
 	AEGfxTextureUnload(blast[2]);
 	AEGfxTextureUnload(blast[3]);
 
-	AEGfxMeshFree(particle_mesh);
+	//Spell Slot 
+	AEGfxTextureUnload(base_mid_pipe);
+	AEGfxTextureUnload(base_cap_pipe);
+	AEGfxTextureUnload(unlocked_spell_slot);
+
+	//Elemental Icons
+	AEGfxTextureUnload(fire_icon);
+	AEGfxTextureUnload(water_icon);
+	AEGfxTextureUnload(shadow_icon);
+	AEGfxTextureUnload(poison_icon);
+	//unload_enemy_texture();
+
+
 	AEGfxMeshFree(pMesh);
+	AEGfxMeshFree(particle_mesh);
 }
