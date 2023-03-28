@@ -199,13 +199,27 @@ void sub_menu_draw(AEGfxTexture* sub_menu, spell_book& spells, AEGfxVertexList* 
 	}
 }
 
-void level_transition(level_enum const& num) {
-	/*const char* transition_text[] = { {"L"}, {"E"}, {"V"}, {"E"}, {"L"}, {":"} };
-	const char* level_text = (num == level_1) ? "1" : (num == level_2) ? "2" : (num == level_3) ? "3" : "";
-	for (int i{}; i < ARRAYSIZE(transition_text); ++i)
-	{
-		f32 middle = -(((float)strlen(transition_text[i]) / 2) / (AEGetWindowWidth() / FONT_SIZE));
-		f32 textY = (float)((0 - i * linespace + scroll_time_current) / ((f32)AEGetWindowHeight() / 2));
-		AEGfxPrint(font, (s8*)Credits[i], middle, textY, 1, 1, 1, 1);
-	}*/
+void level_transition(level_enum const& num, double time, std::string &tmp, bool &transition) {
+	int i{ 0 };
+	const char transition_addtext[] = { {'L'}, {'E'}, {'V'}, {'E'}, {'L'}, {':'}, {' '}, {static_cast<char>(static_cast<int>(num) + '1')}};
+
+	if (time > 0) {
+		i = (int)(time*5);
+	}
+
+	if (i < ARRAYSIZE(transition_addtext) && tmp[i] != transition_addtext[i]) {
+		tmp += transition_addtext[i];
+	}
+
+	if (i > ARRAYSIZE(transition_addtext) && transition) {
+		tmp += ' ';
+		transition = false;
+	}
+
+	const char* transition_text = tmp.c_str();
+
+	f32 middle = -(((float)strlen(transition_text) / 2) / (AEGetWindowWidth() / FONT_SIZE));
+	f32 textY = 0;
+	AEGfxPrint(font, (s8*)tmp.c_str(), middle, textY, 1, 1, 1, 1);
+
 }

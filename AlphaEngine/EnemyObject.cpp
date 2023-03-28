@@ -201,7 +201,7 @@ void Enemy::update_damage_timer()
 {
     if (bool_damage_num)
     {
-        damage_timer -= g_dt;
+        damage_timer -= (f32)g_dt;
         if (damage_timer < 0.f)
         {
             bool_damage_num = false;

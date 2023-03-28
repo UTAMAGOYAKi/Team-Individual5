@@ -18,9 +18,7 @@
 //burn can be placed on either rat, but second rat has no hp
 
 // ---------------------------------------------------------------------------
-// main
-//int i = 0;
-//float position = 1000.0;
+
 
 //Card Variables
 //---------------------------------------------------------------------------------
@@ -58,7 +56,9 @@ bool fullscreen = false;
 Turn turn;
 level_manager level;
 bool transition = false;
+const double transition_set_time = 1;
 double transition_timer = 1;
+std::string transition_text{};
 
 //GameObject Creations
 player* alchemice{};
@@ -201,6 +201,8 @@ void GameStateAlchemiceInit() {
 		enemies[2].set_position_and_aabb(enemy_position[2]);
 
 		level.display_level = "Level 1";
+		alchemice->mp = 2;
+		alchemice->max_mp = 2;
 	}
 	else if (level.curr_level == level_2)
 	{
@@ -214,6 +216,8 @@ void GameStateAlchemiceInit() {
 		enemies[2].set_position_and_aabb(enemy_position[2]);
 
 		level.display_level = "Level 2";
+		alchemice->mp = 3;
+		alchemice->max_mp = 3;
 	}
 	else if (level.curr_level == level_3)
 	{
@@ -227,6 +231,8 @@ void GameStateAlchemiceInit() {
 		enemies[2].set_position_and_aabb(enemy_position[2]);
 
 		level.display_level = "Level 3";
+		alchemice->mp = 4;
+		alchemice->max_mp = 4;
 	}
 }
 
@@ -306,22 +312,11 @@ void GameStateAlchemiceUpdate() {
 	update_particle(crafting_part_manager.particle_vector);
 	rotation_about_time += (f32)g_dt * FRAMERATE;
 
-	//remove
-	if (AEInputCheckTriggered(AEVK_F2)) {
-		transition = !transition;
-		std::cout << transition << std::endl;
-	}
-
 	//MAIN GAMEPLAY LOOP
 	//Check if players or enemies or all enemies are all dead
 	if (alchemice->hp > 0 && enemies_alive && !pause_mode && transition == false) {
 		//Checking for turns
 		if (turn == player_turn) {
-
-			//remove
-			if (AEInputCheckTriggered(AEVK_F1)) {
-				alchemice->hp = 0;
-			}
 
 			if (AEInputCheckCurr(AEVK_LBUTTON))
 			{
@@ -488,10 +483,14 @@ void GameStateAlchemiceUpdate() {
 			}
 		}//End of enemy_turn logic
 	}//End of Main Gameplay Loop.
-	else if (!enemies_alive) {
-		//transition = true;
-		level.next_level();
-		gGameStateNext = GS_RESTART;
+	else if (!enemies_alive && !transition) {
+		if (level.curr_level != level_3) {
+			transition_timer = transition_set_time;
+			transition_text = "";
+			transition = true;
+		}
+		else
+			gGameStateNext = GS_VICTORY;
 	}
 	else if (alchemice->hp <= 0) {
 		gGameStateNext = GS_GAMEOVER;
@@ -499,7 +498,11 @@ void GameStateAlchemiceUpdate() {
 	if (transition) {
 		transition_timer -= g_dt;
 		if (transition_timer < 0) {
-			level_transition(level.curr_level);
+			level_transition(level.curr_level, abs(transition_timer), transition_text, transition);
+		}
+		if (!transition) {
+			level.next_level();
+			gGameStateNext = GS_RESTART;
 		}
 	}
 }
@@ -697,8 +700,7 @@ void GameStateAlchemiceDraw() {
 
 
 	// End turn button
-	// 113 characters on screen, start to end, 113/2 =  56.5(left and right for scaling) Roboto
-	// 85 characters, 85/2 = 42.5 Gothic
+	// 85 characters on screen, start to end, 85/2 =  42.5(left and right for scaling) Gothic
 	// 1280W,720H, 640/HalfWidth, 360/HalfHeight
 	const char* End_Turn_Text{ "End Turn" };
 	f32 middle = (end_turn_button.mid.x / (AEGetWindowWidth() / 2));
@@ -735,9 +737,7 @@ void GameStateAlchemiceDraw() {
 		AEGfxSetTransform(transform.m);
 		AEGfxMeshDraw(pMesh, AE_GFX_MDM_TRIANGLES);
 
-		// 113 characters on screen, start to end, 113/2 =  56.5(left and right for scaling) Roboto
-		// 85 characters, 85/2 = 42.5 Gothic
-		// 1280W,720H, 640/HalfWidth, 360/HalfHeight
+
 		const char* Pause_Text[3]{ { "Continue" }, { "Options" }, {"Main Menu"} };
 
 		for (int i = 0; i < ARRAYSIZE(Pause_Text); ++i) {
@@ -796,7 +796,6 @@ void GameStateAlchemiceUnload() {
 	AEGfxTextureUnload(shadow_icon);
 	AEGfxTextureUnload(poison_icon);
 	//unload_enemy_texture();
-
 
 	AEGfxMeshFree(pMesh);
 	AEGfxMeshFree(particle_mesh);
