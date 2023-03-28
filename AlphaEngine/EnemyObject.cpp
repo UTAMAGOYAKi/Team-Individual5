@@ -202,10 +202,15 @@ void Enemy::update_damage_timer()
     if (bool_damage_num)
     {
         damage_timer -= (f32)g_dt;
+        damage_timer -= g_dt;
+        str_damage_pos.y += 1.0f;
+        str_damage_pos_percent = convert_pos(str_damage_pos);
+
         if (damage_timer < 0.f)
         {
             bool_damage_num = false;
             damage_timer = damage_time; //Resets back to default time.
+            str_damage_pos = default_str_damage_pos;
         }
     }
 }
