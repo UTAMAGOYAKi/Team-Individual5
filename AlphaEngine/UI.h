@@ -28,6 +28,8 @@ void draw_unlocked_spell_slots(AEGfxVertexList* mesh, spell_book & spellbook, AE
 
 void level_transition(level_enum const& num, double time, std::string &tmp, bool &transition);
 
+void text_buffer(std::string const& input_string, std::string& output_string, double time, int buffer_speed = 5);
+
 extern float rotation_about_time;
 
 #endif //UI_h

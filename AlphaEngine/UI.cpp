@@ -201,25 +201,50 @@ void sub_menu_draw(AEGfxTexture* sub_menu, spell_book& spells, AEGfxVertexList* 
 
 void level_transition(level_enum const& num, double time, std::string &tmp, bool &transition) {
 	int i{ 0 };
-	const char transition_addtext[] = { {'L'}, {'E'}, {'V'}, {'E'}, {'L'}, {':'}, {' '}, {static_cast<char>(static_cast<int>(num) + '1')}};
+	const int transition_speed = 5;
+	std::string addtext {"LEVEL: "};
+	addtext += static_cast<char>(static_cast<int>(num) + '1');
+
+
+	text_buffer(addtext, tmp, time);
 
 	if (time > 0) {
-		i = (int)(time*5);
+		i = (int)(time*transition_speed);
 	}
 
-	if (i < ARRAYSIZE(transition_addtext) && tmp[i] != transition_addtext[i]) {
-		tmp += transition_addtext[i];
-	}
-
-	if (i > ARRAYSIZE(transition_addtext) && transition) {
-		tmp += ' ';
+	if (i > addtext.size() && transition)
 		transition = false;
-	}
 
-	const char* transition_text = tmp.c_str();
-
-	f32 middle = -(((float)strlen(transition_text) / 2) / (AEGetWindowWidth() / FONT_SIZE));
+	f32 middle = -(((float)strlen(tmp.c_str()) / 2) / (AEGetWindowWidth() / FONT_SIZE));
 	f32 textY = 0;
 	AEGfxPrint(font, (s8*)tmp.c_str(), middle, textY, 1, 1, 1, 1);
 
+}
+
+/*
+	\brief					
+		function buffers input_string into output_string, it does not print stuff
+	\param input_string		
+		read only string variable to buffer from
+	\param output_string	
+		string variable to add onto
+	\param time
+		time provided by user strictly needs to start from 0, time provided needs to be always positive in value.
+	\param buffer_speed
+		speed at which the text buffers, default at 5.
+*/
+void text_buffer(std::string const &input_string, std::string &output_string, double time, int buffer_speed) {
+	int i{ 0 };
+	const int text_speed{ buffer_speed };
+	if (time > 0) {
+		i = (int)(time * text_speed);
+	}
+
+	if (i < input_string.size() && output_string[i] != input_string[i]) {
+		output_string += input_string[i];
+	}
+
+	if (i > input_string.size()) {
+		output_string += ' ';
+	}
 }
