@@ -50,7 +50,7 @@ private:
   //Setting
     int total_frame = 4;
     int frame_num = 0; //current frame
-    double attack_animation_timer = .5f;
+    double attack_animation_timer = .3f;
 
     //Frame times
     double frame_time = attack_animation_timer / (double)total_frame;

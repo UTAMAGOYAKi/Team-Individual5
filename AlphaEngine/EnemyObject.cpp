@@ -172,11 +172,13 @@ void Enemy::update_animation(f64 dt) {
     
     if (frame_num < 2)
     {
-        pos.x -= 3.0f;
+        pos.x -= 5.0f;
+        element_icon_pos.x -= 5.0f;
     }
     else
     {
-        pos.x+= 3.0f;
+        pos.x+= 5.0f;
+        element_icon_pos.x += 5.0f;
     }
 
     if (frame_timer <= 0) {
