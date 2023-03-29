@@ -38,7 +38,7 @@ private:
     AEVec2 pos{};
     AEVec2 element_icon_pos{};
     AEGfxTexture* icon_texture{};
-    AEGfxTexture* texture{};
+    AEGfxTexture* texture{}; 
     int size = 1; //pixel size for AABB
     aabb enemy_aabb{};
 
@@ -50,7 +50,7 @@ private:
   //Setting
     int total_frame = 4;
     int frame_num = 0; //current frame
-    double attack_animation_timer = 1.0f;
+    double attack_animation_timer = .5f;
 
     //Frame times
     double frame_time = attack_animation_timer / (double)total_frame;

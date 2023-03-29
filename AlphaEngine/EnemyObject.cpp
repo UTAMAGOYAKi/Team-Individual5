@@ -169,10 +169,20 @@ void Enemy::update_animation(f64 dt) {
 
     if (frame_num == total_frame)
         frame_num = 0;
+    
+    if (frame_num < 2)
+    {
+        pos.x -= 3.0f;
+    }
+    else
+    {
+        pos.x+= 3.0f;
+    }
 
     if (frame_timer <= 0) {
         frame_timer = frame_time;
         frame_num++;
+
 
         if (frame_num >= total_frame) {
             switch_finish_attack();
