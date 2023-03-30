@@ -431,6 +431,7 @@ void GameStateAlchemiceUpdate() {
 			if (crafting_table.get_flag()) {
 				if (crafting_table.crafting_table_update(spellbook) == 2) {
 					alchemice->mp -= 1;
+
 				}
 			}
 
@@ -450,6 +451,7 @@ void GameStateAlchemiceUpdate() {
 					is_enemy_turn = true;
 					level.display_turn = "Enemy's Turn";
 					std::cout << "enemy turn " << std::endl;
+
 				}
 
 			}//Check for Lbutton click
@@ -492,6 +494,7 @@ void GameStateAlchemiceUpdate() {
 						alchemice->hp -= enemies[s_enemy_turn].get_atk();
 					
 						enemies[s_enemy_turn].switch_finish_attack();
+						enemies[s_enemy_turn].set_audio(false);
 						s_enemy_turn++;
 						//is_enemy_turn = false;
 					}
@@ -514,6 +517,7 @@ void GameStateAlchemiceUpdate() {
 				}
 				else
 				{
+
 					is_enemy_turn = false;
 				}
 			}
@@ -711,7 +715,29 @@ void GameStateAlchemiceDraw() {
 
 		if (enemies[s_enemy_turn].is_alive())
 		{
-			
+			if (enemies[s_enemy_turn].get_frame_num() < 1)
+			{
+				if (enemies[s_enemy_turn].get_name() == "Big Rat")
+				{
+					
+					if (!enemies[s_enemy_turn].get_audio())
+					{
+						AEAudioPlay(gun, pain, 1.0f, 1.0f, 0);
+						enemies[s_enemy_turn].set_audio(true);
+						std::cout << " pain\n";
+					}
+
+				}
+				else if (enemies[s_enemy_turn].get_name() == "Rat")
+				{
+					if (!enemies[s_enemy_turn].get_audio())
+					{
+						AEAudioPlay(gun, pain, 1.0f, 1.0f, 0);
+						enemies[s_enemy_turn].set_audio(true);
+						std::cout << " pain\n";
+					}
+				}
+			}
 
 			//Ensure 4th frame which is the delay frame does not get drawn and crash
 			if (enemies[s_enemy_turn].get_frame_num() < enemies[s_enemy_turn].get_total_frame())
@@ -833,4 +859,6 @@ void GameStateAlchemiceUnload() {
 
 	AEGfxMeshFree(pMesh);
 	AEGfxMeshFree(particle_mesh);
+
+	//unload audio?
 }
