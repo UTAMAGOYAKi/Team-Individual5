@@ -181,7 +181,7 @@ void GameStateAlchemiceLoad() {
 	
 	gun =	AEAudioLoadSound("Assets/gun.wav");
 	combi = AEAudioLoadSound("Assets/Magic-combinations-sfx.wav");
-	death = AEAudioLoadSound("Assets/pain-death-sfx.wav");
+	death = AEAudioLoadSound("Assets/fox.wav");
 	init_spells_draw(spellbook);
 }
 
@@ -397,6 +397,11 @@ void GameStateAlchemiceUpdate() {
 							if (enemies[j].is_alive() && alchemice->mp > 0)
 							{
 								enemies[j].take_damage(spellbook.spell_array[i].base_damage, static_cast<Elements>(spellbook.spell_array[i].element));
+								if (enemies[j].get_hp() <= 0)
+								{
+									AEAudioPlay(death, pain, 1.0f, 0.6, 0);
+
+								}
 								enemies[j].set_bleeding(true);
 								alchemice->mp -= 1;
 								if (spellbook.spell_array[i].id > tier3_last) {
