@@ -679,25 +679,24 @@ void GameStateAlchemiceDraw() {
 	draw_particles(crafting_part_manager.particle_vector, particle_mesh, blast[2]);
 
 	//Enemy Attack Animation
-	// TURNED OFF
-	//if (turn == enemy_turn) {
+	if (turn == enemy_turn) {
 
-	//	if (enemies[s_enemy_turn].is_alive())
-	//	{
-	//		//Ensure 4th frame which is the delay frame does not get drawn and crash
-	//		if (enemies[s_enemy_turn].get_frame_num() < enemies[s_enemy_turn].get_total_frame())
-	//		{
-	//			AEGfxTextureSet(blast[enemies[s_enemy_turn].get_frame_num()], 0, 0);
-	//			AEMtx33Trans(&translate, (f32)(enemies[s_enemy_turn].get_pos().x), (f32)(enemies[s_enemy_turn].get_pos().y));
-	//			AEMtx33Rot(&rotate, 0);
-	//			AEMtx33Scale(&scale, 100.f, 100.f);
-	//			AEMtx33Concat(&transform, &rotate, &scale);
-	//			AEMtx33Concat(&transform, &translate, &transform);
-	//			AEGfxSetTransform(transform.m);
-	//			AEGfxMeshDraw(pMesh, AE_GFX_MDM_TRIANGLES);
-	//		}
-	//	}
-	//}
+		if (enemies[s_enemy_turn].is_alive())
+		{
+			//Ensure 4th frame which is the delay frame does not get drawn and crash
+			if (enemies[s_enemy_turn].get_frame_num() < enemies[s_enemy_turn].get_total_frame())
+			{
+				AEGfxTextureSet(blast[enemies[s_enemy_turn].get_frame_num()], 0, 0);
+				AEMtx33Trans(&translate, (f32)(enemies[s_enemy_turn].get_pos().x), (f32)(enemies[s_enemy_turn].get_pos().y));
+				AEMtx33Rot(&rotate, 0);
+				AEMtx33Scale(&scale, 100.f, 100.f);
+				AEMtx33Concat(&transform, &rotate, &scale);
+				AEMtx33Concat(&transform, &translate, &transform);
+				AEGfxSetTransform(transform.m);
+				AEGfxMeshDraw(pMesh, AE_GFX_MDM_TRIANGLES);
+			}
+		}
+	}
 
 
 	// End turn button

@@ -1,3 +1,16 @@
+/******************************************************************************/
+/*!
+\file		GameStates.h
+\author 	Liang HongJie, Yeo Jun Jie
+\par    	email: l.hongjie\@digipen.edu, 
+\brief		Function declaration for Game as well as define Enum used within Game loop
+
+Copyright (C) 2023 DigiPen Institute of Technology.
+Reproduction or disclosure of this file or its contents without the
+prior written consent of DigiPen Institute of Technology is prohibited.
+ */
+ /******************************************************************************/
+
 #pragma once
 
 enum Turn {

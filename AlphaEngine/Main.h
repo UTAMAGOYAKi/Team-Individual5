@@ -1,3 +1,16 @@
+/******************************************************************************/
+/*!
+\file		Main.h
+\author 	TeamIndividual5
+\brief		Global variables and all header files included here.
+			Macro ARRAYSIZE defined here.
+
+Copyright (C) 2023 DigiPen Institute of Technology.
+Reproduction or disclosure of this file or its contents without the
+prior written consent of DigiPen Institute of Technology is prohibited.
+ */
+ /******************************************************************************/
+
 #pragma once
 
 #include "AEEngine.h"
@@ -13,7 +26,6 @@
 #include "GameStates.h"
 #include "LoadScreen.h"
 #include "MainMenu.h"
-#include "Mesh.h"
 #include "Player.h"
 #include "Particles.h"
 #include "Spells.h"
@@ -32,4 +44,4 @@ extern double click_offset;
 
 #ifndef ARRAYSIZE
 #define ARRAYSIZE(x) (sizeof(x)/sizeof(x[0]))
-#endif // !
+#endif

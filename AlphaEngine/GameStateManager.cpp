@@ -1,11 +1,28 @@
+/******************************************************************************/
+/*!
+\file		GaneStateManager.cpp
+\author 	Liang HongJie
+\par    	email: l.hongjie\@digipen.edu
+\brief		Defines functions for GameStateManager.
+			Update function is to change the function pointer to point to its
+			respective function of the game state.
+
+Copyright (C) 2023 DigiPen Institute of Technology.
+Reproduction or disclosure of this file or its contents without the
+prior written consent of DigiPen Institute of Technology is prohibited.
+ */
+ /******************************************************************************/
+
 #pragma once
 #include "Main.h"
 
+//Game states
 unsigned int	gGameStateInit;
 unsigned int	gGameStateCurr;
 unsigned int	gGameStatePrev;
 unsigned int	gGameStateNext;
 
+//Function pointers
 void (*GameStateLoad)()	= 0; 
 void (*GameStateInit)()	= 0;
 void (*GameStateUpdate)()	= 0;
@@ -13,6 +30,9 @@ void (*GameStateDraw)()	= 0;
 void (*GameStateFree)()	= 0;
 void (*GameStateUnload)()	= 0;
 
+/*
+	Init function of GameStateManager
+*/
 void GameStateManagerInit(unsigned int gameStateInit) {
 	// set the initial game state
 	gGameStateInit = gameStateInit;
@@ -26,6 +46,13 @@ void GameStateManagerInit(unsigned int gameStateInit) {
 	GameStateManagerUpdate();
 }
 
+/*
+	Update function of GameStateManager
+
+	Function changes function pointer to point to respective game state function calls.
+
+	These function pointers will then be called in Main.cpp.
+*/
 void GameStateManagerUpdate() {
 	if ((gGameStateCurr == GS_RESTART) || (gGameStateCurr == GS_QUIT))
 		return;

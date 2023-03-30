@@ -1,3 +1,16 @@
+/******************************************************************************/
+/*!
+\file		Credits.cpp
+\author 	Liang HongJie
+\par    	email: l.hongjie\@digipen.edu
+\brief		Function definitions for Credits gamestate.
+
+Copyright (C) 2023 DigiPen Institute of Technology.
+Reproduction or disclosure of this file or its contents without the
+prior written consent of DigiPen Institute of Technology is prohibited.
+ */
+ /******************************************************************************/
+
 #include "main.h"
 
 int linespace;
@@ -7,7 +20,7 @@ double scroll_time_max;
 void CreditsLoad() {}
 void CreditsInit() {
 	scroll_time_current = 0;
-	scroll_time_max = 38 * FRAMERATE;
+	scroll_time_max = 38.0 * (f64)FRAMERATE;
 	click_offset = 0.1;
 	linespace = 60;
 }

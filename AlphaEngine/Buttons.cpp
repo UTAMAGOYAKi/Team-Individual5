@@ -1,3 +1,16 @@
+/******************************************************************************/
+/*!
+\file		Buttons.cpp
+\author 	Liang HongJie, Daniel Tee
+\par    	email: l.hongjie\@digipen.edu, m.tee\@digipen.edu
+\brief		Function definitions for class dragdrop and helper functions.
+
+Copyright (C) 2023 DigiPen Institute of Technology.
+Reproduction or disclosure of this file or its contents without the
+prior written consent of DigiPen Institute of Technology is prohibited.
+ */
+ /******************************************************************************/
+
 #include "Buttons.h"
 
 dragdrop::dragdrop(double s1x, double s1y, double s2x, double s2y, bool flag, int refer)
@@ -226,8 +239,8 @@ AEVec2 distance(AEVec2 first, AEVec2 second)
 double distance_diagonal(AEVec2 first, AEVec2 second)
 {
 	double d = 0.0;
-	d = (first.x - second.x) * (first.x - second.x);
-	d += (first.y - second.y) * (first.y - second.y);
+	d = (f64)(first.x - second.x) * (f64)(first.x - second.x);
+	d += (f64)(first.y - second.y) * (f64)(first.y - second.y);
 	return sqrt(d);
 }
 
@@ -240,6 +253,9 @@ double distance_diagonal(AEVec2 first, AEVec2 second)
 AEVec2 enemy_position[3];
 AEVec2 player_position;
 
+/*
+	Initializes enemy position with respect to the game screen size.
+*/
 void PositionInit() {
 	player_position.x = (float)(-(AEGetWindowWidth() / 4));
 	player_position.y = 0;
@@ -252,6 +268,18 @@ void PositionInit() {
 	enemy_position[2].y = 0;
 }
 
+/*
+	\brief 
+		Function returns struct type aabb with given parameters.
+	\param midpoint
+		Midpoint of object to create aabb for
+	\param length
+		Full length of the aabb to create
+	\param width
+		Full width of the aabb to create
+	\return
+		struct aabb with all its parameters of aabb set, eg. bottom left, top right, midpoint
+*/
 aabb CreateAABB(AEVec2 midpoint, double length, double width) {
 	aabb tmp{
 		{(f32)(midpoint.x + length / 2), (f32)(midpoint.y - width / 2)},

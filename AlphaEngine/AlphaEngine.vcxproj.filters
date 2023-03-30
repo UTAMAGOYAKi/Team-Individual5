@@ -10,7 +10,6 @@
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="EnemyObject.cpp" />
     <ClCompile Include="MainMenu.cpp" />
-    <ClCompile Include="Map.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Particles.cpp" />
     <ClCompile Include="Spells.cpp" />
@@ -30,8 +29,6 @@
     <ClInclude Include="LoadScreen.h" />
     <ClInclude Include="Main.h" />
     <ClInclude Include="MainMenu.h" />
-    <ClInclude Include="Map.h" />
-    <ClInclude Include="Mesh.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Spells.h" />
     <ClInclude Include="UI.h" />
