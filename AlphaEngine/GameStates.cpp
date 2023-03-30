@@ -416,7 +416,6 @@ void GameStateAlchemiceUpdate() {
 					s_enemy_turn = 0;
 					is_enemy_turn = true;
 					level.display_turn = "Enemy's Turn";
-					std::cout << "enemy turn " << std::endl;
 				}
 
 			}//Check for Lbutton click
@@ -440,10 +439,6 @@ void GameStateAlchemiceUpdate() {
 				turn = player_turn;
 				level.display_turn = "Player's Turn";
 
-				//Variables to update when switching back to Player Turn.
-				//is_enemy_turn = false;
-				//curr_time = frame_time;
-
 				//Player Mana System
 				alchemice->max_mp = (alchemice->max_mp == 5) ? 5 : alchemice->max_mp + 1;
 				alchemice->mp = alchemice->max_mp;
@@ -458,9 +453,12 @@ void GameStateAlchemiceUpdate() {
 
 						alchemice->hp -= enemies[s_enemy_turn].get_atk();
 
+						//Do Damage number to alchemice;
+						enemies[s_enemy_turn].set_p_damage_num_str(std::to_string(enemies[s_enemy_turn].get_atk()));
+						enemies[s_enemy_turn].set_p_bool_damage_num(true);
+
 						enemies[s_enemy_turn].switch_finish_attack();
 						s_enemy_turn++;
-						//is_enemy_turn = false;
 					}
 					else
 					{
@@ -671,6 +669,12 @@ void GameStateAlchemiceDraw() {
 			enemies[i].update_damage_timer();
 			AEGfxPrint(font, (s8*)enemies[i].get_str_damage_number().c_str(), enemies[i].get_str_damage_pos_percent().x, enemies[i].get_str_damage_pos_percent().y, 1.0f, 1.0f, enemies[i].get_crit_colour(), enemies[i].get_crit_colour());
 		}
+
+		if (enemies[i].get_p_bool_damage_num())
+		{
+			AEGfxPrint(font, (s8*)enemies[i].get_p_damage_num_str().c_str(), enemies[i].get_p_damage_num_percent_pos().x, enemies[i].get_p_damage_num_percent_pos().y, 1.0f, 1.0f, 1.0f, 1.0f);
+			enemies[i].update_p_damage_timer();
+		}
 	}
 
 
@@ -679,24 +683,25 @@ void GameStateAlchemiceDraw() {
 	draw_particles(crafting_part_manager.particle_vector, particle_mesh, blast[2]);
 
 	//Enemy Attack Animation
-	if (turn == enemy_turn) {
+	// TURNED OFF
+	//if (turn == enemy_turn) {
 
-		if (enemies[s_enemy_turn].is_alive())
-		{
-			//Ensure 4th frame which is the delay frame does not get drawn and crash
-			if (enemies[s_enemy_turn].get_frame_num() < enemies[s_enemy_turn].get_total_frame())
-			{
-				AEGfxTextureSet(blast[enemies[s_enemy_turn].get_frame_num()], 0, 0);
-				AEMtx33Trans(&translate, (f32)(enemies[s_enemy_turn].get_pos().x), (f32)(enemies[s_enemy_turn].get_pos().y));
-				AEMtx33Rot(&rotate, 0);
-				AEMtx33Scale(&scale, 100.f, 100.f);
-				AEMtx33Concat(&transform, &rotate, &scale);
-				AEMtx33Concat(&transform, &translate, &transform);
-				AEGfxSetTransform(transform.m);
-				AEGfxMeshDraw(pMesh, AE_GFX_MDM_TRIANGLES);
-			}
-		}
-	}
+	//	if (enemies[s_enemy_turn].is_alive())
+	//	{
+	//		//Ensure 4th frame which is the delay frame does not get drawn and crash
+	//		if (enemies[s_enemy_turn].get_frame_num() < enemies[s_enemy_turn].get_total_frame())
+	//		{
+	//			AEGfxTextureSet(blast[enemies[s_enemy_turn].get_frame_num()], 0, 0);
+	//			AEMtx33Trans(&translate, (f32)(enemies[s_enemy_turn].get_pos().x), (f32)(enemies[s_enemy_turn].get_pos().y));
+	//			AEMtx33Rot(&rotate, 0);
+	//			AEMtx33Scale(&scale, 100.f, 100.f);
+	//			AEMtx33Concat(&transform, &rotate, &scale);
+	//			AEMtx33Concat(&transform, &translate, &transform);
+	//			AEGfxSetTransform(transform.m);
+	//			AEGfxMeshDraw(pMesh, AE_GFX_MDM_TRIANGLES);
+	//		}
+	//	}
+	//}
 
 
 	// End turn button

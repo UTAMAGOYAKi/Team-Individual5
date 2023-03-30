@@ -1,3 +1,16 @@
+/******************************************************************************/
+/*!
+\file		EnemyObject.cpp
+\author 	Yeo Jun Jie
+\par    	email: yeo.junjie\@digipen.edu
+\brief		Member functions and functions for Enemy objects
+
+Copyright (C) 2023 DigiPen Institute of Technology.
+Reproduction or disclosure of this file or its contents without the
+prior written consent of DigiPen Institute of Technology is prohibited.
+ */
+ /******************************************************************************/
+
 #include "EnemyObject.h"
 #include "Buttons.h"
 
@@ -92,10 +105,7 @@ void Enemy::set_position_and_aabb(AEVec2 input_pos) {
     element_icon_pos = {pos.x - 20.0f , pos.y + 60.0f};
     default_str_damage_pos = {pos.x, pos.y + 20.0f};
     str_damage_pos = default_str_damage_pos;
-    std::cout << " input_pox y: " << str_damage_pos.x << " input_pox y: " << str_damage_pos.y << std::endl;
     str_damage_pos_percent = convert_pos(str_damage_pos);
-    std::cout << " input_pox y: " << str_damage_pos_percent.x << " input_pox y: " << str_damage_pos_percent.y << std::endl;
-
 }
 
 int Enemy::elemental_damage_calculator(Elements enemy_type, Elements input_element) 
@@ -138,7 +148,6 @@ int Enemy::elemental_damage_calculator(Elements enemy_type, Elements input_eleme
             return -1;
         }
     }
-
     //Reaching here means it is neutral.
     return 0;
 }
@@ -223,7 +232,6 @@ void Enemy::update_damage_timer()
     if (bool_damage_num)
     {
         damage_timer -= (f32)g_dt;
-        damage_timer -= g_dt;
         str_damage_pos.y += 1.0f;
         str_damage_pos_percent = convert_pos(str_damage_pos);
 
@@ -257,5 +265,55 @@ bool Enemy::get_audio()
 void Enemy::set_audio(bool input)
 {
     audio = input;
+}
+
+//For player damage numbers
+void Enemy::set_p_damage_num_pos(AEVec2 const& input)
+{
+    p_default_damage_num_pos = input;
+    p_damage_num_pos = p_default_damage_num_pos;
+    p_damage_num_percent_pos = convert_pos(p_damage_num_pos);
+}
+
+AEVec2 Enemy::get_p_damage_num_percent_pos()
+{
+    return p_damage_num_percent_pos;
+}
+
+std::string Enemy::get_p_damage_num_str()
+{
+    return p_damage_num_str;
+}
+
+bool Enemy::get_p_bool_damage_num()
+{
+    return p_bool_damage_num;
+}
+
+void Enemy::set_p_bool_damage_num(bool input)
+{
+    p_bool_damage_num = input;
+}
+
+void Enemy::set_p_damage_num_str(std::string input)
+{
+    p_damage_num_str = input;
+}
+
+void Enemy::update_p_damage_timer()
+{
+    if (p_bool_damage_num)
+    {
+        p_damage_timer -= (f32)g_dt;
+        p_damage_num_pos.y += 2.0f;
+        p_damage_num_percent_pos = convert_pos(p_damage_num_pos);
+        if (p_damage_timer < 0.f)
+        {
+            p_damage_timer = p_damage_time; //Resets back to default time.
+            p_damage_num_pos = p_default_damage_num_pos;
+            p_damage_num_percent_pos = convert_pos(p_damage_num_pos);
+            p_bool_damage_num = false;
+        }
+    }
 }
 

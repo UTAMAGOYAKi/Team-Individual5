@@ -1,3 +1,16 @@
+/******************************************************************************/
+/*!
+\file		Particles.h
+\author 	Yeo Jun Jie
+\par    	email: yeo.junjie\@digipen.edu
+\brief		Functions to help create particles effects in the game.
+
+Copyright (C) 2023 DigiPen Institute of Technology.
+Reproduction or disclosure of this file or its contents without the
+prior written consent of DigiPen Institute of Technology is prohibited.
+ */
+ /******************************************************************************/
+
 #pragma once
 
 #include "Main.h"

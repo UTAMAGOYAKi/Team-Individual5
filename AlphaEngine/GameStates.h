@@ -19,6 +19,7 @@ enum Turn {
 };
 
 enum level_enum {
+	
 	level_1 = 1,
 	level_2,
 	level_3,

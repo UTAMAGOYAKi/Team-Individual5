@@ -1,3 +1,16 @@
+/******************************************************************************/
+/*!
+\file		EnemyObject.h
+\author 	Yeo Jun Jie
+\par    	email: yeo.junjie\@digipen.edu
+\brief		Enemy class declaration and its member functions and functions.
+
+Copyright (C) 2023 DigiPen Institute of Technology.
+Reproduction or disclosure of this file or its contents without the
+prior written consent of DigiPen Institute of Technology is prohibited.
+ */
+ /******************************************************************************/
+
 #ifndef ENEMYOBJECT_H
 #define ENEMYOBJECT_H
 
@@ -76,6 +89,16 @@ private:
     //_______________________FOR AUDIO_______________________________
     bool audio{ false };
 
+    //_________________FOR DAMAGE NUMBER DEALT TO PLAYER_____________
+    AEVec2 p_default_damage_num_pos{ -320.f,0.0f };
+    AEVec2 p_damage_num_pos{ p_default_damage_num_pos };
+    AEVec2 p_damage_num_percent_pos{};
+    std::string p_damage_num_str{};
+
+    bool p_bool_damage_num{ false };
+    float p_damage_time{ 1.0f };
+    float p_damage_timer{ damage_time };
+
 public:
     Enemy() {};
 
@@ -132,6 +155,17 @@ public:
     //Audio
     bool get_audio();
     void set_audio(bool input);
+
+    //_______________ENEMY DAMAGE ONTO PLAYER NUM____________________
+    void set_p_damage_num_pos(AEVec2 const& input);
+
+    AEVec2 get_p_damage_num_percent_pos();
+    std::string get_p_damage_num_str();
+    bool get_p_bool_damage_num();
+
+    void set_p_bool_damage_num(bool input);
+    void set_p_damage_num_str(std::string input);
+    void update_p_damage_timer();
 };
 
 #endif // ENEMY_H
