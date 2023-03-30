@@ -80,6 +80,14 @@ void GameStateManagerUpdate() {
 			GameStateFree	= GameOverFree;
 			GameStateUnload	= GameOverUnload;
 			break;
+		case GS_VICTORY:
+			GameStateLoad = GameOverLoad;
+			GameStateInit = GameOverInit;
+			GameStateUpdate = GameOverUpdate;
+			GameStateDraw = VictoryDraw;
+			GameStateFree = GameOverFree;
+			GameStateUnload = GameOverUnload;
+			break;
 		case GS_RESTART:
 			break;
 		case GS_QUIT:

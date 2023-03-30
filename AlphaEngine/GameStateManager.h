@@ -9,6 +9,7 @@ enum
 	GS_MENU,
 	// special game state. Do not change
 	GS_RESTART,
+	GS_VICTORY,
 	GS_GAMEOVER,
 	GS_TUTORIAL,
 	GS_QUIT,

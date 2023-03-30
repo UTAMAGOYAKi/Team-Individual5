@@ -33,6 +33,13 @@ enum class crafting {
 	SUCCESFUL_COMBO
 };
 
+enum special {
+	NILL = 0,
+	STUN,
+	LINGERING,
+	AOE,
+};
+
 //Spells Bounds
 //Based on tier & max and min
 const enum spells first_spell = spells::TOXIC_DELUGE;
@@ -90,10 +97,9 @@ extern f64 timer;
 
 //A single spell object
 struct Spell {
-	Spell(spells id, spells tier, int element, std::string spell_name, AEGfxTexture* texture, bool unlocked, int base_damage,
-		int AOE_damage, int lingering_damage, int lingering_rounds) :
-		id(id), tier(tier), element(element), spell_name(spell_name), texture(texture), unlocked(unlocked), base_damage(base_damage),
-		aoe_damage(AOE_damage), lingering_damage(lingering_damage), lingering_rounds(lingering_rounds) {
+	Spell(spells id, spells tier, int element, std::string spell_name, AEGfxTexture* texture, bool unlocked, int base_damage, int special) :
+		id(id), tier(tier), element(element), spell_name(spell_name), texture(texture), unlocked(unlocked), base_damage(base_damage), effects(special)
+		/*aoe_damage(AOE_damage), lingering_damage(lingering_damage), lingering_rounds(lingering_rounds)* || int AOE_damage, int lingering_damage, int lingering_rounds*/ {
 
 		//Creates new dragdrop object for collision
 		spell_dragdrop = new dragdrop;
@@ -107,9 +113,10 @@ struct Spell {
 	bool unlocked = false;
 	//Damage
 	int base_damage = 0;
-	int aoe_damage = 0;
-	int lingering_damage = 0;
-	int lingering_rounds = 0;
+	int effects;
+	//int aoe_damage = 0;
+	//int lingering_damage = 0;
+	//int lingering_rounds = 0;
 	//Draw Info
 	AEGfxTexture* texture;
 	dragdrop* spell_dragdrop{};

@@ -78,6 +78,11 @@ bool Enemy::get_bool_damage_num()
     return bool_damage_num;
 }
 
+float Enemy::get_crit_colour() 
+{
+    return crit_colour;
+}
+
 
 //Actions
 void Enemy::set_position_and_aabb(AEVec2 input_pos) {
@@ -95,10 +100,12 @@ void Enemy::set_position_and_aabb(AEVec2 input_pos) {
 
 int Enemy::elemental_damage_calculator(Elements enemy_type, Elements input_element) 
 {
+    set_crit_colour(false);
     if (enemy_type == FIRE) 
     {
         if (input_element == POISON) 
         {
+            set_crit_colour(true);
             return 1;
         }
         if (input_element == SHADOW)
@@ -110,6 +117,7 @@ int Enemy::elemental_damage_calculator(Elements enemy_type, Elements input_eleme
     {
         if (input_element == FIRE)
         {
+            set_crit_colour(true);
             return 1;
         }
         if (input_element == POISON)
@@ -122,6 +130,7 @@ int Enemy::elemental_damage_calculator(Elements enemy_type, Elements input_eleme
     {
         if (input_element == SHADOW)
         {
+            set_crit_colour(true);
             return 1;
         }
         if (input_element == FIRE)
@@ -160,10 +169,22 @@ void Enemy::update_animation(f64 dt) {
 
     if (frame_num == total_frame)
         frame_num = 0;
+    
+    if (frame_num < 2)
+    {
+        pos.x -= 5.0f;
+        element_icon_pos.x -= 5.0f;
+    }
+    else
+    {
+        pos.x+= 5.0f;
+        element_icon_pos.x += 5.0f;
+    }
 
     if (frame_timer <= 0) {
         frame_timer = frame_time;
         frame_num++;
+
 
         if (frame_num >= total_frame) {
             switch_finish_attack();
@@ -201,12 +222,29 @@ void Enemy::update_damage_timer()
 {
     if (bool_damage_num)
     {
+        damage_timer -= (f32)g_dt;
         damage_timer -= g_dt;
+        str_damage_pos.y += 1.0f;
+        str_damage_pos_percent = convert_pos(str_damage_pos);
+
         if (damage_timer < 0.f)
         {
-            bool_damage_num = false;
             damage_timer = damage_time; //Resets back to default time.
+            str_damage_pos = default_str_damage_pos;
+            bool_damage_num = false;
         }
+    }
+}
+
+void Enemy::set_crit_colour(bool input)
+{
+    if (input)
+    {
+        crit_colour = 0.0f;
+    }
+    else
+    {
+        crit_colour = 1.0f;
     }
 }
 

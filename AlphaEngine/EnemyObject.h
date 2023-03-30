@@ -38,7 +38,7 @@ private:
     AEVec2 pos{};
     AEVec2 element_icon_pos{};
     AEGfxTexture* icon_texture{};
-    AEGfxTexture* texture{};
+    AEGfxTexture* texture{}; 
     int size = 1; //pixel size for AABB
     aabb enemy_aabb{};
 
@@ -50,15 +50,15 @@ private:
   //Setting
     int total_frame = 4;
     int frame_num = 0; //current frame
-    double attack_animation_timer = 1.0f;
+    double attack_animation_timer = .3f;
 
     //Frame times
-    double frame_time = attack_animation_timer / (float)total_frame;
+    double frame_time = attack_animation_timer / (double)total_frame;
     double frame_timer = frame_time;
 
     //Bleed Time
     bool bleeding{false};
-    float bleed_time{2.0f};
+    f64 bleed_time{0.8f};
     f64 bleed_timer{bleed_time};
 
     //Damage Number
@@ -71,6 +71,7 @@ private:
     bool bool_damage_num{ false };
     float damage_time{ 1.0f };
     float damage_timer{damage_time};
+    float crit_colour{ 1.0f };
     
     //_______________________FOR AUDIO_______________________________
     bool audio{ false };
@@ -108,6 +109,7 @@ public:
     std::string get_str_damage_number();
     AEVec2 get_str_damage_pos_percent();
     bool get_bool_damage_num();
+    float get_crit_colour();
     
     //Used to make changes to damage classes.
     void set_position_and_aabb(AEVec2 input_pos);
@@ -125,6 +127,7 @@ public:
     //Damage Numbers
     AEVec2 convert_pos(AEVec2 input_pos);
     void update_damage_timer();
+    void set_crit_colour(bool input);
 
     //Audio
     bool get_audio();

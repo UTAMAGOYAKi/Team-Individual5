@@ -164,6 +164,9 @@ void sub_menu_draw(AEGfxTexture* sub_menu, spell_book& spells, AEGfxVertexList* 
 
 
 	std::string sub_words[]{ "Known spell lists" };
+	std::string tier_2[]{ "Tier 2:" };
+	std::string tier_1[]{ "Tier 1:" };
+
 	AEGfxTextureSet(sub_menu, 0, 0);
 	AEMtx33Trans(&translate, -440, 100);
 	AEMtx33Rot(&rotate, 0);
@@ -174,6 +177,10 @@ void sub_menu_draw(AEGfxTexture* sub_menu, spell_book& spells, AEGfxVertexList* 
 	AEGfxMeshDraw(mesh, AE_GFX_MDM_TRIANGLES);
 
 	AEGfxPrint(font, (s8*)sub_words[0].c_str(), -0.8f, 0.8f, 1.0f, 1.0f, 1.0f, 1.0f);
+
+	AEGfxPrint(font, (s8*)tier_2[0].c_str(), -0.8f, 0.70f, 1.0f, 1.0f, 1.0f, 1.0f);
+
+	AEGfxPrint(font, (s8*)tier_1[0].c_str(), -0.8f, 0.20f, 1.0f, 1.0f, 1.0f, 1.0f);
 
 	for (int i = 0; i < max_spells - 1; i++)
 	{
@@ -192,13 +199,52 @@ void sub_menu_draw(AEGfxTexture* sub_menu, spell_book& spells, AEGfxVertexList* 
 	}
 }
 
-void level_transition(level_enum const& num) {
-	/*const char* transition_text[] = { {"L"}, {"E"}, {"V"}, {"E"}, {"L"}, {":"} };
-	const char* level_text = (num == level_1) ? "1" : (num == level_2) ? "2" : (num == level_3) ? "3" : "";
-	for (int i{}; i < ARRAYSIZE(transition_text); ++i)
-	{
-		f32 middle = -(((float)strlen(transition_text[i]) / 2) / (AEGetWindowWidth() / FONT_SIZE));
-		f32 textY = (float)((0 - i * linespace + scroll_time_current) / ((f32)AEGetWindowHeight() / 2));
-		AEGfxPrint(font, (s8*)Credits[i], middle, textY, 1, 1, 1, 1);
-	}*/
+void level_transition(level_enum const& num, double time, std::string &tmp, bool &transition) {
+	int i{ 0 };
+	const int transition_speed = 5;
+	std::string addtext {"LEVEL: "};
+	addtext += static_cast<char>(static_cast<int>(num) + '1');
+
+
+	text_buffer(addtext, tmp, time);
+
+	if (time > 0) {
+		i = (int)(time*transition_speed);
+	}
+
+	if (i > addtext.size() && transition)
+		transition = false;
+
+	f32 middle = -(((float)strlen(tmp.c_str()) / 2) / (AEGetWindowWidth() / FONT_SIZE));
+	f32 textY = 0;
+	AEGfxPrint(font, (s8*)tmp.c_str(), middle, textY, 1, 1, 1, 1);
+
+}
+
+/*
+	\brief					
+		function buffers input_string into output_string, it does not print stuff
+	\param input_string		
+		read only string variable to buffer from
+	\param output_string	
+		string variable to add onto
+	\param time
+		time provided by user strictly needs to start from 0, time provided needs to be always positive in value.
+	\param buffer_speed
+		speed at which the text buffers, default at 5.
+*/
+void text_buffer(std::string const &input_string, std::string &output_string, double time, int buffer_speed) {
+	int i{ 0 };
+	const int text_speed{ buffer_speed };
+	if (time > 0) {
+		i = (int)(time * text_speed);
+	}
+
+	if (i < input_string.size() && output_string[i] != input_string[i]) {
+		output_string += input_string[i];
+	}
+
+	if (i > input_string.size()) {
+		output_string += ' ';
+	}
 }
