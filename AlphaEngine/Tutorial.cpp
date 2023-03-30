@@ -1,7 +1,7 @@
 #include "main.h"
 
 AEGfxVertexList* pMesh_Tutorialscreen;
-AEGfxTexture *Tutorial_screen[2], **pointer_to_texutre;
+AEGfxTexture *Tutorial_screen[12], **pointer_to_texutre;
 size_t TutorialPage, TotalPages;
 
 void TutorialLoad() {
@@ -17,24 +17,36 @@ void TutorialLoad() {
 		0.5f, -0.5f, 0x00000000, 1.0f, 1.0f);
 	pMesh_Tutorialscreen = AEGfxMeshEnd();
 
-	Tutorial_screen[0] = AEGfxTextureLoad("Assets/tutorial1.png");
-	Tutorial_screen[1] = AEGfxTextureLoad("Assets/tutorial2.png");
+	Tutorial_screen[0] = AEGfxTextureLoad("Assets/Tutorial/tutorial1.png");
+	Tutorial_screen[1] = AEGfxTextureLoad("Assets/Tutorial/tutorial2.png");
+	Tutorial_screen[2] = AEGfxTextureLoad("Assets/Tutorial/tutorial3.png");
+	Tutorial_screen[3] = AEGfxTextureLoad("Assets/Tutorial/tutorial4.png");
+	Tutorial_screen[4] = AEGfxTextureLoad("Assets/Tutorial/tutorial5.png");
+	Tutorial_screen[5] = AEGfxTextureLoad("Assets/Tutorial/tutorial6.png");
+	Tutorial_screen[6] = AEGfxTextureLoad("Assets/Tutorial/tutorial7.png");
+	Tutorial_screen[7] = AEGfxTextureLoad("Assets/Tutorial/tutorial8.png");
+	Tutorial_screen[8] = AEGfxTextureLoad("Assets/Tutorial/tutorial9.png");
+	Tutorial_screen[9] = AEGfxTextureLoad("Assets/Tutorial/tutorial10.png");
+	Tutorial_screen[10] = AEGfxTextureLoad("Assets/Tutorial/tutorial11.png");
+	Tutorial_screen[11] = AEGfxTextureLoad("Assets/Tutorial/tutorial12.png");
 }
 
 void TutorialInit() {
 	click_offset = 0.1;
-	TutorialPage = 2;
-	pointer_to_texutre = &Tutorial_screen[0];
+	TotalPages = ARRAYSIZE(Tutorial_screen);
+	TutorialPage = 0;
+	pointer_to_texutre = &Tutorial_screen[TutorialPage];
 }
 void TutorialUpdate() {
 	
 	if (click_offset <= 0 && AEInputCheckTriggered(AEVK_LBUTTON)) {
-		TutorialPage -= 1;
+		TutorialPage = (TutorialPage < TotalPages) ? TutorialPage + 1 : TutorialPage;
+		if (TutorialPage >= TotalPages) {
+			TutorialPage = 0;
+			gGameStateNext = GS_MENU;
+		}
 		click_offset = 0.1;
-		pointer_to_texutre = &Tutorial_screen[1];
-	}
-	if (TutorialPage <= 0) {
-		gGameStateNext = GS_MENU;
+		pointer_to_texutre = &Tutorial_screen[TutorialPage];
 	}
 
 	click_offset -= g_dt * FRAMERATE;
@@ -64,6 +76,7 @@ void TutorialDraw() {
 void TutorialFree() {}
 void TutorialUnload() {
 	AEGfxMeshFree(pMesh_Tutorialscreen);
-	AEGfxTextureUnload(Tutorial_screen[0]);
-	AEGfxTextureUnload(Tutorial_screen[1]);
+
+	for (int i{}; i < ARRAYSIZE(Tutorial_screen); ++i)
+		AEGfxTextureUnload(Tutorial_screen[i]);
 }
