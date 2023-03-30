@@ -97,7 +97,7 @@ int end_width = 80;
 int end_offset = FONT_SIZE / 3;
 
 
-AEAudio wow , gun, combi, death;
+AEAudio wow , gun, combi, death, whack;
 AEAudio bgm;
 
 AEAudioGroup pain,bgm_g;
@@ -182,6 +182,8 @@ void GameStateAlchemiceLoad() {
 	gun =	AEAudioLoadSound("Assets/gun.wav");
 	combi = AEAudioLoadSound("Assets/Magic-combinations-sfx.wav");
 	death = AEAudioLoadSound("Assets/fox.wav");
+	whack = AEAudioLoadSound("Assets/smackwhack.wav");
+	combi = AEAudioLoadSound("Assets/MagicCartoon CTE01_94.8.wav");
 	init_spells_draw(spellbook);
 }
 
@@ -435,6 +437,7 @@ void GameStateAlchemiceUpdate() {
 			if (crafting_table.get_flag()) {
 				if (crafting_table.crafting_table_update(spellbook) == 2) {
 					alchemice->mp -= 1;
+					AEAudioPlay(combi, pain, 1.0f, 1.0f, 0);
 
 				}
 			}
@@ -538,6 +541,7 @@ void GameStateAlchemiceUpdate() {
 	}
 	else if (alchemice->hp <= 0) {
 		gGameStateNext = GS_GAMEOVER;
+		AEAudioStopGroup(bgm_g);
 	}
 	if (transition) {
 		transition_timer -= g_dt;
@@ -745,7 +749,7 @@ void GameStateAlchemiceDraw() {
 				{
 					if (!enemies[s_enemy_turn].get_audio())
 					{
-						AEAudioPlay(gun, pain, 1.0f, 1.0f, 0);
+						AEAudioPlay(whack, pain, 1.0f, 1.0f, 0);
 						enemies[s_enemy_turn].set_audio(true);
 						std::cout << " pain\n";
 					}
@@ -765,7 +769,7 @@ void GameStateAlchemiceDraw() {
 				AEGfxMeshDraw(pMesh, AE_GFX_MDM_TRIANGLES);
 			}
 		}
-	}
+	
 
 
 	// End turn button
