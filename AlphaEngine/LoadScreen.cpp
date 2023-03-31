@@ -44,6 +44,7 @@ void LoadScreenLoad() {
 */
 void LoadScreenInit() {
 	load_screen_time = load_screen_timer;
+	click_offset = 0.1;
 }
 
 /*
@@ -53,9 +54,10 @@ void LoadScreenUpdate() {
 	if (load_screen_time > 0) {
 		load_screen_time -= (f32)g_dt;
 	}
-	if (load_screen_time <= 0 || AEInputCheckTriggered(AEVK_LBUTTON)) {
+	if (load_screen_time <= 0 || AEInputCheckTriggered(AEVK_LBUTTON) && click_offset <= 0) {
 		gGameStateNext = GS_MENU;
 	}
+	click_offset -= g_dt;
 }
 
 /*
