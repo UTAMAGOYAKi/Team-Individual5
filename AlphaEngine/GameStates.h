@@ -1,8 +1,9 @@
 /******************************************************************************/
 /*!
 \file		GameStates.h
-\author 	Liang HongJie, Yeo Jun Jie
-\par    	email: l.hongjie\@digipen.edu, 
+\project	Alchemice
+\author 	Yeo Jun Jie(75%), Liang HongJie(25%)
+\par    	email: yeo.junjie\@digipen.edu, l.hongjie\@digipen.edu,
 \brief		Function declaration for Game as well as define Enum used within Game loop
 
 Copyright (C) 2023 DigiPen Institute of Technology.

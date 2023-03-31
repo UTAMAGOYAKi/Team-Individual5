@@ -1,3 +1,17 @@
+/******************************************************************************/
+/*!
+\file		Buttons.cpp
+\project	Alchemice
+\author 	Daniel Tee(95%), Liang HongJie(5%)
+\par    	email: m.tee\@digipen.edu, l.hongjie\@digipen.edu
+\brief		Function definitions for class dragdrop and helper functions.
+
+Copyright (C) 2023 DigiPen Institute of Technology.
+Reproduction or disclosure of this file or its contents without the
+prior written consent of DigiPen Institute of Technology is prohibited.
+ */
+ /******************************************************************************/
+
 #ifndef BUTTON_HPP
 #define BUTTON_HPP
 #include <iostream> // istream, ostream

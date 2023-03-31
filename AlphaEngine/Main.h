@@ -1,6 +1,7 @@
 /******************************************************************************/
 /*!
 \file		Main.h
+\project	Alchemice
 \author 	TeamIndividual5
 \brief		Global variables and all header files included here.
 			Macro ARRAYSIZE defined here.

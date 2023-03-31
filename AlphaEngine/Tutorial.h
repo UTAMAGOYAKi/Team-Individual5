@@ -1,6 +1,7 @@
 /******************************************************************************/
 /*!
 \file		Tutorial.h
+\project	Alchemice
 \author 	Liang HongJie
 \par    	email: l.hongjie\@digipen.edu
 \brief		Function declarations for Tutorial gamestate.

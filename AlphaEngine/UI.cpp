@@ -1,7 +1,7 @@
 /******************************************************************************/
 /*!
 \file		UI.cpp
-\author 	Liang HongJie,
+\author 	Liang HongJie(20%),
 \par    	email: l.hongjie\@digipen.edu, 
 \brief		Some UI functions defined here.
 

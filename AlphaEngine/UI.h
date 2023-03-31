@@ -1,7 +1,7 @@
 /******************************************************************************/
 /*!
 \file		UI.h
-\author 	Liang HongJie,
+\author 	Liang HongJie(20%),
 \par    	email: l.hongjie\@digipen.edu,
 \brief		Some UI functions declared here as well as 
 

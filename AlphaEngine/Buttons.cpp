@@ -1,8 +1,9 @@
 /******************************************************************************/
 /*!
 \file		Buttons.cpp
-\author 	Liang HongJie, Daniel Tee
-\par    	email: l.hongjie\@digipen.edu, m.tee\@digipen.edu
+\project	Alchemice
+\author 	Daniel Tee(90%), Liang HongJie(10%)
+\par    	email: m.tee\@digipen.edu, l.hongjie\@digipen.edu
 \brief		Function definitions for class dragdrop and helper functions.
 
 Copyright (C) 2023 DigiPen Institute of Technology.

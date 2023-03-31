@@ -1,7 +1,8 @@
 /******************************************************************************/
 /*!
 \file		MainMenu.cpp
-\author 	Liang HongJie, Daniel Tee
+\project	Alchemice
+\author 	Liang HongJie(50%), Daniel Tee(50%)
 \par    	email: l.hongjie\@digipen.edu, m.tee\@digipen.edu
 \brief		Function definitions for MainMenu gamestate.
 

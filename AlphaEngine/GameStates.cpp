@@ -1,3 +1,18 @@
+/******************************************************************************/
+/*!
+\file		GameStates.h
+\project	Alchemice
+\author 	Daniel Tee(25%), Liang HongJie(25%), Low Ee Loong(25%), Yeo Jun Jie(25%)
+\par    	email: m.tee\@digipen.edu, l.hongjie\@digipen.edu, 
+										yeo.junjie\@digipen.edu, 
+\brief		Function declaration for Game as well as define Enum used within Game loop
+
+Copyright (C) 2023 DigiPen Institute of Technology.
+Reproduction or disclosure of this file or its contents without the
+prior written consent of DigiPen Institute of Technology is prohibited.
+ */
+ /******************************************************************************/
+
 // ---------------------------------------------------------------------------
 // includes
 #pragma once

@@ -1,6 +1,7 @@
 /******************************************************************************/
 /*!
 \file		Credits.h
+\project	Alchemice
 \author 	Liang HongJie
 \par    	email: l.hongjie\@digipen.edu
 \brief		Function declaration for credits gamestate.

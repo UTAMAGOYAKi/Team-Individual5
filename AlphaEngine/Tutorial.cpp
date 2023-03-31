@@ -1,6 +1,7 @@
 /******************************************************************************/
 /*!
 \file		Tutorial.cpp
+\project	Alchemice
 \author 	Liang HongJie
 \par    	email: l.hongjie\@digipen.edu
 \brief		Function definitions for Tutorial gamestate. 
