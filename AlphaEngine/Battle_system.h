@@ -1,8 +1,7 @@
 
-#ifndef Battle_h
-#define Battle_h
+#ifndef Battle_system_h
+#define Battle_system_h
 #include "Buttons.h"
-#include "AEEngine.h"
 #include <string>
 
 aabb* Battle_position_create_chara();

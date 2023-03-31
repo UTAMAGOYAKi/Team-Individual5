@@ -1,17 +1,11 @@
 #pragma once
-#include "Main.h"
-#include "Elements.h"
-#include "Buttons.h"
-#include "AEengine.h"
-#include <iostream>
-#include <string>
-#include <limits>
-#include <algorithm>
-#include <assert.h>
 
-enum class spells {
+#include "Main.h"
+
+enum class spells
+{
 	// Tier 3
-	TOXIC_DELUGE =0 ,
+	TOXIC_DELUGE = 0,
 	INFERNO_BLAST,
 	UMBRAL_TENDRILS,
 	MAELSTROM_SURGE,
@@ -24,13 +18,6 @@ enum class spells {
 	BUBONIC_BLAZE,
 	// Invalid
 	INVALID_SPELL
-};
-
-//Table Widths and Heights
-enum class crafting {
-	ONE_SPELL = 1,
-	INVALID_COMBO,
-	SUCCESFUL_COMBO
 };
 
 enum special {
@@ -73,17 +60,9 @@ const int lingering_high = 3;
 //Lingering Rounds
 const int lingering_rounds_mid = 2;
 
-//Crafting Table properties
-const float table_width_const = 180;
-const float table_height_const = 180;
 //Spell Properties
 const float card_width_const = 102.0f;
 const float card_height_const = 128.0f;
-//Space between crafting table centre and spell centre when crafting
-const float crafting_table_buffer = (table_width_const / 4);
-
-//Buffer Float
-const float crafting_time_buffer = 1.2f;
 
 //Individual Spell x coord buffer
 const int spell_buffer = 20;
@@ -91,8 +70,6 @@ const int spell_buffer = 20;
 //Spell X coord tier buffer
 const int spell_tier_buffer = 40;
 
-// crafting table timer for combination spell delay
-extern f64 timer;
 
 
 //A single spell object
@@ -147,67 +124,21 @@ struct spell_book {
 	//swap function
 	void swap(spell_book& rhs);
 
+	//Draws Every Single Spell in a given spellbook
+	void draw_all_spells( AEGfxVertexList* pMesh);
+
+	// Returns true if spell has been unlocked 
+	bool combine_spells( spells id1, spells id2);
+
+	//Set all Spells AABB and Coords when called
+	void init_spells_coords();
+
+	// Called when level ends etc.
+	void unload_spells();
+
 	Spell* spell_array = nullptr;
 	size_t array_size = max_spells ;
 };
 
-class craftingtable {
-public:
-
-	void crafting_table_snap(spell_book& spellbook, spells spell_id);
-
-	//Returns 1 when crafting table is in buffer time (crafting)
-	//Returns 2 when crafting table unlocked a spell succesfully
-	//Returns 3 when invalid combination
-	//Only to be called when two spells are input (see two_spells_flag)
-	int crafting_table_update(spell_book& spellbook);
-	//Returns a pointer to the crafting table's dragdrop object
-	dragdrop* get_dragdrop();
-	//Default Ctor
-	craftingtable();
-
-	//Get Spell1 id
-	spells get_spell1();
-	//Set Spell1 id
-	void reset_spells();
-	//Get Spell2 id
-	spells get_spell2();
-
-	//Set 2 spell flag to true or false
-	void set_flag(bool);
-	//Get status of flag
-	bool get_flag();
-private:
-	const float table_width{ table_width_const };
-	const float table_height{ table_height_const };
-	//Spell 1 hold
-	spells spell1_id = spells::INVALID_SPELL;
-
-	//Spell 2 hold
-	spells spell2_id = spells::INVALID_SPELL;
-
-	//Crafting table snap
-	dragdrop table_dragdrop{};
-
-	// Two Spell Flag
-	bool two_spell_flag;
-};
-
-
-
 // Create array of all spells
 spell_book init_all_spells();
-
-
-// Returns true if spell has been unlocked 
-bool combine_spells(spell_book& spellbook, spells id1, spells id2);
-
-// Called when level ends etc.
-void unload_spells(spell_book& spellbook);
-
-void draw_all_spells(spell_book& spellbook, AEGfxVertexList* pMesh);
-
-void draw_spell_combination(spell_book& spellbook, AEGfxVertexList* pMesh);
-
-//Set all Spells AABB and Coords when called
-void init_spells_coords(spell_book& spellbook);

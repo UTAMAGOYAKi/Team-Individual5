@@ -11,8 +11,8 @@ prior written consent of DigiPen Institute of Technology is prohibited.
  */
  /******************************************************************************/
 
-#include "EnemyObject.h"
-#include "Buttons.h"
+#include "Main.h"
+
 
 //Functions to retrieve Enemy datas
 std::string Enemy::get_name() {

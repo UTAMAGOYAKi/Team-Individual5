@@ -12,7 +12,6 @@ prior written consent of DigiPen Institute of Technology is prohibited.
  /******************************************************************************/
 
 #include "Main.h"
-#include "UI.h"
 
 /*---------------------------------*/
 //	Defines
@@ -37,9 +36,8 @@ AEMtx33 rotate = { 0 };
 AEMtx33 translate = { 0 };
 AEMtx33 transform = { 0 };
 
+//f64 timer;
 float rotation_about_time{};
-
-
 
 void name_bar(std::string name, aabb place, s8 font)
 {

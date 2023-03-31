@@ -14,12 +14,6 @@ prior written consent of DigiPen Institute of Technology is prohibited.
 #ifndef ENEMYOBJECT_H
 #define ENEMYOBJECT_H
 
-//Unused currently
-#include "Main.h"
-#include "string"
-#include "Buttons.h"
-#include <AEVec2.h>
-
 #define TOTAL_ENEMY 3
 const int animation_time = 1;
 

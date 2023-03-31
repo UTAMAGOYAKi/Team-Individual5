@@ -18,8 +18,9 @@ const u32 FRAMERATE = 60;
 int FONT_SIZE = 30;
 AEVec2 mouse_pos;
 s8 font;
-f64 g_dt;
 double click_offset;
+f64 g_dt = 0;
+f64 timer = 0;
 
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	_In_opt_ HINSTANCE hPrevInstance,

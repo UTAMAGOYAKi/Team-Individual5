@@ -11,7 +11,7 @@ prior written consent of DigiPen Institute of Technology is prohibited.
  */
  /******************************************************************************/
 
-#include "Particles.h"
+#include "Main.h"
 
 //This function creates one particle in that frame. Use it somewhere where it can be called over a period of time.
 void create_particle(std::vector<particle>& particle_vector, size_t particle_max, AEVec2 starting_pos, particle (*callback)(AEVec2 pos)) {

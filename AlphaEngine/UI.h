@@ -13,11 +13,6 @@ prior written consent of DigiPen Institute of Technology is prohibited.
 
 #ifndef UI_h
 #define UI_h
-#include "Buttons.h"
-#include "AEEngine.h"
-#include "EnemyObject.h"
-#include <string>
-#include "Spells.h"
 
 extern float rotation_about_time;
 

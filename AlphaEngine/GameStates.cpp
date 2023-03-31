@@ -3,8 +3,8 @@
 \file		GameStates.h
 \project	Alchemice
 \author 	Daniel Tee(25%), Liang HongJie(25%), Low Ee Loong(25%), Yeo Jun Jie(25%)
-\par    	email: m.tee\@digipen.edu, l.hongjie\@digipen.edu, 
-										yeo.junjie\@digipen.edu, 
+\par    	email: m.tee\@digipen.edu, l.hongjie\@digipen.edu,
+										yeo.junjie\@digipen.edu,
 \brief		Function declaration for Game as well as define Enum used within Game loop
 
 Copyright (C) 2023 DigiPen Institute of Technology.
@@ -17,6 +17,7 @@ prior written consent of DigiPen Institute of Technology is prohibited.
 // includes
 #pragma once
 #include "Main.h"
+#include "Crafting.h"
 #include "UI.h"
 #include <iostream>
 #include <fstream>
@@ -181,7 +182,7 @@ void GameStateAlchemiceLoad() {
 
 	PositionInit();
 	alchemice = create_player();
-	
+
 	bgm = AEAudioLoadMusic("Assets/Audio/bgm.wav");
 	bgm_g = AEAudioCreateGroup();
 	AEAudioPlay(bgm, bgm_g, 1.0f, 1.0f, -1);
@@ -197,7 +198,7 @@ void GameStateAlchemiceLoad() {
 
 	//Init All Spells
 	spellbook = init_all_spells();
-	init_spells_coords(spellbook);
+	spellbook.init_spells_coords();
 }
 
 // Initialization of your own variables go here
@@ -357,19 +358,19 @@ void GameStateAlchemiceUpdate() {
 				for (int i = 0; i <= max_spells; i++)
 				{
 					if (spellbook.spell_array[i].unlocked == true) {
-						if (aabbbutton(spellbook.spell_array[i].spell_dragdrop, mouse_pos) 
+						if (aabbbutton(spellbook.spell_array[i].spell_dragdrop, mouse_pos)
 							&& !crafting_table.get_flag())
 						{
 							for (int i = 0; i <= max_spells; i++)
 							{
-								if (spellbook.spell_array[i].spell_dragdrop->getmouse()) 
+								if (spellbook.spell_array[i].spell_dragdrop->getmouse())
 								{
 									drag = false;
 								}
 							}
 							if (drag)
 							{
-								spellbook.spell_array[i].spell_dragdrop->mousechange(true); 
+								spellbook.spell_array[i].spell_dragdrop->mousechange(true);
 							}
 						}
 					}
@@ -447,7 +448,7 @@ void GameStateAlchemiceUpdate() {
 				for (int i = 0; i <= max_spells; i++) {
 					if (aabbbutton(spellbook.spell_array[i].spell_dragdrop, mouse_pos)) {
 						std::cout << "Clicking " << spellbook.spell_array[i].spell_name << std::endl;
-						
+
 					}
 				}
 
@@ -567,7 +568,7 @@ void GameStateAlchemiceUpdate() {
 }
 
 void GameStateAlchemiceDraw() {
-	
+
 	// Your own rendering logic goes here
 	// Set the background to black.
 	AEGfxSetBackgroundColor(.2f, .2f, .2f);
@@ -622,7 +623,7 @@ void GameStateAlchemiceDraw() {
 	AEGfxSetTransform(transform.m);
 	AEGfxMeshDraw(pMesh, AE_GFX_MDM_TRIANGLES);
 	std::string player_hp;
-	
+
 	if (!transition) {
 		if (alchemice->hp)
 		{
@@ -664,13 +665,13 @@ void GameStateAlchemiceDraw() {
 
 	//Spell Slot Drawing
 	draw_base_spell_slots(pMesh, base_mid_pipe, base_cap_pipe);
-	draw_unlocked_spell_slots(pMesh, spellbook,unlocked_spell_slot);
+	draw_unlocked_spell_slots(pMesh, spellbook, unlocked_spell_slot);
 
 	//Crafting Table
 	draw_crafting_table(pMesh, crafting_table, crafting_part_manager, enemy_take_damage_particle, crafting_test);
 
 	//Card Drawing
-	draw_all_spells(spellbook, pMesh);
+	spellbook.draw_all_spells(pMesh);
 
 	//Enemy drawing
 	for (int i = 0; i < TOTAL_ENEMY; ++i) {
@@ -719,7 +720,7 @@ void GameStateAlchemiceDraw() {
 			AEGfxSetTransform(transform.m);
 			AEGfxMeshDraw(pMesh, AE_GFX_MDM_TRIANGLES);
 
-		}	
+		}
 	}
 
 	//Damage Numbers Drawing
@@ -842,7 +843,7 @@ void GameStateAlchemiceUnload() {
 	AEGfxTextureUnload(bg);
 	AEGfxTextureUnload(mana_full);
 	AEGfxTextureUnload(mana_empty);
-	unload_spells(spellbook);
+	spellbook.unload_spells();
 
 
 	//Animations

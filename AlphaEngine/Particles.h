@@ -13,11 +13,6 @@ prior written consent of DigiPen Institute of Technology is prohibited.
 
 #pragma once
 
-#include "Main.h"
-#include "string"
-#include "vector"
-#include <AEVec2.h>
-
 //Particle object
 struct particle
 {

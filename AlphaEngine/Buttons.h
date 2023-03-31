@@ -12,8 +12,8 @@ prior written consent of DigiPen Institute of Technology is prohibited.
  */
  /******************************************************************************/
 
-#ifndef BUTTON_HPP
-#define BUTTON_HPP
+#ifndef BUTTONS_H
+#define BUTTONS_H
 #include <iostream> // istream, ostream
 #include <string.h>
 #include <float.h>
