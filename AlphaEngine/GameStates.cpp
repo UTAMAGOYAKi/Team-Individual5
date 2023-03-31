@@ -118,7 +118,7 @@ int end_width = 80;
 int end_offset = FONT_SIZE / 3;
 
 void GameStateAlchemiceLoad() {
-	level.curr_level = level_1;
+	level.curr_level = level_enum::level_1;
 
 	pMesh = 0;
 	// Informing the library that we're about to start adding triangles
@@ -203,8 +203,7 @@ void GameStateAlchemiceLoad() {
 // Initialization of your own variables go here
 void GameStateAlchemiceInit() {
 
-
-	turn = player_turn;
+	turn = Turn::player_turn;
 	pause_mode = false;
 
 	for (int i = 0; i <= spellbook.array_size; i++) {
@@ -223,46 +222,46 @@ void GameStateAlchemiceInit() {
 	end_turn_button = CreateAABB(end_mid, end_length, end_width);
 
 	//Most stuff are only needed to be init in level 1;
-	if (level.curr_level == level_1)
+	if (level.curr_level == level_enum::level_1)
 	{
 
-		enemies[0] = Enemy(big_rat, rat, "Rat", 4, 1, FIRE);
+		enemies[0] = Enemy(enemy_types::big_rat, rat, "Rat", 4, 1, FIRE);
 		enemies[0].set_position_and_aabb(enemy_position[0]);
 
-		enemies[1] = Enemy(base_rat, rat, "Rat", 4, 1, WATER);
+		enemies[1] = Enemy(enemy_types::base_rat, rat, "Rat", 4, 1, WATER);
 		enemies[1].set_position_and_aabb(enemy_position[1]);
 
-		enemies[2] = Enemy(base_rat, rat, "Rat", 4, 1, WATER);
+		enemies[2] = Enemy(enemy_types::base_rat, rat, "Rat", 4, 1, WATER);
 		enemies[2].set_position_and_aabb(enemy_position[2]);
 
 		level.display_level = "Level 1";
 		alchemice->mp = 2;
 		alchemice->max_mp = 2;
 	}
-	else if (level.curr_level == level_2)
+	else if (level.curr_level == level_enum::level_2)
 	{
-		enemies[0] = Enemy(big_rat, big_rat_texture, "Big Rat", 8, 3, INVALID_ELEMENT);
+		enemies[0] = Enemy(enemy_types::big_rat, big_rat_texture, "Big Rat", 8, 3, SHADOW);
 		enemies[0].set_position_and_aabb(enemy_position[0]);
 
-		enemies[1] = Enemy(base_rat, rat, "Rat", 4, 2, INVALID_ELEMENT);
+		enemies[1] = Enemy(enemy_types::base_rat, rat, "Rat", 4, 2, POISON);
 		enemies[1].set_position_and_aabb(enemy_position[1]);
 
-		enemies[2] = Enemy(base_rat, rat, "Rat", 4, 2, INVALID_ELEMENT);
+		enemies[2] = Enemy(enemy_types::base_rat, rat, "Rat", 4, 2, FIRE);
 		enemies[2].set_position_and_aabb(enemy_position[2]);
 
 		level.display_level = "Level 2";
 		alchemice->mp = 3;
 		alchemice->max_mp = 3;
 	}
-	else if (level.curr_level == level_3)
+	else if (level.curr_level == level_enum::level_3)
 	{
-		enemies[0] = Enemy(big_rat, big_rat_texture, "Big Rat", 10, 3, INVALID_ELEMENT);
+		enemies[0] = Enemy(enemy_types::big_rat, big_rat_texture, "Big Rat", 10, 3, POISON);
 		enemies[0].set_position_and_aabb(enemy_position[0]);
 
-		enemies[1] = Enemy(base_rat, big_rat_texture, "Big Rat", 8, 2, INVALID_ELEMENT);
+		enemies[1] = Enemy(enemy_types::base_rat, big_rat_texture, "Big Rat", 8, 2, SHADOW);
 		enemies[1].set_position_and_aabb(enemy_position[1]);
 
-		enemies[2] = Enemy(base_rat, big_rat_texture, "Big Rat", 8, 2, INVALID_ELEMENT);
+		enemies[2] = Enemy(enemy_types::base_rat, big_rat_texture, "Big Rat", 8, 2, SHADOW);
 		enemies[2].set_position_and_aabb(enemy_position[2]);
 
 		level.display_level = "Level 3";
@@ -351,7 +350,7 @@ void GameStateAlchemiceUpdate() {
 	//Check if players or enemies or all enemies are all dead
 	if (alchemice->hp > 0 && enemies_alive && !pause_mode && transition == false) {
 		//Checking for turns
-		if (turn == player_turn) {
+		if (turn == Turn::player_turn) {
 
 			if (AEInputCheckCurr(AEVK_LBUTTON))
 			{
@@ -453,7 +452,7 @@ void GameStateAlchemiceUpdate() {
 				}
 
 				if (aabbbutton(&end_turn_button, mouse_pos)) {
-					turn = enemy_turn;
+					turn = Turn::enemy_turn;
 					s_enemy_turn = 0;
 					is_enemy_turn = true;
 					level.display_turn = "Enemy's Turn";
@@ -470,14 +469,14 @@ void GameStateAlchemiceUpdate() {
 		}//End of player turn logic
 
 		//Enemy turn; runs all the enemy functions and animations
-		else if (turn == enemy_turn)
+		else if (turn == Turn::enemy_turn)
 		{
 			//Enemy turn duration
 			//curr_time -= g_dt;
 
 			//When turn ends
 			if (is_enemy_turn == false) {
-				turn = player_turn;
+				turn = Turn::player_turn;
 				level.display_turn = "Player's Turn";
 
 				//Player Mana System
@@ -543,7 +542,7 @@ void GameStateAlchemiceUpdate() {
 		}//End of enemy_turn logic
 	}//End of Main Gameplay Loop.
 	else if (!enemies_alive && !transition) {
-		if (level.curr_level != level_3) {
+		if (level.curr_level != level_enum::level_3) {
 			transition_timer = transition_set_time;
 			transition_text = "";
 			transition = true;

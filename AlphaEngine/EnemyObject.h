@@ -26,7 +26,7 @@ const int animation_time = 1;
 //Element Icons
 //AEGfxTexture * fire_icon, * water_icon, * poison_icon, * shadow_icon;
 
-enum enemy_types 
+enum class enemy_types 
 {
     base_rat,
     big_rat
