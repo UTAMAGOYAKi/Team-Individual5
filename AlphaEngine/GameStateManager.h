@@ -28,6 +28,7 @@ enum
 	GS_TUTORIAL,
 	GS_QUIT,
 	GS_CREDITS,
+	GS_OPTIONS
 };
 
 extern unsigned int gGameStateInit;

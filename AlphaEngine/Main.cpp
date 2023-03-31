@@ -20,7 +20,7 @@ AEVec2 mouse_pos;
 s8 font;
 f64 g_dt;
 double click_offset;
-
+bool sound = true;
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	_In_opt_ HINSTANCE hPrevInstance,
 	_In_ LPWSTR    lpCmdLine,
