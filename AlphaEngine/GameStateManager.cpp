@@ -119,6 +119,14 @@ void GameStateManagerUpdate() {
 			break;
 		case GS_QUIT:
 			break;
+		case GS_OPTIONS:
+			GameStateLoad = GameOverLoad;
+			GameStateInit = GameOverInit;
+			GameStateUpdate = GameOverUpdate;
+			GameStateDraw = VictoryDraw;
+			GameStateFree = GameOverFree;
+			GameStateUnload = GameOverUnload;
+			break;
 		default:
 			break;
 	}

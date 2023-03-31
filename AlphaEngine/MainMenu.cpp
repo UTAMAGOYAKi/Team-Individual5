@@ -81,7 +81,7 @@ void MenuUpdate()
 					break;
 
 				case 1:
-					std::cout << "Options are not coded yet!\n";
+					gGameStateNext = GS_OPTIONS;
 					break;
 
 				case 2:

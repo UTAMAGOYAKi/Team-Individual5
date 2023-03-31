@@ -52,7 +52,7 @@ craftingtable crafting_table;
 //Loading of Mesh and Texture
 AEGfxVertexList* pMesh;
 AEGfxTexture* chara{}, * rat{}, * big_rat_texture{}, * spell_g{}, * pause_box{}, * sub{}, * crafting_test{}, * bg{}, * end_turn_box{}, * mana_full{}, * mana_empty{}, * Menu_ui,
-* base_mid_pipe, * base_cap_pipe, * unlocked_spell_slot, * fire_icon, * water_icon, * poison_icon, * shadow_icon;
+* base_mid_pipe, * base_cap_pipe, * unlocked_spell_slot, * fire_icon, * water_icon, * poison_icon, * shadow_icon, *tick_box[2];
 
 AEAudio gun, combi, death, whack;
 AEAudio bgm;
@@ -72,7 +72,7 @@ s32 pY{};
 bool alchemy_mode = 0;
 bool pause_mode = false;
 bool sub_menu = false;
-bool fullscreen = false;
+static bool fullscreen = true;
 
 //Level Turn checks
 Turn turn;
@@ -102,13 +102,13 @@ particle_manager enemy_part_manager(50);
 particle_manager crafting_part_manager(50);
 
 //Button AABB
-aabb pause_buttons[3];
+aabb pause_buttons[4];
 aabb end_turn_button;
 
 AEVec2 pause_scale{ 400,600 };
 AEVec2 pause_button_scale{ 300,80 };
 int pause_start_y = 190;
-int pause_space_y = 180;
+int pause_space_y = 120;
 int pause_length = 300;
 int pause_width = 80;
 
@@ -180,12 +180,14 @@ void GameStateAlchemiceLoad() {
 	shadow_icon = AEGfxTextureLoad("Assets/shadow_icon.png");
 	poison_icon = AEGfxTextureLoad("Assets/poison_icon.png");
 
+	tick_box[0] = AEGfxTextureLoad("Assets/tick_box-1");
+	tick_box[1] = AEGfxTextureLoad("Assets/tick_box-2");
+
 	PositionInit();
 	alchemice = create_player();
 
 	bgm = AEAudioLoadMusic("Assets/Audio/bgm.wav");
 	bgm_g = AEAudioCreateGroup();
-	AEAudioPlay(bgm, bgm_g, 1.0f, 1.0f, -1);
 
 
 	gun = AEAudioLoadSound("Assets/Audio/GUN-MUSKET_GEN-HDF-13603.wav");
@@ -198,7 +200,11 @@ void GameStateAlchemiceLoad() {
 
 	//Init All Spells
 	spellbook = init_all_spells();
+
 	spellbook.init_spells_coords();
+	AEAudioSetGroupVolume(bgm_g, (float)sound);
+	AEAudioSetGroupVolume(base, (float)sound);
+	AEAudioPlay(bgm, bgm_g, 1.0f, 1.0f, -1);
 }
 
 // Initialization of your own variables go here
@@ -269,11 +275,12 @@ void GameStateAlchemiceInit() {
 		alchemice->mp = 4;
 		alchemice->max_mp = 4;
 	}
+	
 }
 
 
 void GameStateAlchemiceUpdate() {
-
+	AEAudioUpdate();
 	AEVec2 temp;
 	temp = mouse_pos;
 	temp.y = mouse_pos.y;
@@ -286,12 +293,7 @@ void GameStateAlchemiceUpdate() {
 		pause_mode = !pause_mode;
 	}
 
-	if (AEInputCheckCurr(AEVK_LALT)) {
-		if (AEInputCheckTriggered(AEVK_RETURN)) {
-			fullscreen = !fullscreen;
-			AESysToggleFullScreen(fullscreen);
-		}
-	}
+	
 	for (int i{}; i < ARRAYSIZE(pause_buttons); ++i) //for every iteration of pause menu buttons
 	{
 		if (aabbbutton(&pause_buttons[i], mouse_pos) &&
@@ -303,15 +305,30 @@ void GameStateAlchemiceUpdate() {
 				pause_mode = !pause_mode;
 				break;
 			case 1:
+				gGameStateNext = GS_MENU;
 				//to be implemented when options is up
 				break;
 			case 2:
-				//to be implemented into GS_MENU when main menu is up
-				gGameStateNext = GS_MENU;
+				sound = !sound;
+				AEAudioSetGroupVolume(bgm_g, (float)sound);
+				AEAudioSetGroupVolume(base, (float)sound);
+				break;
+			case 3:
+				fullscreen = !fullscreen;
+				AESysToggleFullScreen(fullscreen);
 				break;
 			}
 		}
 	}
+
+	if (pause_mode == true)
+	{
+		for (int i{}; i < ARRAYSIZE(tick_box); i++)
+		{
+
+		}
+	}
+
 
 	//Mouse Debug, remove
 	if (AEInputCheckTriggered(AEVK_E))
@@ -744,26 +761,7 @@ void GameStateAlchemiceDraw() {
 	draw_particles(enemy_part_manager.particle_vector, particle_mesh, mana_empty);
 	draw_particles(crafting_part_manager.particle_vector, particle_mesh, blast[2]);
 
-	//Enemy Attack Animation
-	// TURNED OFF
-	//if (turn == enemy_turn) {
-
-	//	if (enemies[s_enemy_turn].is_alive())
-	//	{
-	//		//Ensure 4th frame which is the delay frame does not get drawn and crash
-	//		if (enemies[s_enemy_turn].get_frame_num() < enemies[s_enemy_turn].get_total_frame())
-	//		{
-	//			AEGfxTextureSet(blast[enemies[s_enemy_turn].get_frame_num()], 0, 0);
-	//			AEMtx33Trans(&translate, (f32)(enemies[s_enemy_turn].get_pos().x), (f32)(enemies[s_enemy_turn].get_pos().y));
-	//			AEMtx33Rot(&rotate, 0);
-	//			AEMtx33Scale(&scale, 100.f, 100.f);
-	//			AEMtx33Concat(&transform, &rotate, &scale);
-	//			AEMtx33Concat(&transform, &translate, &transform);
-	//			AEGfxSetTransform(transform.m);
-	//			AEGfxMeshDraw(pMesh, AE_GFX_MDM_TRIANGLES);
-	//		}
-	//	}
-	//}
+	
 
 
 	// End turn button
@@ -805,12 +803,11 @@ void GameStateAlchemiceDraw() {
 		AEGfxMeshDraw(pMesh, AE_GFX_MDM_TRIANGLES);
 
 
-		const char* Pause_Text[3]{ { "Continue" }, { "Options" }, {"Main Menu"} };
+		const char* Pause_Text[4]{ { "Continue" }, {"Main Menu"}, {"Sound"},{"Fullscreen"}};
 
 		for (int i = 0; i < ARRAYSIZE(Pause_Text); ++i) {
 			f32 middle = -(((float)strlen(Pause_Text[i]) / 2) / (AEGetWindowWidth() / FONT_SIZE));
-			f32 textY = ((float)(AEGetWindowHeight() - i * AEGetWindowHeight()) / 2) / AEGetWindowHeight();
-			f32 boxY = (float)(pause_start_y - i * pause_space_y);
+			f32 textY = (float)((float)(AEGetWindowHeight() - i * AEGetWindowHeight()) / (ARRAYSIZE(pause_buttons) - 1) + pause_space_y) / AEGetWindowHeight();			f32 boxY = (float)(pause_start_y - i * pause_space_y);
 			AEGfxTextureSet(pause_box, 0.f, 0.f);
 			AEMtx33Trans(&translate, 0, boxY);
 			AEMtx33Rot(&rotate, 0);
@@ -825,6 +822,8 @@ void GameStateAlchemiceDraw() {
 }
 
 void GameStateAlchemiceFree() {
+	AEAudioStopGroup(bgm_g);
+
 }
 
 void GameStateAlchemiceUnload() {
