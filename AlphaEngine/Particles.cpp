@@ -1,3 +1,16 @@
+/******************************************************************************/
+/*!
+\file		Particles.cpp
+\author 	Yeo Jun Jie
+\par    	email: yeo.junjie\@digipen.edu
+\brief		Functions to help create particles effects in the game.
+
+Copyright (C) 2023 DigiPen Institute of Technology.
+Reproduction or disclosure of this file or its contents without the
+prior written consent of DigiPen Institute of Technology is prohibited.
+ */
+ /******************************************************************************/
+
 #include "Particles.h"
 
 //This function creates one particle in that frame. Use it somewhere where it can be called over a period of time.

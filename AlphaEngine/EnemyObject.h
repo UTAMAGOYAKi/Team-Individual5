@@ -1,3 +1,16 @@
+/******************************************************************************/
+/*!
+\file		EnemyObject.h
+\author 	Yeo Jun Jie
+\par    	email: yeo.junjie\@digipen.edu
+\brief		Enemy class declaration and its member functions and functions.
+
+Copyright (C) 2023 DigiPen Institute of Technology.
+Reproduction or disclosure of this file or its contents without the
+prior written consent of DigiPen Institute of Technology is prohibited.
+ */
+ /******************************************************************************/
+
 #ifndef ENEMYOBJECT_H
 #define ENEMYOBJECT_H
 
@@ -13,7 +26,7 @@ const int animation_time = 1;
 //Element Icons
 //AEGfxTexture * fire_icon, * water_icon, * poison_icon, * shadow_icon;
 
-enum enemy_types 
+enum class enemy_types 
 {
     base_rat,
     big_rat
@@ -38,7 +51,7 @@ private:
     AEVec2 pos{};
     AEVec2 element_icon_pos{};
     AEGfxTexture* icon_texture{};
-    AEGfxTexture* texture{};
+    AEGfxTexture* texture{}; 
     int size = 1; //pixel size for AABB
     aabb enemy_aabb{};
 
@@ -50,7 +63,7 @@ private:
   //Setting
     int total_frame = 4;
     int frame_num = 0; //current frame
-    double attack_animation_timer = 1.0f;
+    double attack_animation_timer = .3f;
 
     //Frame times
     double frame_time = attack_animation_timer / (double)total_frame;
@@ -75,6 +88,16 @@ private:
     
     //_______________________FOR AUDIO_______________________________
     bool audio{ false };
+
+    //_________________FOR DAMAGE NUMBER DEALT TO PLAYER_____________
+    AEVec2 p_default_damage_num_pos{ -320.f,0.0f };
+    AEVec2 p_damage_num_pos{ p_default_damage_num_pos };
+    AEVec2 p_damage_num_percent_pos{};
+    std::string p_damage_num_str{};
+
+    bool p_bool_damage_num{ false };
+    float p_damage_time{ 1.0f };
+    float p_damage_timer{ damage_time };
 
 public:
     Enemy() {};
@@ -132,6 +155,17 @@ public:
     //Audio
     bool get_audio();
     void set_audio(bool input);
+
+    //_______________ENEMY DAMAGE ONTO PLAYER NUM____________________
+    void set_p_damage_num_pos(AEVec2 const& input);
+
+    AEVec2 get_p_damage_num_percent_pos();
+    std::string get_p_damage_num_str();
+    bool get_p_bool_damage_num();
+
+    void set_p_bool_damage_num(bool input);
+    void set_p_damage_num_str(std::string input);
+    void update_p_damage_timer();
 };
 
 #endif // ENEMY_H

@@ -1,5 +1,20 @@
+/******************************************************************************/
+/*!
+\file		MainMenu.cpp
+\project	Alchemice
+\author 	Liang HongJie(50%), Daniel Tee(50%)
+\par    	email: l.hongjie\@digipen.edu, m.tee\@digipen.edu
+\brief		Function definitions for MainMenu gamestate.
+
+Copyright (C) 2023 DigiPen Institute of Technology.
+Reproduction or disclosure of this file or its contents without the
+prior written consent of DigiPen Institute of Technology is prohibited.
+ */
+ /******************************************************************************/
+
 #include "main.h"
 
+//Variables used in MainMenu state
 AEGfxVertexList* pMesh_MainMenu;
 AEGfxTexture *Menu_BG, *Menu_UI;
 aabb menu_buttons[5];
@@ -8,6 +23,9 @@ float const texture_start = -250.0f;
 float const text_start = 40.0f;
 AEVec2 const main_button_size{ 140,50 };
 
+/*
+	Load function of Menu
+*/
 void MenuLoad()
 {
 	pMesh_MainMenu = 0;
@@ -32,6 +50,9 @@ void MenuLoad()
 
 }
 
+/*
+	Init function of Menu
+*/
 void MenuInit()
 {
 	for (int i{}; i < ARRAYSIZE(menu_buttons); ++i)
@@ -41,6 +62,10 @@ void MenuInit()
 	}
 
 }
+
+/*
+	Update function of Menu
+*/
 void MenuUpdate()
 {
 	if (AEInputCheckTriggered(AEVK_LBUTTON))
@@ -78,6 +103,10 @@ void MenuUpdate()
 	}
 
 }
+
+/*
+	Draw function of Menu
+*/
 void MenuDraw()
 {
 	AEGfxSetBackgroundColor(.2f, .2f, .2f);
@@ -122,8 +151,15 @@ void MenuDraw()
 	}
 
 }
+
+/*
+	Free function of Menu
+*/
 void MenuFree() {}
 
+/*
+	Unload function of Menu
+*/
 void MenuUnload() {
 	AEGfxMeshFree(pMesh_MainMenu);
 	AEGfxTextureUnload(Menu_UI);

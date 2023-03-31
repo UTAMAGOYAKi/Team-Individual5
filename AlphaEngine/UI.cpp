@@ -1,3 +1,17 @@
+/******************************************************************************/
+/*!
+\file		UI.cpp
+\author 	Liang HongJie(20%),
+\par    	email: l.hongjie\@digipen.edu, 
+\brief		Some UI functions defined here.
+
+Copyright (C) 2023 DigiPen Institute of Technology.
+Reproduction or disclosure of this file or its contents without the
+prior written consent of DigiPen Institute of Technology is prohibited.
+ */
+ /******************************************************************************/
+
+#include "Main.h"
 #include "UI.h"
 
 /*---------------------------------*/
@@ -209,7 +223,19 @@ void sub_menu_draw(AEGfxTexture* sub_menu, spell_book& spells, AEGfxVertexList* 
 	}
 }
 
-void level_transition(level_enum const& num, double time, std::string& tmp, bool& transition) {
+/*
+	\breif 
+		function prints text while during transition
+	\param num [in]
+		value of level cleared
+	\param time [in]
+		time since transition started, time has to be positive and increasing.
+	\param tmp [in,out]
+		for this function, to input an empty string, transitioning text will be buffered onto this string before printing
+	\param transition [in,out]
+		function will change the state of transition after it's done.
+*/
+void level_transition(level_enum const& num, double const &time, std::string &tmp, bool &transition) {
 	int i{ 0 };
 	const int transition_speed = 5;
 	std::string addtext{ "LEVEL: " };

@@ -1,11 +1,28 @@
+/******************************************************************************/
+/*!
+\file		LoadScreen.cpp
+\author 	Liang HongJie
+\par    	email: l.hongjie\@digipen.edu
+\brief		Function definition for LoadScreen gamestate. (Digipen Logo)
+
+Copyright (C) 2023 DigiPen Institute of Technology.
+Reproduction or disclosure of this file or its contents without the
+prior written consent of DigiPen Institute of Technology is prohibited.
+ */
+ /******************************************************************************/
+
 #include "Main.h"
 
+//Defines
 AEGfxVertexList* pMesh_Loadscreen;
 AEGfxTexture *load_screen;
 
 float load_screen_time{};
 const float load_screen_timer{ 3 };
 
+/*
+	Load function of loadscreen
+*/
 void LoadScreenLoad() {
 	pMesh_Loadscreen = 0;
 	AEGfxMeshStart();
@@ -22,19 +39,30 @@ void LoadScreenLoad() {
 	load_screen = AEGfxTextureLoad("Assets/digilogo.png");
 }
 
+/*
+	Init function of loadscreen
+*/
 void LoadScreenInit() {
 	load_screen_time = load_screen_timer;
+	click_offset = 0.1;
 }
 
+/*
+	Update function of loadscreen
+*/
 void LoadScreenUpdate() {
 	if (load_screen_time > 0) {
 		load_screen_time -= (f32)g_dt;
 	}
-	if (load_screen_time <= 0 || AEInputCheckTriggered(AEVK_LBUTTON)) {
+	if (load_screen_time <= 0 || AEInputCheckTriggered(AEVK_LBUTTON) && click_offset <= 0) {
 		gGameStateNext = GS_MENU;
 	}
+	click_offset -= g_dt;
 }
 
+/*
+	Draw function of loadscreen
+*/
 void LoadScreenDraw() {
 	AEGfxSetBackgroundColor(.0f, .0f, .0f);
 	AEGfxSetRenderMode(AE_GFX_RM_TEXTURE);
@@ -64,8 +92,14 @@ void LoadScreenDraw() {
 	AEGfxMeshDraw(pMesh_Loadscreen, AE_GFX_MDM_TRIANGLES);
 }
 
+/*
+	Free function of loadscreen
+*/
 void LoadScreenFree() {}
 
+/*
+	Unload function of loadscreen
+*/
 void LoadScreenUnload() {
 	AEGfxMeshFree(pMesh_Loadscreen);
 	AEGfxTextureUnload(load_screen);

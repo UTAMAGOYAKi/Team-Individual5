@@ -1,8 +1,25 @@
+/******************************************************************************/
+/*!
+\file		GameOver.cpp
+\author 	Liang HongJie
+\par    	email: l.hongjie\@digipen.edu
+\brief		Function definition for GameOver gamestate.
+
+Copyright (C) 2023 DigiPen Institute of Technology.
+Reproduction or disclosure of this file or its contents without the
+prior written consent of DigiPen Institute of Technology is prohibited.
+ */
+ /******************************************************************************/
+
 #include "main.h"
 
+//Define variable used in GameOver gamestate
 AEGfxVertexList* pMesh_GameOver;
 AEGfxTexture *Gameover_screen, *Victory_screen;
 
+/*
+	Load function of GameOver
+*/
 void GameOverLoad() {
 	pMesh_GameOver = 0;
 	AEGfxMeshStart();
@@ -20,10 +37,18 @@ void GameOverLoad() {
 	Victory_screen = AEGfxTextureLoad("Assets/Victory_Text.png");
 }
 
+
+/*
+	Init function of GameOver
+*/
 void GameOverInit() {
 	click_offset = 0.1;
 }
 
+
+/*
+	Update function of GameOver
+*/
 void GameOverUpdate() {
 	if ((AEInputCheckTriggered(AEVK_LBUTTON) && click_offset <= 0)) {
 		gGameStateNext = GS_MENU;
@@ -32,6 +57,10 @@ void GameOverUpdate() {
 	click_offset -= g_dt * FRAMERATE;
 }
 
+
+/*
+	Draw function of GameOver
+*/
 void GameOverDraw() {
 	AEGfxSetBackgroundColor(.0f, .0f, .0f);
 	AEGfxSetRenderMode(AE_GFX_RM_TEXTURE);
@@ -54,6 +83,10 @@ void GameOverDraw() {
 	AEGfxMeshDraw(pMesh_GameOver, AE_GFX_MDM_TRIANGLES);
 }
 
+
+/*
+	Load function of GameOver
+*/
 void VictoryDraw() {
 	AEGfxSetBackgroundColor(.0f, .0f, .0f);
 	AEGfxSetRenderMode(AE_GFX_RM_TEXTURE);
@@ -76,8 +109,16 @@ void VictoryDraw() {
 	AEGfxMeshDraw(pMesh_GameOver, AE_GFX_MDM_TRIANGLES);
 }
 
+
+/*
+	Free function of GameOver
+*/
 void GameOverFree() {}
 
+
+/*
+	Unload function of GameOver
+*/
 void GameOverUnload() {
 	AEGfxMeshFree(pMesh_GameOver);
 	AEGfxTextureUnload(Gameover_screen);

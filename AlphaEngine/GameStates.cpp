@@ -1,3 +1,18 @@
+/******************************************************************************/
+/*!
+\file		GameStates.h
+\project	Alchemice
+\author 	Daniel Tee(25%), Liang HongJie(25%), Low Ee Loong(25%), Yeo Jun Jie(25%)
+\par    	email: m.tee\@digipen.edu, l.hongjie\@digipen.edu, 
+										yeo.junjie\@digipen.edu, 
+\brief		Function declaration for Game as well as define Enum used within Game loop
+
+Copyright (C) 2023 DigiPen Institute of Technology.
+Reproduction or disclosure of this file or its contents without the
+prior written consent of DigiPen Institute of Technology is prohibited.
+ */
+ /******************************************************************************/
+
 // ---------------------------------------------------------------------------
 // includes
 #pragma once
@@ -37,6 +52,12 @@ craftingtable crafting_table;
 AEGfxVertexList* pMesh;
 AEGfxTexture* chara{}, * rat{}, * big_rat_texture{}, * spell_g{}, * pause_box{}, * sub{}, * crafting_test{}, * bg{}, * end_turn_box{}, * mana_full{}, * mana_empty{}, * Menu_ui,
 * base_mid_pipe, * base_cap_pipe, * unlocked_spell_slot, * fire_icon, * water_icon, * poison_icon, * shadow_icon;
+
+AEAudio gun, combi, death, whack;
+AEAudio bgm;
+
+AEAudioGroup base, bgm_g;
+
 
 aabb* chara_pos;
 aabb* Enemy_pos_1;
@@ -97,7 +118,7 @@ int end_width = 80;
 int end_offset = FONT_SIZE / 3;
 
 void GameStateAlchemiceLoad() {
-	level.curr_level = level_1;
+	level.curr_level = level_enum::level_1;
 
 	pMesh = 0;
 	// Informing the library that we're about to start adding triangles
@@ -161,6 +182,19 @@ void GameStateAlchemiceLoad() {
 	PositionInit();
 	alchemice = create_player();
 	
+	bgm = AEAudioLoadMusic("Assets/Audio/bgm.wav");
+	bgm_g = AEAudioCreateGroup();
+	AEAudioPlay(bgm, bgm_g, 1.0f, 1.0f, -1);
+
+
+	gun = AEAudioLoadSound("Assets/Audio/GUN-MUSKET_GEN-HDF-13603.wav");
+	combi = AEAudioLoadSound("Assets/Audio/Magic-combinations-sfx.wav");
+	death = AEAudioLoadSound("Assets/Audio/fox.wav");
+	whack = AEAudioLoadSound("Assets/Audio/smackwhack.wav");
+	combi = AEAudioLoadSound("Assets/Audio/MagicCartoon CTE01_94.8.wav");
+	base = AEAudioCreateGroup();
+
+
 	//Init All Spells
 	spellbook = init_all_spells();
 	init_spells_coords(spellbook);
@@ -169,9 +203,7 @@ void GameStateAlchemiceLoad() {
 // Initialization of your own variables go here
 void GameStateAlchemiceInit() {
 
-	float width{};
-
-	turn = player_turn;
+	turn = Turn::player_turn;
 	pause_mode = false;
 
 	for (int i = 0; i <= spellbook.array_size; i++) {
@@ -190,46 +222,46 @@ void GameStateAlchemiceInit() {
 	end_turn_button = CreateAABB(end_mid, end_length, end_width);
 
 	//Most stuff are only needed to be init in level 1;
-	if (level.curr_level == level_1)
+	if (level.curr_level == level_enum::level_1)
 	{
 
-		enemies[0] = Enemy(big_rat, rat, "Rat", 4, 1, FIRE);
+		enemies[0] = Enemy(enemy_types::big_rat, rat, "Rat", 4, 1, FIRE);
 		enemies[0].set_position_and_aabb(enemy_position[0]);
 
-		enemies[1] = Enemy(base_rat, rat, "Rat", 4, 1, WATER);
+		enemies[1] = Enemy(enemy_types::base_rat, rat, "Rat", 4, 1, WATER);
 		enemies[1].set_position_and_aabb(enemy_position[1]);
 
-		enemies[2] = Enemy(base_rat, rat, "Rat", 4, 1, WATER);
+		enemies[2] = Enemy(enemy_types::base_rat, rat, "Rat", 4, 1, WATER);
 		enemies[2].set_position_and_aabb(enemy_position[2]);
 
 		level.display_level = "Level 1";
 		alchemice->mp = 2;
 		alchemice->max_mp = 2;
 	}
-	else if (level.curr_level == level_2)
+	else if (level.curr_level == level_enum::level_2)
 	{
-		enemies[0] = Enemy(big_rat, big_rat_texture, "Big Rat", 8, 3, INVALID_ELEMENT);
+		enemies[0] = Enemy(enemy_types::big_rat, big_rat_texture, "Big Rat", 8, 3, SHADOW);
 		enemies[0].set_position_and_aabb(enemy_position[0]);
 
-		enemies[1] = Enemy(base_rat, rat, "Rat", 4, 2, INVALID_ELEMENT);
+		enemies[1] = Enemy(enemy_types::base_rat, rat, "Rat", 4, 2, POISON);
 		enemies[1].set_position_and_aabb(enemy_position[1]);
 
-		enemies[2] = Enemy(base_rat, rat, "Rat", 4, 2, INVALID_ELEMENT);
+		enemies[2] = Enemy(enemy_types::base_rat, rat, "Rat", 4, 2, FIRE);
 		enemies[2].set_position_and_aabb(enemy_position[2]);
 
 		level.display_level = "Level 2";
 		alchemice->mp = 3;
 		alchemice->max_mp = 3;
 	}
-	else if (level.curr_level == level_3)
+	else if (level.curr_level == level_enum::level_3)
 	{
-		enemies[0] = Enemy(big_rat, big_rat_texture, "Big Rat", 10, 3, INVALID_ELEMENT);
+		enemies[0] = Enemy(enemy_types::big_rat, big_rat_texture, "Big Rat", 10, 3, POISON);
 		enemies[0].set_position_and_aabb(enemy_position[0]);
 
-		enemies[1] = Enemy(base_rat, big_rat_texture, "Big Rat", 8, 2, INVALID_ELEMENT);
+		enemies[1] = Enemy(enemy_types::base_rat, big_rat_texture, "Big Rat", 8, 2, SHADOW);
 		enemies[1].set_position_and_aabb(enemy_position[1]);
 
-		enemies[2] = Enemy(base_rat, big_rat_texture, "Big Rat", 8, 2, INVALID_ELEMENT);
+		enemies[2] = Enemy(enemy_types::base_rat, big_rat_texture, "Big Rat", 8, 2, SHADOW);
 		enemies[2].set_position_and_aabb(enemy_position[2]);
 
 		level.display_level = "Level 3";
@@ -318,7 +350,7 @@ void GameStateAlchemiceUpdate() {
 	//Check if players or enemies or all enemies are all dead
 	if (alchemice->hp > 0 && enemies_alive && !pause_mode && transition == false) {
 		//Checking for turns
-		if (turn == player_turn) {
+		if (turn == Turn::player_turn) {
 
 			if (AEInputCheckCurr(AEVK_LBUTTON))
 			{
@@ -369,6 +401,11 @@ void GameStateAlchemiceUpdate() {
 								}
 								crafting_table.reset_spells();
 								enemies[j].take_damage(spellbook.spell_array[i].base_damage, static_cast<Elements>(spellbook.spell_array[i].element));
+								if (enemies[j].get_hp() <= 0)
+								{
+									AEAudioPlay(death, base, 1.0f, 0.6f, 0);
+
+								}
 								enemies[j].set_bleeding(true);
 								alchemice->mp -= 1;
 							}
@@ -400,6 +437,7 @@ void GameStateAlchemiceUpdate() {
 			if (crafting_table.get_flag()) {
 				if (crafting_table.crafting_table_update(spellbook) == 2) {
 					alchemice->mp -= 1;
+					AEAudioPlay(combi, base, 1.0f, 1.0f, 0);
 				}
 			}
 
@@ -414,11 +452,10 @@ void GameStateAlchemiceUpdate() {
 				}
 
 				if (aabbbutton(&end_turn_button, mouse_pos)) {
-					turn = enemy_turn;
+					turn = Turn::enemy_turn;
 					s_enemy_turn = 0;
 					is_enemy_turn = true;
 					level.display_turn = "Enemy's Turn";
-					std::cout << "enemy turn " << std::endl;
 				}
 
 			}//Check for Lbutton click
@@ -432,19 +469,15 @@ void GameStateAlchemiceUpdate() {
 		}//End of player turn logic
 
 		//Enemy turn; runs all the enemy functions and animations
-		else if (turn == enemy_turn)
+		else if (turn == Turn::enemy_turn)
 		{
 			//Enemy turn duration
 			//curr_time -= g_dt;
 
 			//When turn ends
 			if (is_enemy_turn == false) {
-				turn = player_turn;
+				turn = Turn::player_turn;
 				level.display_turn = "Player's Turn";
-
-				//Variables to update when switching back to Player Turn.
-				//is_enemy_turn = false;
-				//curr_time = frame_time;
 
 				//Player Mana System
 				alchemice->max_mp = (alchemice->max_mp == 5) ? 5 : alchemice->max_mp + 1;
@@ -460,15 +493,38 @@ void GameStateAlchemiceUpdate() {
 
 						alchemice->hp -= enemies[s_enemy_turn].get_atk();
 
+						//Do Damage number to alchemice;
+						enemies[s_enemy_turn].set_p_damage_num_str(std::to_string(enemies[s_enemy_turn].get_atk()));
+						enemies[s_enemy_turn].set_p_bool_damage_num(true);
+
 						enemies[s_enemy_turn].switch_finish_attack();
+						enemies[s_enemy_turn].set_audio(false);
+
 						s_enemy_turn++;
-						//is_enemy_turn = false;
 					}
 					else
 					{
 						//To update animations(it will auto switch)
 						if (enemies[s_enemy_turn].is_alive())
 						{
+							if (enemies[s_enemy_turn].get_name() == "Big Rat")
+							{
+
+								if (!enemies[s_enemy_turn].get_audio())
+								{
+									AEAudioPlay(gun, base, 1.0f, 1.0f, 0);
+									enemies[s_enemy_turn].set_audio(true);
+								}
+
+							}
+							else if (enemies[s_enemy_turn].get_name() == "Rat")
+							{
+								if (!enemies[s_enemy_turn].get_audio())
+								{
+									AEAudioPlay(whack, base, 0.6f, 1.0f, 0);
+									enemies[s_enemy_turn].set_audio(true);
+								}
+							}
 							//update_animation will switch enemy object's animation to be finished when it ends.
 							enemies[s_enemy_turn].update_animation(g_dt);
 						}
@@ -486,7 +542,7 @@ void GameStateAlchemiceUpdate() {
 		}//End of enemy_turn logic
 	}//End of Main Gameplay Loop.
 	else if (!enemies_alive && !transition) {
-		if (level.curr_level != level_3) {
+		if (level.curr_level != level_enum::level_3) {
 			transition_timer = transition_set_time;
 			transition_text = "";
 			transition = true;
@@ -496,6 +552,7 @@ void GameStateAlchemiceUpdate() {
 	}
 	else if (alchemice->hp <= 0) {
 		gGameStateNext = GS_GAMEOVER;
+		AEAudioStopGroup(bgm_g);
 	}
 	if (transition) {
 		transition_timer -= g_dt;
@@ -673,6 +730,12 @@ void GameStateAlchemiceDraw() {
 			enemies[i].update_damage_timer();
 			AEGfxPrint(font, (s8*)enemies[i].get_str_damage_number().c_str(), enemies[i].get_str_damage_pos_percent().x, enemies[i].get_str_damage_pos_percent().y, 1.0f, 1.0f, enemies[i].get_crit_colour(), enemies[i].get_crit_colour());
 		}
+
+		if (enemies[i].get_p_bool_damage_num())
+		{
+			AEGfxPrint(font, (s8*)enemies[i].get_p_damage_num_str().c_str(), enemies[i].get_p_damage_num_percent_pos().x, enemies[i].get_p_damage_num_percent_pos().y, 1.0f, 1.0f, 1.0f, 1.0f);
+			enemies[i].update_p_damage_timer();
+		}
 	}
 
 
@@ -681,24 +744,25 @@ void GameStateAlchemiceDraw() {
 	draw_particles(crafting_part_manager.particle_vector, particle_mesh, blast[2]);
 
 	//Enemy Attack Animation
-	if (turn == enemy_turn) {
+	// TURNED OFF
+	//if (turn == enemy_turn) {
 
-		if (enemies[s_enemy_turn].is_alive())
-		{
-			//Ensure 4th frame which is the delay frame does not get drawn and crash
-			if (enemies[s_enemy_turn].get_frame_num() < enemies[s_enemy_turn].get_total_frame())
-			{
-				AEGfxTextureSet(blast[enemies[s_enemy_turn].get_frame_num()], 0, 0);
-				AEMtx33Trans(&translate, (f32)(enemies[s_enemy_turn].get_pos().x), (f32)(enemies[s_enemy_turn].get_pos().y));
-				AEMtx33Rot(&rotate, 0);
-				AEMtx33Scale(&scale, 100.f, 100.f);
-				AEMtx33Concat(&transform, &rotate, &scale);
-				AEMtx33Concat(&transform, &translate, &transform);
-				AEGfxSetTransform(transform.m);
-				AEGfxMeshDraw(pMesh, AE_GFX_MDM_TRIANGLES);
-			}
-		}
-	}
+	//	if (enemies[s_enemy_turn].is_alive())
+	//	{
+	//		//Ensure 4th frame which is the delay frame does not get drawn and crash
+	//		if (enemies[s_enemy_turn].get_frame_num() < enemies[s_enemy_turn].get_total_frame())
+	//		{
+	//			AEGfxTextureSet(blast[enemies[s_enemy_turn].get_frame_num()], 0, 0);
+	//			AEMtx33Trans(&translate, (f32)(enemies[s_enemy_turn].get_pos().x), (f32)(enemies[s_enemy_turn].get_pos().y));
+	//			AEMtx33Rot(&rotate, 0);
+	//			AEMtx33Scale(&scale, 100.f, 100.f);
+	//			AEMtx33Concat(&transform, &rotate, &scale);
+	//			AEMtx33Concat(&transform, &translate, &transform);
+	//			AEGfxSetTransform(transform.m);
+	//			AEGfxMeshDraw(pMesh, AE_GFX_MDM_TRIANGLES);
+	//		}
+	//	}
+	//}
 
 
 	// End turn button
