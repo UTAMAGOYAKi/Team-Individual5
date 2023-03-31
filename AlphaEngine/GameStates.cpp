@@ -807,7 +807,7 @@ void GameStateAlchemiceDraw() {
 
 		for (int i = 0; i < ARRAYSIZE(Pause_Text); ++i) {
 			f32 middle = -(((float)strlen(Pause_Text[i]) / 2) / (AEGetWindowWidth() / FONT_SIZE));
-			f32 textY = (float)((float)(AEGetWindowHeight() - i * AEGetWindowHeight()) / (ARRAYSIZE(pause_buttons) - 1) + pause_button_scale.y * 1.5) / AEGetWindowHeight();			f32 boxY = (float)(pause_start_y - i * pause_space_y);
+			f32 textY = (float)((float)(AEGetWindowHeight() - i * AEGetWindowHeight()) / (ARRAYSIZE(pause_buttons) - 1) + pause_space_y) / AEGetWindowHeight();			f32 boxY = (float)(pause_start_y - i * pause_space_y);
 			AEGfxTextureSet(pause_box, 0.f, 0.f);
 			AEMtx33Trans(&translate, 0, boxY);
 			AEMtx33Rot(&rotate, 0);
