@@ -180,7 +180,7 @@ void sub_menu_draw(AEGfxTexture* sub_menu, spell_book& spells, AEGfxVertexList* 
 	AEGfxTextureSet(sub_menu, 0, 0);
 	AEMtx33Trans(&translate, -440, 100);
 	AEMtx33Rot(&rotate, 0);
-	AEMtx33Scale(&scale, 600, 500);
+	AEMtx33Scale(&scale, 400, 500);
 	AEMtx33Concat(&transform, &rotate, &scale);
 	AEMtx33Concat(&transform, &translate, &transform);
 	AEGfxSetTransform(transform.m);
