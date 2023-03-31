@@ -2,9 +2,9 @@
 // includes
 #pragma once
 #include "Main.h"
+#include "UI.h"
 #include <iostream>
 #include <fstream>
-#include "UI.h"
 #include <math.h>
 
 //Reference for controls
@@ -163,11 +163,13 @@ void GameStateAlchemiceLoad() {
 	
 	//Init All Spells
 	spellbook = init_all_spells();
-	init_spells_draw(spellbook);
+	init_spells_coords(spellbook);
 }
 
 // Initialization of your own variables go here
 void GameStateAlchemiceInit() {
+
+	float width{};
 
 	turn = player_turn;
 	pause_mode = false;

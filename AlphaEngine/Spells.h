@@ -11,7 +11,7 @@
 
 enum class spells {
 	// Tier 3
-	TOXIC_DELUGE,
+	TOXIC_DELUGE =0 ,
 	INFERNO_BLAST,
 	UMBRAL_TENDRILS,
 	MAELSTROM_SURGE,
@@ -110,22 +110,22 @@ struct Spell {
 	spells tier{};
 	int element = INVALID_ELEMENT;
 	std::string spell_name = "";
+	bool discovered = false;
 	bool unlocked = false;
 	//Damage
 	int base_damage = 0;
 	int effects;
-	//int aoe_damage = 0;
-	//int lingering_damage = 0;
-	//int lingering_rounds = 0;
+
 	//Draw Info
 	AEGfxTexture* texture;
 	dragdrop* spell_dragdrop{};
+
+	//Known Spell list Coords
+	AEVec2 known_spell_coords{};
+
 	// card size
 	const float			card_width = card_width_const;
 	const float			card_height = card_height_const;
-
-	//Set a Spells' AABB and Coords when called
-
 
 	//Reset a spells customisable stuff / variables
 	void reset_spell();
@@ -138,6 +138,9 @@ struct spell_book {
 	//Copy Assignment
 	spell_book(spell_book const& rhs);
 
+	//Sets the first unlock flag of the spell that got unlocked
+	void set_discovered();
+
 	//Equal Operator
 	spell_book& operator=(spell_book const& rhs);
 
@@ -145,7 +148,7 @@ struct spell_book {
 	void swap(spell_book& rhs);
 
 	Spell* spell_array = nullptr;
-	size_t array_size = max_spells;
+	size_t array_size = max_spells ;
 };
 
 class craftingtable {
@@ -206,4 +209,5 @@ void draw_all_spells(spell_book& spellbook, AEGfxVertexList* pMesh);
 
 void draw_spell_combination(spell_book& spellbook, AEGfxVertexList* pMesh);
 
-void init_spells_draw(spell_book& spellbook);
+//Set all Spells AABB and Coords when called
+void init_spells_coords(spell_book& spellbook);

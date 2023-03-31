@@ -1,4 +1,3 @@
-#include "Main.h"
 #include "UI.h"
 
 /*---------------------------------*/
@@ -19,14 +18,12 @@ const float spell_cap_width = 128.0f;
 const float spell_pipe_overlap = 10;
 
 
-
 AEMtx33 scale = { 0 };
 AEMtx33 rotate = { 0 };
 AEMtx33 translate = { 0 };
 AEMtx33 transform = { 0 };
 
 float rotation_about_time{};
-
 
 
 
@@ -97,15 +94,15 @@ void name_bar(std::string name, AEVec2 place, s8 font)
 	//remeber to check for centering offset %
 }
 
-void draw_crafting_table(AEGfxVertexList* mesh, craftingtable& crafting_table,particle_manager& particle_manager, particle (*callback)(AEVec2 pos), AEGfxTexture* table)
+void draw_crafting_table(AEGfxVertexList* mesh, craftingtable& crafting_table, particle_manager& particle_manager, particle(*callback)(AEVec2 pos), AEGfxTexture* table)
 {
 	rotation_about_time = (timer <= 0) ? 0 : rotation_about_time;
 
-	
+
 	AEVec2 table_coord = { crafting_table.get_dragdrop()->getcoord().mid.x, crafting_table.get_dragdrop()->getcoord().mid.y };
 	// Creating particles
 	if (timer != rotation_about_time)
-	create_particle(particle_manager.particle_vector, particle_manager.max_capacity, table_coord, enemy_take_damage_particle);
+		create_particle(particle_manager.particle_vector, particle_manager.max_capacity, table_coord, enemy_take_damage_particle);
 	// Drawing textures
 	AEGfxTextureSet(table, crafting_table.get_dragdrop()->getcoord().mid.x, crafting_table.get_dragdrop()->getcoord().mid.y);
 	AEMtx33Trans(&translate, crafting_table.get_dragdrop()->getcoord().mid.x, crafting_table.get_dragdrop()->getcoord().mid.y);
@@ -121,8 +118,8 @@ void draw_base_spell_slots(AEGfxVertexList* mesh, AEGfxTexture* base_spell, AEGf
 {
 
 	//Draw Cap
-	AEGfxTextureSet(base_spell_cap, (f32) - AEGetWindowWidth() / 2, (f32) AEGetWindowHeight() / 2);
-	AEMtx33Trans(&translate, (f32)(AEGetWindowWidth() / 2) - (spell_cap_width/ 2), (f32)(-AEGetWindowHeight() / 2) + (spell_menu_height / 2));
+	AEGfxTextureSet(base_spell_cap, (f32)-AEGetWindowWidth() / 2, (f32)AEGetWindowHeight() / 2);
+	AEMtx33Trans(&translate, (f32)(AEGetWindowWidth() / 2) - (spell_cap_width / 2), (f32)(-AEGetWindowHeight() / 2) + (spell_menu_height / 2));
 	AEMtx33Rot(&rotate, NULL);
 	AEMtx33Scale(&scale, spell_cap_width, spell_menu_height);
 	AEMtx33Concat(&transform, &rotate, &scale);
@@ -162,7 +159,6 @@ void sub_menu_draw(AEGfxTexture* sub_menu, spell_book& spells, AEGfxVertexList* 
 	// to ensure the sub_menu is on left 
 	float tmpy = (float)AEGetWindowHeight();
 
-
 	std::string sub_words[]{ "Known spell lists" };
 	std::string tier_2[]{ "Tier 2:" };
 	std::string tier_1[]{ "Tier 1:" };
@@ -176,40 +172,54 @@ void sub_menu_draw(AEGfxTexture* sub_menu, spell_book& spells, AEGfxVertexList* 
 	AEGfxSetTransform(transform.m);
 	AEGfxMeshDraw(mesh, AE_GFX_MDM_TRIANGLES);
 
-	AEGfxPrint(font, (s8*)sub_words[0].c_str(), -0.8f, 0.8f, 1.0f, 1.0f, 1.0f, 1.0f);
+	AEGfxPrint(font, (s8*)sub_words[0].c_str(), known_spell_x, known_spell_title_y, 1.0f, 1.0f, 1.0f, 1.0f);
 
-	AEGfxPrint(font, (s8*)tier_2[0].c_str(), -0.8f, 0.70f, 1.0f, 1.0f, 1.0f, 1.0f);
+	AEGfxPrint(font, (s8*)tier_2[0].c_str(), known_spell_x, known_spell_two_y, 1.0f, 1.0f, 1.0f, 1.0f);
 
-	AEGfxPrint(font, (s8*)tier_1[0].c_str(), -0.8f, 0.20f, 1.0f, 1.0f, 1.0f, 1.0f);
+	AEGfxPrint(font, (s8*)tier_1[0].c_str(), known_spell_x, known_spell_one_y, 1.0f, 1.0f, 1.0f, 1.0f);
 
-	for (int i = 0; i < max_spells - 1; i++)
+	for (int i = 0; i < max_spells ; i++)
 	{
-		if (spells.spell_array[i].unlocked == true && spells.spell_array[i].tier > tier3_last)
+		if (spells.spell_array[i].discovered == true && spells.spell_array[i].tier > tier3_last)
 		{
-			AEGfxTextureSet(spells.spell_array[i].texture, 0, 0);
-			AEMtx33Trans(&translate, (f32)-590, (f32)300 - i * 50);
-			AEMtx33Rot(&rotate, 0);
-			AEMtx33Scale(&scale, 50, 50);
-			AEMtx33Concat(&transform, &rotate, &scale);
-			AEMtx33Concat(&transform, &translate, &transform);
-			AEGfxSetTransform(transform.m);
-			AEGfxMeshDraw(mesh, AE_GFX_MDM_TRIANGLES);
-			AEGfxPrint(font, (s8*)"=", ((-540.0f / 640.0f) * 1.0f), (((300 - i * 50) / 360.0f) * 1.0f - 0.025f), 1, 1.0f, 1.0f, 1.0f);
+			if (spells.spell_array[i].tier == tier2_last) {
+				switch (spells.spell_array[i].element) {
+				case POISON:
+					draw_combination(poison_icon, shadow_icon, poison_icon, spells.spell_array[i].known_spell_coords, mesh);
+					break;
+				case FIRE:
+					draw_combination(fire_icon, shadow_icon, fire_icon, spells.spell_array[i].known_spell_coords, mesh);
+					break;				
+				case SHADOW:
+					draw_combination(shadow_icon, shadow_icon, water_icon, spells.spell_array[i].known_spell_coords, mesh);
+					break;
+				}
+			}
+			if (spells.spell_array[i].tier == tier1_last) {
+				switch (spells.spell_array[i].element) {
+				case SHADOW:
+					draw_combination(shadow_icon, shadow_icon, poison_icon, spells.spell_array[i].known_spell_coords, mesh);
+					break;
+				case FIRE:
+					draw_combination(fire_icon, fire_icon, poison_icon, spells.spell_array[i].known_spell_coords, mesh);
+					break;
+				}
+			}
 		}
 	}
 }
 
-void level_transition(level_enum const& num, double time, std::string &tmp, bool &transition) {
+void level_transition(level_enum const& num, double time, std::string& tmp, bool& transition) {
 	int i{ 0 };
 	const int transition_speed = 5;
-	std::string addtext {"LEVEL: "};
+	std::string addtext{ "LEVEL: " };
 	addtext += static_cast<char>(static_cast<int>(num) + '1');
 
 
 	text_buffer(addtext, tmp, time);
 
 	if (time > 0) {
-		i = (int)(time*transition_speed);
+		i = (int)(time * transition_speed);
 	}
 
 	if (i > addtext.size() && transition)
@@ -222,18 +232,18 @@ void level_transition(level_enum const& num, double time, std::string &tmp, bool
 }
 
 /*
-	\brief					
+	\brief
 		function buffers input_string into output_string, it does not print stuff
-	\param input_string		
+	\param input_string
 		read only string variable to buffer from
-	\param output_string	
+	\param output_string
 		string variable to add onto
 	\param time
 		time provided by user strictly needs to start from 0, time provided needs to be always positive in value.
 	\param buffer_speed
 		speed at which the text buffers, default at 5.
 */
-void text_buffer(std::string const &input_string, std::string &output_string, double time, int buffer_speed) {
+void text_buffer(std::string const& input_string, std::string& output_string, double time, int buffer_speed) {
 	int i{ 0 };
 	const int text_speed{ buffer_speed };
 	if (time > 0) {
@@ -247,4 +257,42 @@ void text_buffer(std::string const &input_string, std::string &output_string, do
 	if (i > input_string.size()) {
 		output_string += ' ';
 	}
+}
+
+
+void draw_combination(AEGfxTexture* equals, AEGfxTexture* lhs, AEGfxTexture* rhs, AEVec2& coords, AEGfxVertexList* mesh)
+{
+	//Returned Spell Icon
+	AEGfxTextureSet(equals, 0, 0);
+	AEMtx33Trans(&translate, coords.x, coords.y);
+	AEMtx33Rot(&rotate, 0);
+	AEMtx33Scale(&scale,known_spell_height, known_spell_height);
+	AEMtx33Concat(&transform, &rotate, &scale);
+	AEMtx33Concat(&transform, &translate, &transform);
+	AEGfxSetTransform(transform.m);
+	AEGfxMeshDraw(mesh, AE_GFX_MDM_TRIANGLES);
+
+	//LHS Spell Icon
+	AEGfxTextureSet(lhs, 0, 0);
+	AEMtx33Trans(&translate, coords.x + known_spell_spacing + known_spell_height , coords.y);
+	AEMtx33Rot(&rotate, 0);
+	AEMtx33Scale(&scale, known_spell_height, known_spell_height);
+	AEMtx33Concat(&transform, &rotate, &scale);
+	AEMtx33Concat(&transform, &translate, &transform);
+	AEGfxSetTransform(transform.m);
+	AEGfxMeshDraw(mesh, AE_GFX_MDM_TRIANGLES);
+	
+	//Rhs Spell Icon
+	AEGfxTextureSet(rhs, 0, 0);
+	AEMtx33Trans(&translate, coords.x + known_spell_spacing * 2 + known_spell_height *2 , coords.y);
+	AEMtx33Rot(&rotate, 0);
+	AEMtx33Scale(&scale, known_spell_height, known_spell_height);
+	AEMtx33Concat(&transform, &rotate, &scale);
+	AEMtx33Concat(&transform, &translate, &transform);
+	AEGfxSetTransform(transform.m);
+	AEGfxMeshDraw(mesh, AE_GFX_MDM_TRIANGLES);
+
+	//Text printing
+	AEGfxPrint(font, (s8*)"=", (((coords.x + known_spell_spacing) *2)/ AEGetWindowWidth() ) , ((coords.y - 10)*2 / AEGetWindowHeight()) , 1, 1.0f, 1.0f, 1.0f);
+	AEGfxPrint(font, (s8*)"+", (((coords.x + known_spell_spacing*4 ) *2) / AEGetWindowWidth()), ((coords.y - 10) * 2 / AEGetWindowHeight()), 1, 1.0f, 1.0f, 1.0f);
 }
