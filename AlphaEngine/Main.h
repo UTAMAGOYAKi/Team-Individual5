@@ -42,6 +42,7 @@ extern s8 font;
 extern AEVec2 mouse_pos;
 extern f64 g_dt;
 extern double click_offset;
+extern bool sound;
 
 #ifndef ARRAYSIZE
 #define ARRAYSIZE(x) (sizeof(x)/sizeof(x[0]))
