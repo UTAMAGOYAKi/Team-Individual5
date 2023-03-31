@@ -53,6 +53,12 @@ AEGfxVertexList* pMesh;
 AEGfxTexture* chara{}, * rat{}, * big_rat_texture{}, * spell_g{}, * pause_box{}, * sub{}, * crafting_test{}, * bg{}, * end_turn_box{}, * mana_full{}, * mana_empty{}, * Menu_ui,
 * base_mid_pipe, * base_cap_pipe, * unlocked_spell_slot, * fire_icon, * water_icon, * poison_icon, * shadow_icon;
 
+AEAudio gun, combi, death, whack;
+AEAudio bgm;
+
+AEAudioGroup base, bgm_g;
+
+
 aabb* chara_pos;
 aabb* Enemy_pos_1;
 aabb* Enemy_pos_2;
@@ -176,6 +182,19 @@ void GameStateAlchemiceLoad() {
 	PositionInit();
 	alchemice = create_player();
 	
+	bgm = AEAudioLoadMusic("Assets/Audio/bgm.wav");
+	bgm_g = AEAudioCreateGroup();
+	AEAudioPlay(bgm, bgm_g, 1.0f, 1.0f, -1);
+
+
+	gun = AEAudioLoadSound("Assets/Audio/GUN-MUSKET_GEN-HDF-13603.wav");
+	combi = AEAudioLoadSound("Assets/Audio/Magic-combinations-sfx.wav");
+	death = AEAudioLoadSound("Assets/Audio/fox.wav");
+	whack = AEAudioLoadSound("Assets/Audio/smackwhack.wav");
+	combi = AEAudioLoadSound("Assets/Audio/MagicCartoon CTE01_94.8.wav");
+	base = AEAudioCreateGroup();
+
+
 	//Init All Spells
 	spellbook = init_all_spells();
 	init_spells_draw(spellbook);
@@ -183,6 +202,7 @@ void GameStateAlchemiceLoad() {
 
 // Initialization of your own variables go here
 void GameStateAlchemiceInit() {
+
 
 	turn = player_turn;
 	pause_mode = false;
@@ -382,6 +402,11 @@ void GameStateAlchemiceUpdate() {
 								}
 								crafting_table.reset_spells();
 								enemies[j].take_damage(spellbook.spell_array[i].base_damage, static_cast<Elements>(spellbook.spell_array[i].element));
+								if (enemies[j].get_hp() <= 0)
+								{
+									AEAudioPlay(death, base, 1.0f, 0.6f, 0);
+
+								}
 								enemies[j].set_bleeding(true);
 								alchemice->mp -= 1;
 							}
@@ -413,6 +438,7 @@ void GameStateAlchemiceUpdate() {
 			if (crafting_table.get_flag()) {
 				if (crafting_table.crafting_table_update(spellbook) == 2) {
 					alchemice->mp -= 1;
+					AEAudioPlay(combi, base, 1.0f, 1.0f, 0);
 				}
 			}
 
@@ -473,6 +499,8 @@ void GameStateAlchemiceUpdate() {
 						enemies[s_enemy_turn].set_p_bool_damage_num(true);
 
 						enemies[s_enemy_turn].switch_finish_attack();
+						enemies[s_enemy_turn].set_audio(false);
+
 						s_enemy_turn++;
 					}
 					else
@@ -480,6 +508,24 @@ void GameStateAlchemiceUpdate() {
 						//To update animations(it will auto switch)
 						if (enemies[s_enemy_turn].is_alive())
 						{
+							if (enemies[s_enemy_turn].get_name() == "Big Rat")
+							{
+
+								if (!enemies[s_enemy_turn].get_audio())
+								{
+									AEAudioPlay(gun, base, 1.0f, 1.0f, 0);
+									enemies[s_enemy_turn].set_audio(true);
+								}
+
+							}
+							else if (enemies[s_enemy_turn].get_name() == "Rat")
+							{
+								if (!enemies[s_enemy_turn].get_audio())
+								{
+									AEAudioPlay(whack, base, 0.6f, 1.0f, 0);
+									enemies[s_enemy_turn].set_audio(true);
+								}
+							}
 							//update_animation will switch enemy object's animation to be finished when it ends.
 							enemies[s_enemy_turn].update_animation(g_dt);
 						}
@@ -507,6 +553,7 @@ void GameStateAlchemiceUpdate() {
 	}
 	else if (alchemice->hp <= 0) {
 		gGameStateNext = GS_GAMEOVER;
+		AEAudioStopGroup(bgm_g);
 	}
 	if (transition) {
 		transition_timer -= g_dt;
