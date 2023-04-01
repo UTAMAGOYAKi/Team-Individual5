@@ -890,7 +890,14 @@ void GameStateAlchemiceDraw() {
 			AEGfxTextureSet(pause_box, 0.f, 0.f);
 			AEMtx33Trans(&translate, 0, boxY);
 			AEMtx33Rot(&rotate, 0);
-			AEMtx33Scale(&scale, pause_button_scale.x, pause_button_scale.y);
+			if (i == 0)
+			{
+				AEMtx33Scale(&scale, 0, 0);
+			}
+			else
+			{
+				AEMtx33Scale(&scale, pause_button_scale.x, pause_button_scale.y);
+			}
 			AEMtx33Concat(&transform, &rotate, &scale);
 			AEMtx33Concat(&transform, &translate, &transform);
 			AEGfxSetTransform(transform.m);
