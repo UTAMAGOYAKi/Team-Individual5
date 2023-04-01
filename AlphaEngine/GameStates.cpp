@@ -200,8 +200,8 @@ void GameStateAlchemiceLoad() {
 	shadow_icon = AEGfxTextureLoad("Assets/shadow_icon.png");
 	poison_icon = AEGfxTextureLoad("Assets/poison_icon.png");
 
-	tick_box[0] = AEGfxTextureLoad("Assets/tick_box-1");
-	tick_box[1] = AEGfxTextureLoad("Assets/tick_box-2");
+	tick_box[0] = AEGfxTextureLoad("Assets/tick_box_1.png");
+	tick_box[1] = AEGfxTextureLoad("Assets/tick_box_2.png");
 
 	PositionInit();
 	alchemice = create_player();
@@ -837,7 +837,23 @@ void GameStateAlchemiceDraw() {
 			AEGfxSetTransform(transform.m);
 			AEGfxMeshDraw(pMesh, AE_GFX_MDM_TRIANGLES);
 			AEGfxPrint(font, (s8*)Pause_Text[i], middle, textY, 1, 0, 0, 0);
+
+			if (i == 2 || i == 3)
+			{
+
+				AEGfxTextureSet(tick_box[(i == 2) ? sound : fullscreen], 0, 0);
+				AEMtx33Trans(&translate, -120, boxY);
+				AEMtx33Rot(&rotate, 0);
+				AEMtx33Scale(&scale, pause_button_scale.x/6, pause_button_scale.x/4);
+				AEMtx33Concat(&transform, &rotate, &scale);
+				AEMtx33Concat(&transform, &translate, &transform);
+				AEGfxSetTransform(transform.m);
+				AEGfxMeshDraw(pMesh, AE_GFX_MDM_TRIANGLES);
+				AEGfxPrint(font, (s8*)Pause_Text[i], middle, textY, 1, 0, 0, 0);
+			}
+
 		}
+		
 	}
 }
 
