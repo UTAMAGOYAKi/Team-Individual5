@@ -373,7 +373,7 @@ void GameStateAlchemiceUpdate() {
 			enemies[i].update_bleed_timer();
 			if (enemies[i].get_bleed_timer() <= 0) {
 				enemies[i].reset_bleed_time();
-				f64 j = enemies[i].get_bleed_timer();
+				//f64 j = enemies[i].get_bleed_timer();
 				enemies[i].set_bleeding(false);
 			}
 		}
@@ -398,9 +398,9 @@ void GameStateAlchemiceUpdate() {
 						if (aabbbutton(spellbook.spell_array[i].spell_dragdrop, mouse_pos)
 							&& !crafting_table.get_flag())
 						{
-							for (int i = 0; i <= max_spells; i++)
+							for (int j = 0; j <= max_spells; j++)
 							{
-								if (spellbook.spell_array[i].spell_dragdrop->getmouse())
+								if (spellbook.spell_array[j].spell_dragdrop->getmouse())
 								{
 									drag = false;
 								}
@@ -676,7 +676,7 @@ void GameStateAlchemiceDraw() {
 		name_bar(player_hp, player_position, font);
 	}
 
-	for (int i{ 0 }; i < alchemice->max_mp; ++i) {
+	for (int i{}; i < alchemice->max_mp; ++i) {
 		AEVec2 mana_draw_position{ (f32)(-AEGetWindowWidth() / 2.5) + (i * 40), (f32)(-AEGetWindowHeight() / 4) };
 		AEGfxTextureSet(mana_full, 0, 0);
 		AEMtx33Trans(&translate, mana_draw_position.x, mana_draw_position.y);
@@ -690,8 +690,8 @@ void GameStateAlchemiceDraw() {
 		if (alchemice->mp < alchemice->max_mp) {
 			for (int j{ alchemice->mp }; j < alchemice->max_mp; ++j) {
 				AEGfxTextureSet(mana_empty, 0, 0);
-				AEVec2 mana_draw_position{ (f32)(-AEGetWindowWidth() / 2.5) + (j * 40), (f32)(-AEGetWindowHeight() / 4) };
-				AEMtx33Trans(&translate, mana_draw_position.x, mana_draw_position.y);
+				AEVec2 mana_draw_position_empty{ (f32)(-AEGetWindowWidth() / 2.5) + (j * 40), (f32)(-AEGetWindowHeight() / 4) };
+				AEMtx33Trans(&translate, mana_draw_position_empty.x, mana_draw_position_empty.y);
 				AEMtx33Concat(&transform, &rotate, &scale);
 				AEMtx33Concat(&transform, &translate, &transform);
 				AEGfxSetTransform(transform.m);
@@ -826,7 +826,7 @@ void GameStateAlchemiceDraw() {
 		const char* Pause_Text[4]{ { "Continue" }, {"Main Menu"}, {"Sound"},{"Fullscreen"}};
 
 		for (int i = 0; i < ARRAYSIZE(Pause_Text); ++i) {
-			f32 middle = -(((float)strlen(Pause_Text[i]) / 2) / (AEGetWindowWidth() / FONT_SIZE));
+			f32 pause_middle = -(((float)strlen(Pause_Text[i]) / 2) / (AEGetWindowWidth() / FONT_SIZE));
 			f32 textY = (float)((float)(AEGetWindowHeight() - i * AEGetWindowHeight()) / (ARRAYSIZE(pause_buttons) - 1) + pause_space_y) / AEGetWindowHeight();			f32 boxY = (float)(pause_start_y - i * pause_space_y);
 			AEGfxTextureSet(pause_box, 0.f, 0.f);
 			AEMtx33Trans(&translate, 0, boxY);
@@ -836,11 +836,10 @@ void GameStateAlchemiceDraw() {
 			AEMtx33Concat(&transform, &translate, &transform);
 			AEGfxSetTransform(transform.m);
 			AEGfxMeshDraw(pMesh, AE_GFX_MDM_TRIANGLES);
-			AEGfxPrint(font, (s8*)Pause_Text[i], middle, textY, 1, 0, 0, 0);
+			AEGfxPrint(font, (s8*)Pause_Text[i], pause_middle, textY, 1, 0, 0, 0);
 
 			if (i == 2 || i == 3)
 			{
-
 				AEGfxTextureSet(tick_box[(i == 2) ? sound : fullscreen], 0, 0);
 				AEMtx33Trans(&translate, -120, boxY);
 				AEMtx33Rot(&rotate, 0);
@@ -849,7 +848,7 @@ void GameStateAlchemiceDraw() {
 				AEMtx33Concat(&transform, &translate, &transform);
 				AEGfxSetTransform(transform.m);
 				AEGfxMeshDraw(pMesh, AE_GFX_MDM_TRIANGLES);
-				AEGfxPrint(font, (s8*)Pause_Text[i], middle, textY, 1, 0, 0, 0);
+				AEGfxPrint(font, (s8*)Pause_Text[i], pause_middle, textY, 1, 0, 0, 0);
 			}
 
 		}
