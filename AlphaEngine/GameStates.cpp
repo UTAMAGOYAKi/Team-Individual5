@@ -72,6 +72,8 @@ s32 pY{};
 //Modes
 bool alchemy_mode = 0;
 bool pause_mode = false;
+bool check_exit = false;
+bool toggler = true;
 bool sub_menu = false;
 static bool fullscreen = false;
 
@@ -313,20 +315,26 @@ void GameStateAlchemiceUpdate() {
 		pause_mode = !pause_mode;
 	}
 
+	if (AEInputCheckReleased(AEVK_LBUTTON))
+	{
+		toggler = true;
+	}
 	
+
 	for (int i{}; i < ARRAYSIZE(pause_buttons); ++i) //for every iteration of pause menu buttons
 	{
 		if (aabbbutton(&pause_buttons[i], mouse_pos) &&
 			AEInputCheckTriggered(AEVK_LBUTTON) && //check if left button is clicked
-			pause_mode == true) //only runs during pause mode
+			pause_mode == true && !check_exit) //only runs during pause mode
 		{
 			switch (i) {
 			case 0:
 				pause_mode = !pause_mode;
 				break;
 			case 1:
-				gGameStateNext = GS_MENU;
-				//to be implemented when options is up
+				check_exit = !check_exit;
+				toggler = false;
+				////to be implemented when options is up
 				break;
 			case 2:
 				sound = !sound;
@@ -341,10 +349,17 @@ void GameStateAlchemiceUpdate() {
 		}
 	}
 
-	if (pause_mode == true)
+	if (check_exit && toggler)
 	{
-		for (int i{}; i < ARRAYSIZE(tick_box); i++)
+		if(AEInputCheckTriggered(AEVK_LBUTTON))
+		if (aabbbutton(&pause_buttons[1], mouse_pos)) //check if left button is clicked
 		{
+			gGameStateNext = GS_MENU;
+
+		}
+		else
+		{
+			check_exit = !check_exit;
 
 		}
 	}
@@ -827,7 +842,8 @@ void GameStateAlchemiceDraw() {
 
 		for (int i = 0; i < ARRAYSIZE(Pause_Text); ++i) {
 			f32 pause_middle = -(((float)strlen(Pause_Text[i]) / 2) / (AEGetWindowWidth() / FONT_SIZE));
-			f32 textY = (float)((float)(AEGetWindowHeight() - i * AEGetWindowHeight()) / (ARRAYSIZE(pause_buttons) - 1) + pause_space_y) / AEGetWindowHeight();			f32 boxY = (float)(pause_start_y - i * pause_space_y);
+			f32 textY = (float)((float)(AEGetWindowHeight() - i * AEGetWindowHeight()) / (ARRAYSIZE(pause_buttons) - 1) + pause_space_y) / AEGetWindowHeight();			
+			f32 boxY = (float)(pause_start_y - i * pause_space_y);
 			AEGfxTextureSet(pause_box, 0.f, 0.f);
 			AEMtx33Trans(&translate, 0, boxY);
 			AEMtx33Rot(&rotate, 0);
@@ -854,6 +870,36 @@ void GameStateAlchemiceDraw() {
 		}
 		
 	}
+
+	if (check_exit)
+	{
+		AEGfxTextureSet(pause_box, 0, 0);
+		AEMtx33Trans(&translate, 0, 0);
+		AEMtx33Rot(&rotate, 0);
+		AEMtx33Scale(&scale, pause_scale.x, pause_scale.y);
+		AEMtx33Concat(&transform, &rotate, &scale);
+		AEMtx33Concat(&transform, &translate, &transform);
+		AEGfxSetTransform(transform.m);
+		AEGfxMeshDraw(pMesh, AE_GFX_MDM_TRIANGLES); 
+
+		const char* check[3]{ { "Exit?" }, { "Yes" }, {"No" } };
+		for (int i = 0; i < ARRAYSIZE(check); ++i) {
+			f32 middle = -(((float)strlen(check[i]) / 2) / (AEGetWindowWidth() / FONT_SIZE));
+			f32 textY = (float)((float)(AEGetWindowHeight() - i * AEGetWindowHeight()) / (ARRAYSIZE(pause_buttons) - 1) + pause_space_y) / AEGetWindowHeight();			
+			f32 boxY = (float)(pause_start_y - i * pause_space_y);
+			AEGfxTextureSet(pause_box, 0.f, 0.f);
+			AEMtx33Trans(&translate, 0, boxY);
+			AEMtx33Rot(&rotate, 0);
+			AEMtx33Scale(&scale, pause_button_scale.x, pause_button_scale.y);
+			AEMtx33Concat(&transform, &rotate, &scale);
+			AEMtx33Concat(&transform, &translate, &transform);
+			AEGfxSetTransform(transform.m);
+			AEGfxMeshDraw(pMesh, AE_GFX_MDM_TRIANGLES);
+			AEGfxPrint(font, (s8*)check[i], middle, textY, 1, 0, 0, 0);
+
+		}
+	}
+	
 }
 
 void GameStateAlchemiceFree() {
