@@ -17,9 +17,9 @@ prior written consent of DigiPen Institute of Technology is prohibited.
 //Variables used in MainMenu state
 AEGfxVertexList* pMesh_MainMenu;
 AEGfxTexture *Menu_BG, *Menu_UI;
-aabb menu_buttons[5];
+aabb menu_buttons[4];
 float const linespace_main = 75.0f;
-float const texture_start = -250.0f;
+float const texture_start = -175.0f;
 float const text_start = 40.0f;
 AEVec2 const main_button_size{ 140,50 };
 
@@ -81,18 +81,14 @@ void MenuUpdate()
 					break;
 
 				case 1:
-					gGameStateNext = GS_OPTIONS;
-					break;
-
-				case 2:
 					gGameStateNext = GS_TUTORIAL;
 					break;
 
-				case 3:
+				case 2:
 					gGameStateNext = GS_CREDITS;
 					break;
 
-				case 4:
+				case 3:
 					gGameStateNext = GS_QUIT;
 					break;
 
@@ -141,7 +137,7 @@ void MenuDraw()
 		AEGfxMeshDraw(pMesh_MainMenu, AE_GFX_MDM_TRIANGLES);
 	}
 
-	const char* MainMenu[] = { {"Play"}, {"Options"}, {"Tutorial"}, {"Credits"}, {"Exit"} };
+	const char* MainMenu[] = { {"Play"}, {"Tutorial"}, {"Credits"}, {"Exit"} };
 
 	for (int i{}; i < ARRAYSIZE(MainMenu); ++i)
 	{
