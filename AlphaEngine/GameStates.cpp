@@ -213,7 +213,6 @@ void GameStateAlchemiceLoad() {
 
 
 	gun = AEAudioLoadSound("Assets/Audio/GUN-MUSKET_GEN-HDF-13603.wav");
-	combi = AEAudioLoadSound("Assets/Audio/Magic-combinations-sfx.wav");
 	death = AEAudioLoadSound("Assets/Audio/fox.wav");
 	whack = AEAudioLoadSound("Assets/Audio/smackwhack.wav");
 	combi = AEAudioLoadSound("Assets/Audio/MagicCartoon CTE01_94.8.wav");
