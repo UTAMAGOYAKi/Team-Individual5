@@ -73,7 +73,7 @@ s32 pY{};
 bool alchemy_mode = 0;
 bool pause_mode = false;
 bool sub_menu = false;
-static bool fullscreen = true;
+static bool fullscreen = false;
 
 //Level Turn checks
 Turn turn;
