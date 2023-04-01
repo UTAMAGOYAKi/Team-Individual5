@@ -52,7 +52,8 @@ craftingtable crafting_table;
 //Loading of Mesh and Texture
 AEGfxVertexList* pMesh;
 AEGfxTexture* chara{}, * rat{}, * big_rat_texture{}, * spell_g{}, * pause_box{}, * sub{}, * crafting_test{}, * bg{}, * end_turn_box{}, * mana_full{}, * mana_empty{}, * Menu_ui,
-* base_mid_pipe, * base_cap_pipe, * unlocked_spell_slot, * fire_icon, * water_icon, * poison_icon, * shadow_icon, *tick_box[2];
+* base_mid_pipe, * base_cap_pipe, * unlocked_spell_slot, * fire_icon, * water_icon, * poison_icon, * shadow_icon, *tick_box[2], *toxic_deluge_icon, * inferno_blast_icon, * umbral_tendrils_icon, * maelstrom_surge_icon, * venemous_bite_icon,
+* shadow_cloak_icon, * flame_burst_icon, * rat_swarm_icon, * bubonic_blaze_icon;
 
 AEAudio gun, combi, death, whack;
 AEAudio bgm;
@@ -152,7 +153,6 @@ void GameStateAlchemiceLoad() {
 
 	particle_mesh = AEGfxMeshEnd();
 
-
 	chara = AEGfxTextureLoad("Assets/char.png");
 	rat = AEGfxTextureLoad("Assets/Rat.png");
 	big_rat_texture = AEGfxTextureLoad("Assets/big_rat.png");
@@ -167,6 +167,26 @@ void GameStateAlchemiceLoad() {
 	base_mid_pipe = AEGfxTextureLoad("Assets/midpipe.png");
 	base_cap_pipe = AEGfxTextureLoad("Assets/side_ui.png");
 	unlocked_spell_slot = AEGfxTextureLoad("Assets/box_ui.png");
+
+	umbral_tendrils_icon = AEGfxTextureLoad("Assets/umbral.png");
+	std::cout << "spell_g MemLoc: " << umbral_tendrils_icon << std::endl;
+	inferno_blast_icon = AEGfxTextureLoad("Assets/inferno_blast.png");
+	std::cout << "fire MemLoc: " << inferno_blast_icon << std::endl;
+	toxic_deluge_icon = AEGfxTextureLoad("Assets/toxic_deluge.png");
+	std::cout << "poison MemLoc: " << toxic_deluge_icon << std::endl;
+	maelstrom_surge_icon = AEGfxTextureLoad("Assets/maelstrom_surge.png");
+	std::cout << "shame MemLoc: " << maelstrom_surge_icon << std::endl;
+	venemous_bite_icon = AEGfxTextureLoad("Assets/venemous_bite.png");
+	std::cout << "venemous_bite MemLoc: " << venemous_bite_icon << std::endl;
+	shadow_cloak_icon = AEGfxTextureLoad("Assets/shadow_cloak.png");
+	std::cout << "shadow_cloak MemLoc: " << shadow_cloak_icon << std::endl;
+	flame_burst_icon = AEGfxTextureLoad("Assets/flame_burst.png");
+	std::cout << "flame_burst MemLoc: " << flame_burst_icon << std::endl;
+	rat_swarm_icon = AEGfxTextureLoad("Assets/rat_swarm.png");
+	std::cout << "rat_swarm MemLoc: " << rat_swarm_icon << std::endl;
+	bubonic_blaze_icon = AEGfxTextureLoad("Assets/bubonic_blaze.png");
+	std::cout << "bubonic_blaze MemLoc: " << bubonic_blaze_icon << std::endl;
+
 
 	blast[0] = AEGfxTextureLoad("Assets/blast1.png");
 	blast[1] = AEGfxTextureLoad("Assets/blast2.png");
@@ -842,8 +862,20 @@ void GameStateAlchemiceUnload() {
 	AEGfxTextureUnload(bg);
 	AEGfxTextureUnload(mana_full);
 	AEGfxTextureUnload(mana_empty);
+	
+	//Unload all spells in spellbook
 	spellbook.unload_spells();
 
+	//Unloads spell icons used in known spell list
+	AEGfxTextureUnload(umbral_tendrils_icon);
+	AEGfxTextureUnload(inferno_blast_icon);
+	AEGfxTextureUnload(toxic_deluge_icon);
+	AEGfxTextureUnload(maelstrom_surge_icon);
+	AEGfxTextureUnload(venemous_bite_icon);
+	AEGfxTextureUnload(shadow_cloak_icon);
+	AEGfxTextureUnload(flame_burst_icon);
+	AEGfxTextureUnload(rat_swarm_icon);
+	AEGfxTextureUnload(bubonic_blaze_icon);
 
 	//Animations
 	AEGfxTextureUnload(blast[0]);

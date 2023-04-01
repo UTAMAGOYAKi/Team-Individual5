@@ -1,3 +1,18 @@
+/******************************************************************************/
+/*!
+\file		Spells.h
+\project	Alchemice
+\author 	Low Ee Loong
+\par    	email: eeloong.l\@digipen.edu
+\brief		This file defines a spell_book object that contains a 
+			spell array of spell objects.
+
+Copyright (C) 2023 DigiPen Institute of Technology.
+Reproduction or disclosure of this file or its contents without the
+prior written consent of DigiPen Institute of Technology is prohibited.
+*/
+/******************************************************************************/
+
 #pragma once
 
 #include "Main.h"

@@ -1,9 +1,24 @@
+/******************************************************************************/
+/*!
+\file		Spells.cpp
+\project	Alchemice
+\author 	Low Ee Loong
+\par    	email: eeloong.l\@digipen.edu
+\brief		This file declares a spell_book object that contains a 
+			spell array of spell objects.
+
+
+Copyright (C) 2023 DigiPen Institute of Technology.
+Reproduction or disclosure of this file or its contents without the
+prior written consent of DigiPen Institute of Technology is prohibited.
+*/
+/******************************************************************************/
+
 #include "Main.h"
 
 //Declare textures for spells
 AEGfxTexture* toxic_deluge{}, * inferno_blast{}, * umbral_tendrils{}, * maelstrom_surge{}, * venemous_bite{},
 * shadow_cloak{}, * flame_burst{}, * rat_swarm{}, * bubonic_blaze{};
-
 
 
 //Know Spell Coords Counter

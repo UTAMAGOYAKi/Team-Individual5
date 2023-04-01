@@ -1,9 +1,10 @@
 /******************************************************************************/
 /*!
 \file		UI.cpp
-\author 	Liang HongJie(20%),
-\par    	email: l.hongjie\@digipen.edu, 
+\author 	Liang HongJie(20%),Low Ee Loong (20%)
+\par    	email: l.hongjie\@digipen.edu, eeloong.l\@digipen.edu
 \brief		Some UI functions defined here.
+			
 
 Copyright (C) 2023 DigiPen Institute of Technology.
 Reproduction or disclosure of this file or its contents without the
@@ -36,8 +37,10 @@ AEMtx33 rotate = { 0 };
 AEMtx33 translate = { 0 };
 AEMtx33 transform = { 0 };
 
-//f64 timer;
 float rotation_about_time{};
+
+
+
 
 void name_bar(std::string name, aabb place, s8 font)
 {
@@ -197,23 +200,23 @@ void sub_menu_draw(AEGfxTexture* sub_menu, spell_book& spells, AEGfxVertexList* 
 			if (spells.spell_array[i].tier == tier2_last) {
 				switch (spells.spell_array[i].element) {
 				case POISON:
-					draw_combination(poison_icon, shadow_icon, poison_icon, spells.spell_array[i].known_spell_coords, mesh);
+					draw_combination(venemous_bite_icon, umbral_tendrils_icon,toxic_deluge_icon,  spells.spell_array[i].known_spell_coords, mesh);
 					break;
 				case FIRE:
-					draw_combination(fire_icon, shadow_icon, fire_icon, spells.spell_array[i].known_spell_coords, mesh);
+					draw_combination(flame_burst_icon, umbral_tendrils_icon,inferno_blast_icon, spells.spell_array[i].known_spell_coords, mesh);
 					break;				
 				case SHADOW:
-					draw_combination(shadow_icon, shadow_icon, water_icon, spells.spell_array[i].known_spell_coords, mesh);
+					draw_combination(shadow_cloak_icon, umbral_tendrils_icon, maelstrom_surge_icon, spells.spell_array[i].known_spell_coords, mesh);
 					break;
 				}
 			}
 			if (spells.spell_array[i].tier == tier1_last) {
 				switch (spells.spell_array[i].element) {
 				case SHADOW:
-					draw_combination(shadow_icon, shadow_icon, poison_icon, spells.spell_array[i].known_spell_coords, mesh);
+					draw_combination(rat_swarm_icon, venemous_bite_icon, shadow_cloak_icon, spells.spell_array[i].known_spell_coords, mesh);
 					break;
 				case FIRE:
-					draw_combination(fire_icon, fire_icon, poison_icon, spells.spell_array[i].known_spell_coords, mesh);
+					draw_combination(bubonic_blaze_icon, flame_burst_icon, venemous_bite_icon, spells.spell_array[i].known_spell_coords, mesh);
 					break;
 				}
 			}

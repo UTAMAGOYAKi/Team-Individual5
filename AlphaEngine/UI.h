@@ -1,18 +1,22 @@
 /******************************************************************************/
 /*!
-\file		UI.h
-\author 	Liang HongJie(20%),
-\par    	email: l.hongjie\@digipen.edu,
-\brief		Some UI functions declared here as well as 
+\file		UI.cpp
+\author 	Liang HongJie(20%),Low Ee Loong (20%)
+\par    	email: l.hongjie\@digipen.edu, eeloong.l\@digipen.edu
+\brief		Some UI functions defined here.
 
 Copyright (C) 2023 DigiPen Institute of Technology.
 Reproduction or disclosure of this file or its contents without the
 prior written consent of DigiPen Institute of Technology is prohibited.
- */
- /******************************************************************************/
+*/
+/******************************************************************************/
 
 #ifndef UI_h
 #define UI_h
+
+//Textures for spell icon
+extern AEGfxTexture* toxic_deluge_icon, * inferno_blast_icon, * umbral_tendrils_icon, * maelstrom_surge_icon, * venemous_bite_icon,
+* shadow_cloak_icon, * flame_burst_icon, * rat_swarm_icon, * bubonic_blaze_icon;
 
 extern float rotation_about_time;
 

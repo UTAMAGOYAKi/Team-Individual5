@@ -1,3 +1,18 @@
+/******************************************************************************/
+/*!
+\file		Crafting.cpp
+\project	Alchemice
+\author 	Low Ee Loong
+\par    	email: eeloong.l\@digipen.edu
+\brief		Function declaration for Game as well as define Enum used within Game loop
+
+Copyright (C) 2023 DigiPen Institute of Technology.
+Reproduction or disclosure of this file or its contents without the
+prior written consent of DigiPen Institute of Technology is prohibited.
+*/
+/******************************************************************************/
+
+
 #include "Main.h"
 
 craftingtable::craftingtable()
