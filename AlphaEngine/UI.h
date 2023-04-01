@@ -14,23 +14,27 @@ prior written consent of DigiPen Institute of Technology is prohibited.
 #ifndef UI_h
 #define UI_h
 
-//Textures for spell icon
-extern AEGfxTexture* toxic_deluge_icon, * inferno_blast_icon, * umbral_tendrils_icon, * maelstrom_surge_icon, * venemous_bite_icon,
-* shadow_cloak_icon, * flame_burst_icon, * rat_swarm_icon, * bubonic_blaze_icon;
 
 extern float rotation_about_time;
 
+
+//Known Spell List Variables
+/******************************************************************************/
+//Textures for spell icons (Used in known spells)
+extern AEGfxTexture* toxic_deluge_icon, * inferno_blast_icon, * umbral_tendrils_icon, * maelstrom_surge_icon, * venemous_bite_icon,
+* shadow_cloak_icon, * flame_burst_icon, * rat_swarm_icon, * bubonic_blaze_icon;
 //Know spells width & height 
 const float known_spell_height = 50.f;
 const float known_spell_ybuffer = 30.f;
-
-// Words for known spell
+//Position of known spell menu headers
 const float known_spell_x = -0.9f;
 const float known_spell_title_y = 0.8f;
 const float known_spell_two_y = 0.7f;
 const float known_spell_one_y = 0.1f;
-
 const float known_spell_spacing = 30.f;
+
+
+/******************************************************************************/
 
 //Element Icons
 extern AEGfxTexture* fire_icon, * water_icon, * poison_icon, * shadow_icon;

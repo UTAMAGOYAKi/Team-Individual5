@@ -18,7 +18,6 @@ prior written consent of DigiPen Institute of Technology is prohibited.
 //	Defines
 //  All values tenative to changes
 /*---------------------------------*/
-
 const float hp_bar_height = 10.0f;
 const float hp_bar_offset = 5.0f;
 const float name_offset = 100.0f;
@@ -27,10 +26,29 @@ const float hp_bar_player_width = 10.0f;
 const float hp_bar_enemy_width = 10.0f;
 const float hp_bar_boss_width = 20.0f;
 
+//Menu that spells sit on
 const float spell_menu_height = 164.0f;
 const float spell_cap_width = 128.0f;
 const float spell_pipe_overlap = 10;
 
+
+//Known Spell List Variables
+/******************************************************************************/
+
+//Known spell lists menu consts
+const float known_spell_menu_x = -440;
+const float known_spell_menu_y = 100;
+const float known_spell_menu_width = 400;
+const float known_spell_menu_height = 500;
+const float known_spell_text_scale = 1.0f;
+const float known_spell_text_RGBwhite = 1.0f;
+const float known_spell_printtext_y_offset = 10.0f;
+
+//Dynamically printed when called
+//Rhs Spell Icon Spacing
+const float known_spell_rhs_spacing = known_spell_spacing * 2 + known_spell_height * 2;
+const float known_spell_plus_spacing = known_spell_spacing * 4;
+/******************************************************************************/
 
 AEMtx33 scale = { 0 };
 AEMtx33 rotate = { 0 };
@@ -178,20 +196,20 @@ void sub_menu_draw(AEGfxTexture* sub_menu, spell_book& spells, AEGfxVertexList* 
 	std::string tier_2[]{ "Tier 2:" };
 	std::string tier_1[]{ "Tier 1:" };
 
-	AEGfxTextureSet(sub_menu, 0, 0);
-	AEMtx33Trans(&translate, -440, 100);
-	AEMtx33Rot(&rotate, 0);
-	AEMtx33Scale(&scale, 400, 500);
+	AEGfxTextureSet(sub_menu, NULL, NULL);
+	AEMtx33Trans(&translate, known_spell_menu_x ,known_spell_menu_y );
+	AEMtx33Rot(&rotate, NULL);
+	AEMtx33Scale(&scale, known_spell_menu_width, known_spell_menu_height);
 	AEMtx33Concat(&transform, &rotate, &scale);
 	AEMtx33Concat(&transform, &translate, &transform);
 	AEGfxSetTransform(transform.m);
 	AEGfxMeshDraw(mesh, AE_GFX_MDM_TRIANGLES);
 
-	AEGfxPrint(font, (s8*)sub_words[0].c_str(), known_spell_x, known_spell_title_y, 1.0f, 1.0f, 1.0f, 1.0f);
+	AEGfxPrint(font, (s8*)sub_words[0].c_str(), known_spell_x, known_spell_title_y, known_spell_text_scale, known_spell_text_RGBwhite, known_spell_text_RGBwhite, known_spell_text_RGBwhite);
 
-	AEGfxPrint(font, (s8*)tier_2[0].c_str(), known_spell_x, known_spell_two_y, 1.0f, 1.0f, 1.0f, 1.0f);
+	AEGfxPrint(font, (s8*)tier_2[0].c_str(), known_spell_x, known_spell_two_y, known_spell_text_scale, known_spell_text_RGBwhite, known_spell_text_RGBwhite, known_spell_text_RGBwhite);
 
-	AEGfxPrint(font, (s8*)tier_1[0].c_str(), known_spell_x, known_spell_one_y, 1.0f, 1.0f, 1.0f, 1.0f);
+	AEGfxPrint(font, (s8*)tier_1[0].c_str(), known_spell_x, known_spell_one_y, known_spell_text_scale, known_spell_text_RGBwhite, known_spell_text_RGBwhite, known_spell_text_RGBwhite);
 
 	for (int i = 0; i < max_spells ; i++)
 	{
@@ -290,9 +308,9 @@ void text_buffer(std::string const& input_string, std::string& output_string, do
 void draw_combination(AEGfxTexture* equals, AEGfxTexture* lhs, AEGfxTexture* rhs, AEVec2& coords, AEGfxVertexList* mesh)
 {
 	//Returned Spell Icon
-	AEGfxTextureSet(equals, 0, 0);
+	AEGfxTextureSet(equals, NULL, NULL);
 	AEMtx33Trans(&translate, coords.x, coords.y);
-	AEMtx33Rot(&rotate, 0);
+	AEMtx33Rot(&rotate, NULL);
 	AEMtx33Scale(&scale,known_spell_height, known_spell_height);
 	AEMtx33Concat(&transform, &rotate, &scale);
 	AEMtx33Concat(&transform, &translate, &transform);
@@ -300,9 +318,9 @@ void draw_combination(AEGfxTexture* equals, AEGfxTexture* lhs, AEGfxTexture* rhs
 	AEGfxMeshDraw(mesh, AE_GFX_MDM_TRIANGLES);
 
 	//LHS Spell Icon
-	AEGfxTextureSet(lhs, 0, 0);
+	AEGfxTextureSet(lhs, NULL, NULL);
 	AEMtx33Trans(&translate, coords.x + known_spell_spacing + known_spell_height , coords.y);
-	AEMtx33Rot(&rotate, 0);
+	AEMtx33Rot(&rotate, NULL);
 	AEMtx33Scale(&scale, known_spell_height, known_spell_height);
 	AEMtx33Concat(&transform, &rotate, &scale);
 	AEMtx33Concat(&transform, &translate, &transform);
@@ -310,9 +328,9 @@ void draw_combination(AEGfxTexture* equals, AEGfxTexture* lhs, AEGfxTexture* rhs
 	AEGfxMeshDraw(mesh, AE_GFX_MDM_TRIANGLES);
 	
 	//Rhs Spell Icon
-	AEGfxTextureSet(rhs, 0, 0);
-	AEMtx33Trans(&translate, coords.x + known_spell_spacing * 2 + known_spell_height *2 , coords.y);
-	AEMtx33Rot(&rotate, 0);
+	AEGfxTextureSet(rhs, NULL, NULL);
+	AEMtx33Trans(&translate, coords.x + known_spell_rhs_spacing , coords.y);
+	AEMtx33Rot(&rotate, NULL);
 	AEMtx33Scale(&scale, known_spell_height, known_spell_height);
 	AEMtx33Concat(&transform, &rotate, &scale);
 	AEMtx33Concat(&transform, &translate, &transform);
@@ -320,6 +338,6 @@ void draw_combination(AEGfxTexture* equals, AEGfxTexture* lhs, AEGfxTexture* rhs
 	AEGfxMeshDraw(mesh, AE_GFX_MDM_TRIANGLES);
 
 	//Text printing
-	AEGfxPrint(font, (s8*)"=", (((coords.x + known_spell_spacing) *2)/ AEGetWindowWidth() ) , ((coords.y - 10)*2 / AEGetWindowHeight()) , 1, 1.0f, 1.0f, 1.0f);
-	AEGfxPrint(font, (s8*)"+", (((coords.x + known_spell_spacing*4 ) *2) / AEGetWindowWidth()), ((coords.y - 10) * 2 / AEGetWindowHeight()), 1, 1.0f, 1.0f, 1.0f);
+	AEGfxPrint(font, (s8*)"=", ((coords.x + known_spell_spacing) *2/ AEGetWindowWidth()) , ((coords.y - known_spell_printtext_y_offset)*2 / AEGetWindowHeight()) , known_spell_text_scale, known_spell_text_RGBwhite, known_spell_text_RGBwhite, known_spell_text_RGBwhite);
+	AEGfxPrint(font, (s8*)"+", ((coords.x + known_spell_plus_spacing) *2 / AEGetWindowWidth()), ((coords.y - known_spell_printtext_y_offset) * 2 / AEGetWindowHeight()), known_spell_text_scale, known_spell_text_RGBwhite, known_spell_text_RGBwhite, known_spell_text_RGBwhite);
 }
