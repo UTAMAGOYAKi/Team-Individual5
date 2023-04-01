@@ -822,7 +822,11 @@ void GameStateAlchemiceDraw() {
 }
 
 void GameStateAlchemiceFree() {
-	AEAudioStopGroup(bgm_g);
+	if (!(gGameStateNext == GS_RESTART))
+	{
+		AEAudioStopGroup(bgm_g);
+		AEAudioStopGroup(base);
+	}
 
 }
 
