@@ -17,15 +17,6 @@ prior written consent of DigiPen Institute of Technology is prohibited.
 #define TOTAL_ENEMY 3
 const int animation_time = 1;
 
-//Element Icons
-//AEGfxTexture * fire_icon, * water_icon, * poison_icon, * shadow_icon;
-
-enum class enemy_types 
-{
-    base_rat,
-    big_rat
-};
-
 enum enemy_life_state_enum 
 {
     dead = 0,
@@ -96,11 +87,10 @@ private:
 public:
     Enemy() {};
 
-    Enemy(enemy_types type, AEGfxTexture* input_texture, std::string input_name, int input_hp, int input_atk, Elements element) 
-        : texture{ input_texture }, life_state{alive} , name{input_name}, max_hp{ input_hp }, atk{input_atk}, element_type{element}
+    Enemy( AEGfxTexture* input_texture, std::string input_name, int input_hp, int input_atk, Elements element) 
+        :  texture{ input_texture }, life_state{alive} , name{input_name}, max_hp{ input_hp }, atk{input_atk}, element_type{element}
     {
         hp = max_hp; //Initialized hp will be same as max_hp;
-
         //Sets icon
     };
 

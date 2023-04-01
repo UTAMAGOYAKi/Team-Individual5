@@ -254,13 +254,13 @@ void GameStateAlchemiceInit() {
 	if (level.curr_level == level_enum::level_1)
 	{
 
-		enemies[0] = Enemy(enemy_types::big_rat, rat, "Rat", 4, 1, FIRE);
+		enemies[0] = Enemy( rat, "Rat", 4, 1, FIRE);
 		enemies[0].set_position_and_aabb(enemy_position[0]);
 
-		enemies[1] = Enemy(enemy_types::base_rat, rat, "Rat", 4, 1, WATER);
+		enemies[1] = Enemy( rat, "Rat", 4, 1, WATER);
 		enemies[1].set_position_and_aabb(enemy_position[1]);
 
-		enemies[2] = Enemy(enemy_types::base_rat, rat, "Rat", 4, 1, WATER);
+		enemies[2] = Enemy( rat, "Rat", 4, 1, WATER);
 		enemies[2].set_position_and_aabb(enemy_position[2]);
 
 		level.display_level = "Level 1";
@@ -269,13 +269,13 @@ void GameStateAlchemiceInit() {
 	}
 	else if (level.curr_level == level_enum::level_2)
 	{
-		enemies[0] = Enemy(enemy_types::big_rat, big_rat_texture, "Big Rat", 8, 3, SHADOW);
+		enemies[0] = Enemy(big_rat_texture, "Big Rat", 8, 3, SHADOW);
 		enemies[0].set_position_and_aabb(enemy_position[0]);
 
-		enemies[1] = Enemy(enemy_types::base_rat, rat, "Rat", 4, 2, POISON);
+		enemies[1] = Enemy( rat, "Rat", 4, 2, POISON);
 		enemies[1].set_position_and_aabb(enemy_position[1]);
 
-		enemies[2] = Enemy(enemy_types::base_rat, rat, "Rat", 4, 2, FIRE);
+		enemies[2] = Enemy( rat, "Rat", 4, 2, FIRE);
 		enemies[2].set_position_and_aabb(enemy_position[2]);
 
 		level.display_level = "Level 2";
@@ -284,13 +284,13 @@ void GameStateAlchemiceInit() {
 	}
 	else if (level.curr_level == level_enum::level_3)
 	{
-		enemies[0] = Enemy(enemy_types::big_rat, big_rat_texture, "Big Rat", 10, 3, POISON);
+		enemies[0] = Enemy( big_rat_texture, "Big Rat", 10, 3, POISON);
 		enemies[0].set_position_and_aabb(enemy_position[0]);
 
-		enemies[1] = Enemy(enemy_types::base_rat, big_rat_texture, "Big Rat", 8, 2, SHADOW);
+		enemies[1] = Enemy( big_rat_texture, "Big Rat", 8, 2, SHADOW);
 		enemies[1].set_position_and_aabb(enemy_position[1]);
 
-		enemies[2] = Enemy(enemy_types::base_rat, big_rat_texture, "Big Rat", 8, 2, SHADOW);
+		enemies[2] = Enemy( big_rat_texture, "Big Rat", 8, 2, SHADOW);
 		enemies[2].set_position_and_aabb(enemy_position[2]);
 
 		level.display_level = "Level 3";
@@ -688,7 +688,7 @@ void GameStateAlchemiceDraw() {
 		}
 		player_hp += "/";
 		player_hp += std::to_string(alchemice->max_hp);
-		name_bar(player_hp, player_position, font);
+		name_bar(player_hp, player_position);
 	}
 
 	for (int i{}; i < alchemice->max_mp; ++i) {
@@ -739,7 +739,7 @@ void GameStateAlchemiceDraw() {
 			AEGfxMeshDraw(pMesh, AE_GFX_MDM_TRIANGLES);
 
 			if (!transition)
-				enemy_info(enemies[i], font, pMesh);
+				enemy_info(enemies[i], pMesh);
 
 			//Choosing Icon
 			AEGfxTexture* element;
@@ -824,7 +824,7 @@ void GameStateAlchemiceDraw() {
 
 	if (sub_menu)
 	{
-		sub_menu_draw(sub, spellbook, pMesh, font);
+		sub_menu_draw(sub, spellbook, pMesh);
 	}
 
 	if (pause_mode) {
@@ -884,7 +884,7 @@ void GameStateAlchemiceDraw() {
 
 		const char* check[3]{ { "Exit?" }, { "Yes" }, {"No" } };
 		for (int i = 0; i < ARRAYSIZE(check); ++i) {
-			f32 middle = -(((float)strlen(check[i]) / 2) / (AEGetWindowWidth() / FONT_SIZE));
+			f32 middle_pause = -(((float)strlen(check[i]) / 2) / (AEGetWindowWidth() / FONT_SIZE));
 			f32 textY = (float)((float)(AEGetWindowHeight() - i * AEGetWindowHeight()) / (ARRAYSIZE(pause_buttons) - 1) + pause_space_y) / AEGetWindowHeight();			
 			f32 boxY = (float)(pause_start_y - i * pause_space_y);
 			AEGfxTextureSet(pause_box, 0.f, 0.f);
@@ -895,7 +895,7 @@ void GameStateAlchemiceDraw() {
 			AEMtx33Concat(&transform, &translate, &transform);
 			AEGfxSetTransform(transform.m);
 			AEGfxMeshDraw(pMesh, AE_GFX_MDM_TRIANGLES);
-			AEGfxPrint(font, (s8*)check[i], middle, textY, 1, 0, 0, 0);
+			AEGfxPrint(font, (s8*)check[i], middle_pause, textY, 1, 0, 0, 0);
 
 		}
 	}
@@ -959,6 +959,9 @@ void GameStateAlchemiceUnload() {
 	AEGfxTextureUnload(shadow_icon);
 	AEGfxTextureUnload(poison_icon);
 	//unload_enemy_texture();
+
+	AEGfxTextureUnload(tick_box[0]);
+	AEGfxTextureUnload(tick_box[1]);
 
 	AEGfxMeshFree(pMesh);
 	AEGfxMeshFree(particle_mesh);

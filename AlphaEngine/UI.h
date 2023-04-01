@@ -41,13 +41,13 @@ extern AEGfxTexture* fire_icon, * water_icon, * poison_icon, * shadow_icon;
 
 void player_hp_bar(player ref, AEVec2 pos, AEGfxVertexList* mesh);
 
-void name_bar(std::string name, AEVec2 place, s8 font);
+void name_bar(std::string name, AEVec2 place);
 
-void name_bar(std::string name, aabb place, s8 font);
+//void name_bar(std::string name, aabb place);
 
-void enemy_info(Enemy enemy, s8 font, AEGfxVertexList* mesh);
+void enemy_info(Enemy enemy, AEGfxVertexList* mesh);
 
-void sub_menu_draw(AEGfxTexture* sub_menu, spell_book& spells, AEGfxVertexList* mesh, s8 font);
+void sub_menu_draw(AEGfxTexture* sub_menu, spell_book& spells, AEGfxVertexList* mesh);
 
 void draw_crafting_table(AEGfxVertexList* mesh, craftingtable& crafting_table, particle_manager& particle_manager, particle(*callback)(AEVec2 pos), AEGfxTexture* table = nullptr);
 

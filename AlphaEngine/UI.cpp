@@ -60,13 +60,13 @@ float rotation_about_time{};
 
 
 
-void name_bar(std::string name, aabb place, s8 font)
-{
-	//remeber to check for centering offset %
-}
+//void name_bar(std::string name, aabb place)
+//{
+//	//remeber to check for centering offset %
+//}
 
 
-void enemy_info(Enemy ref, s8 font, AEGfxVertexList* mesh)
+void enemy_info(Enemy ref, AEGfxVertexList* mesh)
 {
 	std::string tmp{ ref.get_name() };
 
@@ -121,7 +121,7 @@ void player_hp_bar(player ref, AEVec2 pos, AEGfxVertexList* mesh)
 }
 
 
-void name_bar(std::string name, AEVec2 place, s8 font)
+void name_bar(std::string name, AEVec2 place)
 {
 	AEGfxPrint(font, (s8*)name.c_str(), place.x / 640, (place.y / 360) - .35f, 1.0f, 1.0f, 1.0f, 1.0f);
 	//remeber to check for centering offset %
@@ -145,6 +145,8 @@ void draw_crafting_table(AEGfxVertexList* mesh, craftingtable& crafting_table, p
 	AEMtx33Concat(&transform, &translate, &transform);
 	AEGfxSetTransform(transform.m);
 	AEGfxMeshDraw(mesh, AE_GFX_MDM_TRIANGLES);
+
+	UNREFERENCED_PARAMETER(callback);
 }
 
 void draw_base_spell_slots(AEGfxVertexList* mesh, AEGfxTexture* base_spell, AEGfxTexture* base_spell_cap)
@@ -187,10 +189,10 @@ void draw_unlocked_spell_slots(AEGfxVertexList* mesh, spell_book& spellbook, AEG
 	}
 }
 
-void sub_menu_draw(AEGfxTexture* sub_menu, spell_book& spells, AEGfxVertexList* mesh, s8 font)
+void sub_menu_draw(AEGfxTexture* sub_menu, spell_book& spells, AEGfxVertexList* mesh)
 {
 	// to ensure the sub_menu is on left 
-	float tmpy = (float)AEGetWindowHeight();
+	/*float tmpy = (float)AEGetWindowHeight();*/
 
 	std::string sub_words[]{ "Known spell lists" };
 	std::string tier_2[]{ "Tier 2:" };

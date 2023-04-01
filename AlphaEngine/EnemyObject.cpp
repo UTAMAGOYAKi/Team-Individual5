@@ -156,7 +156,7 @@ void Enemy::take_damage(int val, Elements input_element)
 {
     val += elemental_damage_calculator(element_type,input_element);
 
-    if (alive) { //if alive
+    if (life_state== alive) { //if alive
         hp -= val;
         if (hp <= 0) {
             hp = 0;
