@@ -44,6 +44,9 @@ spell_book spellbook;
 
 //Coords for active cards
 AEVec2 cards;
+aabb bookaabb;
+AEVec2 bookpos{-540,-230};
+AEVec2 bookscale{ 256,144 };
 //Crafting table for magic
 craftingtable crafting_table;
 
@@ -53,7 +56,7 @@ craftingtable crafting_table;
 AEGfxVertexList* pMesh;
 AEGfxTexture* chara{}, * rat{}, * big_rat_texture{}, * spell_g{}, * pause_box{}, * sub{}, * crafting_test{}, * bg{}, * end_turn_box{}, * mana_full{}, * mana_empty{}, * Menu_ui,
 * base_mid_pipe, * base_cap_pipe, * unlocked_spell_slot, * fire_icon, * water_icon, * poison_icon, * shadow_icon, *tick_box[2], *toxic_deluge_icon, * inferno_blast_icon, * umbral_tendrils_icon, * maelstrom_surge_icon, * venemous_bite_icon,
-* shadow_cloak_icon, * flame_burst_icon, * rat_swarm_icon, * bubonic_blaze_icon;
+* shadow_cloak_icon, * flame_burst_icon, * rat_swarm_icon, * bubonic_blaze_icon, *book_icon;
 
 AEAudio gun, combi, death, whack;
 AEAudio bgm;
@@ -221,6 +224,7 @@ void GameStateAlchemiceLoad() {
 
 	//Init All Spells
 	spellbook = init_all_spells();
+	book_icon = AEGfxTextureLoad("Assets/Spellbook.png");
 
 	spellbook.init_spells_coords();
 	AEAudioSetGroupVolume(bgm_g, (float)sound);
@@ -296,7 +300,7 @@ void GameStateAlchemiceInit() {
 		alchemice->mp = 4;
 		alchemice->max_mp = 4;
 	}
-	
+	bookaabb = CreateAABB(bookpos, bookscale.y, bookscale.y);
 }
 
 
@@ -517,6 +521,14 @@ void GameStateAlchemiceUpdate() {
 			{
 				sub_menu = !sub_menu;
 			}
+			if (sub_menu && AEInputCheckTriggered(AEVK_LBUTTON) && click_offset <= 0) {
+					sub_menu = false;
+					click_offset = 0.1;
+			}
+			if (aabbbutton(&bookaabb, mouse_pos) && AEInputCheckTriggered(AEVK_LBUTTON) && click_offset <= 0) {
+				sub_menu = true;
+				click_offset = 0.1;
+			}
 
 		}//End of player turn logic
 
@@ -616,6 +628,7 @@ void GameStateAlchemiceUpdate() {
 			gGameStateNext = GS_RESTART;
 		}
 	}
+	click_offset -= g_dt;
 }
 
 void GameStateAlchemiceDraw() {
@@ -717,6 +730,7 @@ void GameStateAlchemiceDraw() {
 	//Spell Slot Drawing
 	draw_base_spell_slots(pMesh, base_mid_pipe, base_cap_pipe);
 	draw_unlocked_spell_slots(pMesh, spellbook, unlocked_spell_slot);
+	draw_spellbook(pMesh, book_icon, bookpos, bookscale);
 
 	//Crafting Table
 	draw_crafting_table(pMesh, crafting_table, crafting_part_manager, enemy_take_damage_particle, crafting_test);
@@ -936,6 +950,7 @@ void GameStateAlchemiceUnload() {
 	
 	//Unload all spells in spellbook
 	spellbook.unload_spells();
+	AEGfxTextureUnload(book_icon);
 
 	//Unloads spell icons used in known spell list
 	AEGfxTextureUnload(umbral_tendrils_icon);

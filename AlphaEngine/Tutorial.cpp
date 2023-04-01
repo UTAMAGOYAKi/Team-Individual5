@@ -16,7 +16,7 @@ prior written consent of DigiPen Institute of Technology is prohibited.
 
 //Variables used in Tutorial Gamestate.
 AEGfxVertexList* pMesh_Tutorialscreen;
-AEGfxTexture *Tutorial_screen[12], **pointer_to_texutre;
+AEGfxTexture *Tutorial_screen[13], **pointer_to_texutre;
 size_t TutorialPage, TotalPages;
 float yPos = 330;
 
@@ -48,6 +48,7 @@ void TutorialLoad() {
 	Tutorial_screen[9] = AEGfxTextureLoad("Assets/Tutorial/tutorial10.png");
 	Tutorial_screen[10] = AEGfxTextureLoad("Assets/Tutorial/tutorial11.png");
 	Tutorial_screen[11] = AEGfxTextureLoad("Assets/Tutorial/tutorial12.png");
+	Tutorial_screen[12] = AEGfxTextureLoad("Assets/Tutorial/tutorial13.png");
 }
 
 /*
@@ -75,8 +76,8 @@ void TutorialUpdate() {
 	if (click_offset <= 0 && AEInputCheckTriggered(AEVK_LBUTTON)) {
 		TutorialPage = (TutorialPage < TotalPages) ? TutorialPage + 1 : TutorialPage;
 		if (TutorialPage >= TotalPages) {
-			TutorialPage = 0;
 			gGameStateNext = GS_MENU;
+			TutorialPage -= 1;
 		}
 		click_offset = 0.1;
 		pointer_to_texutre = &Tutorial_screen[TutorialPage];

@@ -55,6 +55,8 @@ void draw_base_spell_slots(AEGfxVertexList* mesh, AEGfxTexture* base_spell, AEGf
 
 void draw_unlocked_spell_slots(AEGfxVertexList* mesh, spell_book& spellbook, AEGfxTexture* unlocked_spell = nullptr);
 
+void draw_spellbook(AEGfxVertexList* mesh, AEGfxTexture* texture, AEVec2 trans, AEVec2 scal);
+
 void level_transition(level_enum const& num, double const &time, std::string &tmp, bool &transition);
 
 void text_buffer(std::string const& input_string, std::string& output_string, double time, int buffer_speed = 5);

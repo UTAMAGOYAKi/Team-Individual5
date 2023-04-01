@@ -46,7 +46,7 @@ void CreditsInit() {
 	linespace = 60;
 	fmodposition.x = 0;
 	fmodposition.y = -360;
-	fmodposition.y = -(35 * linespace);
+	fmodposition.y = -(35.0f * linespace);
 }
 
 void CreditsUpdate()
@@ -60,7 +60,7 @@ void CreditsUpdate()
 	}
 
 	click_offset -= g_dt * FRAMERATE;
-	fmodposition.y += g_dt*FRAMERATE;
+	fmodposition.y += (f32)(g_dt*FRAMERATE);
 }
 
 void CreditsDraw()

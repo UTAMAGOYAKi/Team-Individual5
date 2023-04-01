@@ -189,6 +189,16 @@ void draw_unlocked_spell_slots(AEGfxVertexList* mesh, spell_book& spellbook, AEG
 	}
 }
 
+void draw_spellbook(AEGfxVertexList *mesh, AEGfxTexture *texture, AEVec2 trans, AEVec2 scal) {
+	AEGfxTextureSet(texture, 0, 0);
+	AEMtx33Trans(&translate, trans.x, -trans.y);
+	AEMtx33Scale(&scale, scal.x, scal.y);
+	AEMtx33Concat(&transform, &rotate, &scale);
+	AEMtx33Concat(&transform, &translate, &transform);
+	AEGfxSetTransform(transform.m);
+	AEGfxMeshDraw(mesh, AE_GFX_MDM_TRIANGLES);
+}
+
 void sub_menu_draw(AEGfxTexture* sub_menu, spell_book& spells, AEGfxVertexList* mesh)
 {
 	// to ensure the sub_menu is on left 
