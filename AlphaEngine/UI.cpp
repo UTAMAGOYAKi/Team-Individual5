@@ -194,7 +194,7 @@ void sub_menu_draw(AEGfxTexture* sub_menu, spell_book& spells, AEGfxVertexList* 
 	// to ensure the sub_menu is on left 
 	/*float tmpy = (float)AEGetWindowHeight();*/
 
-	std::string sub_words[]{ "Known spell lists" };
+	std::string sub_words[]{ "Known spell list" };
 	std::string tier_2[]{ "Tier 2:" };
 	std::string tier_1[]{ "Tier 1:" };
 
