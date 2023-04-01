@@ -85,7 +85,7 @@ void LoadScreenDraw() {
 	AEGfxTextureSet(load_screen, 0, 0);
 	AEMtx33Trans(&translate, 0, 0);
 	AEMtx33Rot(&rotate, 0);
-	AEMtx33Scale(&scale, 915, 287);
+	AEMtx33Scale(&scale, (f32)AEGetWindowWidth(), (f32)AEGetWindowHeight());
 	AEMtx33Concat(&transform, &rotate, &scale);
 	AEMtx33Concat(&transform, &translate, &transform);
 	AEGfxSetTransform(transform.m);
