@@ -213,7 +213,7 @@ void GameStateAlchemiceLoad() {
 
 
 	gun = AEAudioLoadSound("Assets/Audio/GUN-MUSKET_GEN-HDF-13603.wav");
-	death = AEAudioLoadSound("Assets/Audio/fox.wav");
+	death = AEAudioLoadSound("Assets/Audio/Knockout.wav");
 	whack = AEAudioLoadSound("Assets/Audio/smackwhack.wav");
 	combi = AEAudioLoadSound("Assets/Audio/MagicCartoon CTE01_94.8.wav");
 	base = AEAudioCreateGroup();
@@ -448,7 +448,7 @@ void GameStateAlchemiceUpdate() {
 								enemies[j].take_damage(spellbook.spell_array[i].base_damage, static_cast<Elements>(spellbook.spell_array[i].element));
 								if (enemies[j].get_hp() <= 0)
 								{
-									AEAudioPlay(death, base, 1.0f, 0.6f, 0);
+									AEAudioPlay(death, base, 0.4f, 1.0f, 0);
 
 								}
 								enemies[j].set_bleeding(true);
