@@ -180,23 +180,14 @@ void GameStateAlchemiceLoad() {
 	unlocked_spell_slot = AEGfxTextureLoad("Assets/box_ui.png");
 
 	umbral_tendrils_icon = AEGfxTextureLoad("Assets/umbral.png");
-	std::cout << "spell_g MemLoc: " << umbral_tendrils_icon << std::endl;
 	inferno_blast_icon = AEGfxTextureLoad("Assets/inferno_blast.png");
-	std::cout << "fire MemLoc: " << inferno_blast_icon << std::endl;
 	toxic_deluge_icon = AEGfxTextureLoad("Assets/toxic_deluge.png");
-	std::cout << "poison MemLoc: " << toxic_deluge_icon << std::endl;
 	maelstrom_surge_icon = AEGfxTextureLoad("Assets/maelstrom_surge.png");
-	std::cout << "shame MemLoc: " << maelstrom_surge_icon << std::endl;
 	venemous_bite_icon = AEGfxTextureLoad("Assets/venemous_bite.png");
-	std::cout << "venemous_bite MemLoc: " << venemous_bite_icon << std::endl;
 	shadow_cloak_icon = AEGfxTextureLoad("Assets/shadow_cloak.png");
-	std::cout << "shadow_cloak MemLoc: " << shadow_cloak_icon << std::endl;
 	flame_burst_icon = AEGfxTextureLoad("Assets/flame_burst.png");
-	std::cout << "flame_burst MemLoc: " << flame_burst_icon << std::endl;
 	rat_swarm_icon = AEGfxTextureLoad("Assets/rat_swarm.png");
-	std::cout << "rat_swarm MemLoc: " << rat_swarm_icon << std::endl;
 	bubonic_blaze_icon = AEGfxTextureLoad("Assets/bubonic_blaze.png");
-	std::cout << "bubonic_blaze MemLoc: " << bubonic_blaze_icon << std::endl;
 
 
 	blast[0] = AEGfxTextureLoad("Assets/blast1.png");
@@ -243,12 +234,6 @@ void GameStateAlchemiceInit() {
 
 	turn = Turn::player_turn;
 	pause_mode = false;
-
-	for (int i = 0; i <= spellbook.array_size; i++) {
-		if (spellbook.spell_array[i].unlocked == true) {
-			std::cout << spellbook.spell_array[i].spell_name << spellbook.spell_array[i].spell_dragdrop->getcoord().mid.x << spellbook.spell_array[i].spell_dragdrop->getcoord().mid.y << std::endl;
-		}
-	}
 
 
 	//creates the button from top to bottom top most button [0]
@@ -373,19 +358,17 @@ void GameStateAlchemiceUpdate() {
 		}
 	}
 
-
-	//Mouse Debug, remove
-	if (AEInputCheckTriggered(AEVK_E))
-	{
-		printf("mouse x is %f\n", mouse_pos.x);
-		printf("mouse y is %f\n", mouse_pos.y);
-	}
 	//Have to check if the player or enemies are all dead
 	bool enemies_alive = false;
 	for (int i{}; i < TOTAL_ENEMY; i++) {
 		if (enemies[i].is_alive()) {
 			enemies_alive = true;
 		}
+	}
+
+	//CHEAT BUTTON
+	if (AEInputCheckTriggered(AEVK_F1)) {
+		enemies_alive = false;
 	}
 
 	//TESTING PARTICLE SYSTEM
@@ -477,7 +460,6 @@ void GameStateAlchemiceUpdate() {
 
 					if (spellbook.spell_array[i].spell_dragdrop->getmouse())
 					{
-						std::cout << "RELEASE" << std::endl;
 						if (spellbook.spell_array[i].id == crafting_table.get_spell1()) {
 							crafting_table.crafting_table_snap(spellbook, spellbook.spell_array[i].id);
 							spellbook.spell_array[i].spell_dragdrop->mousechange(true);
@@ -506,13 +488,6 @@ void GameStateAlchemiceUpdate() {
 			//Check for mouse click
 			if (AEInputCheckTriggered(AEVK_LBUTTON))
 			{
-				for (int i = 0; i <= max_spells; i++) {
-					if (aabbbutton(spellbook.spell_array[i].spell_dragdrop, mouse_pos)) {
-						std::cout << "Clicking " << spellbook.spell_array[i].spell_name << std::endl;
-
-					}
-				}
-
 				if (aabbbutton(&end_turn_button, mouse_pos)) {
 					turn = Turn::enemy_turn;
 					s_enemy_turn = 0;

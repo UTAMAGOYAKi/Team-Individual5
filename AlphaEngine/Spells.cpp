@@ -34,24 +34,14 @@ spell_book init_all_spells()
 
 	//Currently Textures are used as placeholder, ignore the meaning
 	umbral_tendrils = AEGfxTextureLoad("Assets/Card-Sprite-umbral.png");
-	std::cout << "spell_g MemLoc: " << umbral_tendrils << std::endl;
 	inferno_blast = AEGfxTextureLoad("Assets/Card-Sprite-Inferno-Blast.png");
-	std::cout << "fire MemLoc: " << inferno_blast << std::endl;
 	toxic_deluge = AEGfxTextureLoad("Assets/Card-Sprite-Toxic-Deluge.png");
-	std::cout << "poison MemLoc: " << toxic_deluge << std::endl;
 	maelstrom_surge = AEGfxTextureLoad("Assets/Card-Sprite-Maelstrom.png");
-	std::cout << "shame MemLoc: " << maelstrom_surge << std::endl;
 	venemous_bite = AEGfxTextureLoad("Assets/Card-Sprite-Venemous.png");
-	std::cout << "venemous_bite MemLoc: " << venemous_bite << std::endl;
 	shadow_cloak = AEGfxTextureLoad("Assets/Card-Sprite-shadow-cloak.png");
-	std::cout << "shadow_cloak MemLoc: " << shadow_cloak << std::endl;
 	flame_burst = AEGfxTextureLoad("Assets/Card-Sprite-flame-burst.png");
-	std::cout << "flame_burst MemLoc: " << flame_burst << std::endl;
 	rat_swarm = AEGfxTextureLoad("Assets/Card-Sprite-Rat-Swarm.png");
-	std::cout << "rat_swarm MemLoc: " << rat_swarm << std::endl;
 	bubonic_blaze = AEGfxTextureLoad("Assets/Card-Sprite-Bubonic-Blaze.png");
-	std::cout << "bubonic_blaze MemLoc: " << bubonic_blaze << std::endl;
-	std::cout << "Creating All " << max_spells << " Spells" << std::endl;
 
 	// +1 due to invalid spell
 	Spell* spellbook = new Spell[max_spells + 1]{
