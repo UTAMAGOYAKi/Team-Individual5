@@ -30,13 +30,13 @@ void craftingtable::crafting_table_snap(spell_book& spellbook, spells spell_id)
 {
 	assert((spellbook.array_size <= max_spells) || (spellbook.array_size >= (size_t)first_spell));
 	//Only run when crafting table is empty
-	if (this->spell1_id == spells::INVALID_SPELL && two_spell_flag == false) {
+	if (this->spell1_id == spells::INVALID_SPELL && two_spell_flag == false && spellbook.spell_array[(int)spell_id].animation == false) {
 		spellbook.spell_array[(int)spell_id].spell_dragdrop->mousechange(false);
 		spellbook.spell_array[(int)spell_id].spell_dragdrop->moveto(this->table_dragdrop.getcoord());
 		spellbook.spell_array[(int)spell_id].spell_dragdrop->move(crafting_table_buffer, 0);
 		this->spell1_id = spell_id;
 	}
-	else if (this->spell1_id != spells::INVALID_SPELL && this->spell2_id == spells::INVALID_SPELL) {
+	else if (this->spell1_id != spells::INVALID_SPELL && this->spell2_id == spells::INVALID_SPELL && spellbook.spell_array[(int)spell_id].animation == false) {
 		spellbook.spell_array[(int)spell_id].spell_dragdrop->mousechange(false);
 		spellbook.spell_array[(int)spell_id].spell_dragdrop->moveto(this->table_dragdrop.getcoord());
 		spellbook.spell_array[(int)spell_id].spell_dragdrop->move(-crafting_table_buffer, 0);
@@ -66,10 +66,14 @@ int craftingtable::crafting_table_update(spell_book& spellbook)
 			if (spellbook.combine_spells(this->spell1_id, this->spell2_id)) {
 				spellbook.spell_array[(int)this->spell1_id].spell_dragdrop->resetaabb();
 				spellbook.spell_array[(int)this->spell2_id].spell_dragdrop->resetaabb();
-				if (spellbook.spell_array[(int)this->spell1_id].tier > tier3_last)
+				if (spellbook.spell_array[(int)this->spell1_id].tier > tier3_last) {
 					spellbook.spell_array[(int)this->spell1_id].unlocked = false;
-				if (spellbook.spell_array[(int)this->spell2_id].tier > tier3_last)
+					spellbook.spell_array[(int)this->spell1_id].animation = false;
+				}
+				if (spellbook.spell_array[(int)this->spell2_id].tier > tier3_last) {
 					spellbook.spell_array[(int)this->spell2_id].unlocked = false;
+					spellbook.spell_array[(int)this->spell2_id].animation = false;
+				}
 				this->spell1_id = spells::INVALID_SPELL;
 				this->spell2_id = spells::INVALID_SPELL;
 				timer = NULL;

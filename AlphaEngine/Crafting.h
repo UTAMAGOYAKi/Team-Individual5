@@ -22,7 +22,8 @@ const float table_height_const = 180;
 const float crafting_table_buffer = (table_width_const / 4);
 
 //Buffer Float for crafting table effects/ delay
-const float crafting_time_buffer = 1.2f;
+const float crafting_time_buffer = 1.0f;
+
 
 
 
