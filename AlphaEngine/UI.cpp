@@ -1,10 +1,12 @@
 /******************************************************************************/
 /*!
 \file		UI.cpp
-\author 	Liang HongJie(20%),Low Ee Loong (20%)
-\par    	email: l.hongjie\@digipen.edu, eeloong.l\@digipen.edu
+\author 	Liang HongJie(20%), Low Ee Loong (40%), Daniel Tee (40%)
+\par    	email: l.hongjie\@digipen.edu, eeloong.l\@digipen.edu, m.tee\@digipen.edu
 \brief		Some UI functions defined here.
-			
+			Eeloong contributed to the drawing of spell related UIs
+			Daniel contributed to the drawing of player and enemy related information.
+			HongJie contributed to the level transition and text buffer.
 
 Copyright (C) 2023 DigiPen Institute of Technology.
 Reproduction or disclosure of this file or its contents without the

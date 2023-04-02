@@ -1,11 +1,17 @@
 /******************************************************************************/
 /*!
-\file		GameStates.h
+\file		GameStates.cpp
 \project	Alchemice
 \author 	Daniel Tee(25%), Liang HongJie(25%), Low Ee Loong(25%), Yeo Jun Jie(25%)
 \par    	email: m.tee\@digipen.edu, l.hongjie\@digipen.edu,
-										yeo.junjie\@digipen.edu,
+					eeloong.l\@digipen.edu, yeo.junjie\@digipen.edu,
+
 \brief		Function declaration for Game as well as define Enum used within Game loop
+			
+			Daniel contributed to the creation of player, sound and options within the pause menu.
+			Eeloong contributed to the spellcrafting and its respective UI.
+			Jun Jie contributed to particles and effects as well as enemies and battle system.
+			HongJie contributed to the UI for battle systems as well as change of game states.
 
 Copyright (C) 2023 DigiPen Institute of Technology.
 Reproduction or disclosure of this file or its contents without the

@@ -1,6 +1,6 @@
 /******************************************************************************/
 /*!
-\file		Buttons.cpp
+\file		Buttons.h
 \project	Alchemice
 \author 	Daniel Tee(95%), Liang HongJie(5%)
 \par    	email: m.tee\@digipen.edu, l.hongjie\@digipen.edu

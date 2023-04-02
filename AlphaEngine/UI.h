@@ -1,15 +1,15 @@
 /******************************************************************************/
 /*!
-\file		UI.cpp
-\author 	Liang HongJie(20%),Low Ee Loong (20%)
-\par    	email: l.hongjie\@digipen.edu, eeloong.l\@digipen.edu
-\brief		Some UI functions defined here.
+\file		UI.h
+\author 	Liang HongJie(20%), Low Ee Loong (40%), Daniel Tee (40%)
+\par    	email: l.hongjie\@digipen.edu, eeloong.l\@digipen.edu, m.tee\@digipen.edu
+\brief		Some UI functions declared here.
 
 Copyright (C) 2023 DigiPen Institute of Technology.
 Reproduction or disclosure of this file or its contents without the
 prior written consent of DigiPen Institute of Technology is prohibited.
-*/
-/******************************************************************************/
+ */
+ /******************************************************************************/
 
 #ifndef UI_h
 #define UI_h
