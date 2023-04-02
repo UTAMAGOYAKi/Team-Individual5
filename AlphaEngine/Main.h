@@ -50,6 +50,7 @@ extern double click_offset;
 // crafting table timer for combination spell delay
 extern f64 timer;
 extern bool sound;
+extern bool fullscreen;
 
 #ifndef ARRAYSIZE
 #define ARRAYSIZE(x) (sizeof(x)/sizeof(x[0]))

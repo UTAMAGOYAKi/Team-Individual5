@@ -21,8 +21,9 @@ s8 font;
 double click_offset;
 f64 g_dt = 0;
 f64 timer = 0;
-
 bool sound = true;
+bool fullscreen = true;
+
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	_In_opt_ HINSTANCE hPrevInstance,
 	_In_ LPWSTR    lpCmdLine,

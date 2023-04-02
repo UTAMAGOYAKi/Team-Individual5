@@ -59,7 +59,7 @@ void draw_spellbook(AEGfxVertexList* mesh, AEGfxTexture* texture, AEVec2 trans, 
 
 void level_transition(level_enum const& num, double const &time, std::string &tmp, bool &transition);
 
-void text_buffer(std::string const& input_string, std::string& output_string, double time, int buffer_speed = 5);
+void text_buffer(std::string const& input_string, std::string& output_string, double time, int buffer_speed, bool &transition);
 
 void draw_combination(AEGfxTexture* equals, AEGfxTexture* lhs, AEGfxTexture* rhs, AEVec2& coords, AEGfxVertexList* mesh);
 

@@ -112,7 +112,6 @@ void TutorialDraw() {
 	AEGfxSetTransform(transform.m);
 	AEGfxMeshDraw(pMesh_Tutorialscreen, AE_GFX_MDM_TRIANGLES);
 
-	AEGfxSetTransparency(0.25f);
 	const char* Tutorial_text[] = { {"Mouse left click to continue"}, {"Press Esc to return to Main Menu"} };
 
 	f32 middle1 = -(((float)strlen(Tutorial_text[0]) / 2) / (AEGetWindowWidth() / FONT_SIZE));

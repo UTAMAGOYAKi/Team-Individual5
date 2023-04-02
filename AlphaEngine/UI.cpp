@@ -270,23 +270,21 @@ void sub_menu_draw(AEGfxTexture* sub_menu, spell_book& spells, AEGfxVertexList* 
 */
 void level_transition(level_enum const& num, double const &time, std::string &tmp, bool &transition) {
 	int i{ 0 };
+	float offsetfullscreen;
 	const int transition_speed = 5;
-	std::string addtext{ "LEVEL: " };
+	std::string addtext{"LEVEL: "};
 	addtext += static_cast<char>(static_cast<int>(num) + '1');
-
-
-	text_buffer(addtext, tmp, time);
+	
+	text_buffer(addtext, tmp, time, transition_speed, transition);
 
 	if (time > 0) {
 		i = (int)(time * transition_speed);
 	}
 
-	if (i > addtext.size() && transition)
-		transition = false;
-
-	f32 middle = -(((float)strlen(tmp.c_str()) / 2) / (AEGetWindowWidth() / FONT_SIZE));
+	offsetfullscreen = (fullscreen) ? 0.2f : 0.0f;
+	f32 middle = -((float)strlen(tmp.c_str()) / 2) / (AEGetWindowWidth() / FONT_SIZE);
 	f32 textY = 0;
-	AEGfxPrint(font, (s8*)tmp.c_str(), middle, textY, 1, 1, 1, 1);
+	AEGfxPrint(font, (s8*)tmp.c_str(), middle+offsetfullscreen, textY+offsetfullscreen, 1, 1, 1, 1);
 
 }
 
@@ -302,7 +300,7 @@ void level_transition(level_enum const& num, double const &time, std::string &tm
 	\param buffer_speed
 		speed at which the text buffers, default at 5.
 */
-void text_buffer(std::string const& input_string, std::string& output_string, double time, int buffer_speed) {
+void text_buffer(std::string const& input_string, std::string& output_string, double time, int buffer_speed, bool &transition) {
 	int i{ 0 };
 	const int text_speed{ buffer_speed };
 	if (time > 0) {
@@ -313,8 +311,9 @@ void text_buffer(std::string const& input_string, std::string& output_string, do
 		output_string += input_string[i];
 	}
 
-	if (i > input_string.size()) {
+	if (i > input_string.size() && transition) {
 		output_string += ' ';
+		transition = false;
 	}
 }
 

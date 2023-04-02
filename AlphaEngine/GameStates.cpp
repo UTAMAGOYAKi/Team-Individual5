@@ -84,7 +84,6 @@ bool pause_mode = false;
 bool check_exit = false;
 bool toggler = true;
 bool sub_menu = false;
-static bool fullscreen = true;
 
 //Level Turn checks
 Turn turn;
@@ -92,7 +91,7 @@ level_manager level;
 bool transition = false;
 const double transition_set_time = 1;
 double transition_timer = 1;
-std::string transition_text{};
+std::string transition_text;
 
 //GameObject Creations
 player* alchemice{};
@@ -613,10 +612,9 @@ void GameStateAlchemiceUpdate() {
 }
 
 void GameStateAlchemiceDraw() {
-
 	// Your own rendering logic goes here
 	// Set the background to black.
-	AEGfxSetBackgroundColor(.2f, .2f, .2f);
+	AEGfxSetBackgroundColor(1, 1, 1);
 	// Tell the engine to get ready to draw something with texture.
 	AEGfxSetRenderMode(AE_GFX_RM_TEXTURE);
 	// Set the tint to white, so that the sprite can 
@@ -625,6 +623,11 @@ void GameStateAlchemiceDraw() {
 	// Set blend mode to AE_GFX_BM_BLEND
 	// This will allow transparency.
 	AEGfxSetBlendMode(AE_GFX_BM_BLEND);
+
+	AEMtx33 scale{ 0 };
+	AEMtx33 rotate{ 0 };
+	AEMtx33 translate{ 0 };
+	AEMtx33 transform{ 0 };
 
 	if (transition) {
 		AEGfxSetBackgroundColor(.0f, .0f, .0f);
@@ -637,11 +640,6 @@ void GameStateAlchemiceDraw() {
 	}
 	else
 		AEGfxSetTransparency(1.0f);
-
-	AEMtx33 scale{ 0 };
-	AEMtx33 rotate{ 0 };
-	AEMtx33 translate{ 0 };
-	AEMtx33 transform{ 0 };
 
 	AEGfxTextureSet(bg, 0, 0);
 	AEMtx33Trans(&translate, 0, -50);
@@ -900,7 +898,6 @@ void GameStateAlchemiceDraw() {
 
 		}
 	}
-	
 }
 
 void GameStateAlchemiceFree() {
