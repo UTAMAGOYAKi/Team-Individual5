@@ -1,7 +1,22 @@
+/******************************************************************************/
+/*!
+\file		Player.h
+\project	Alchemice
+\author 	Daniel Tee(95%), Liang HongJie(5%)
+\par    	email: m.tee\@digipen.edu, l.hongjie\@digipen.edu 
+\brief		Struct for the player and declarations of functions used to create 
+			the player.
+
+Copyright (C) 2023 DigiPen Institute of Technology.
+Reproduction or disclosure of this file or its contents without the
+prior written consent of DigiPen Institute of Technology is prohibited.
+ */
+ /******************************************************************************/
+
 #pragma once
 #include <iostream>
 
-enum player_sit { p_idle, p_attack, p_alch, p_status, p_dead };
+
 
 struct player {
 	int hp;
@@ -13,5 +28,3 @@ struct player {
 
 player* create_player();
 void delete_player(player* ptr);
-
-player_sit player_flag(player guy);
