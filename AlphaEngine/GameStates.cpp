@@ -454,6 +454,7 @@ void GameStateAlchemiceUpdate() {
 							{
 								if (spellbook.spell_array[i].id > tier3_last) {
 									spellbook.spell_array[i].unlocked = false;
+									spellbook.spell_array[i].animation = false;
 								}
 								crafting_table.reset_spells();
 								enemies[j].take_damage(spellbook.spell_array[i].base_damage, static_cast<Elements>(spellbook.spell_array[i].element));
@@ -497,6 +498,7 @@ void GameStateAlchemiceUpdate() {
 				}
 			}
 
+
 			//Check for mouse click
 			if (AEInputCheckTriggered(AEVK_LBUTTON))
 			{
@@ -529,6 +531,9 @@ void GameStateAlchemiceUpdate() {
 				sub_menu = true;
 				click_offset = 0.1;
 			}
+
+			spellbook.crafting_fly();
+
 
 		}//End of player turn logic
 
