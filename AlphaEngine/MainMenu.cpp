@@ -23,6 +23,9 @@ float const texture_start = -175.0f;
 float const text_start = 40.0f;
 AEVec2 const main_button_size{ 140,50 };
 
+bool exit_game = false;
+bool refresher;
+
 /*
 	Load function of Menu
 */
@@ -68,7 +71,13 @@ void MenuInit()
 */
 void MenuUpdate()
 {
-	if (AEInputCheckTriggered(AEVK_LBUTTON))
+
+	if (AEInputCheckReleased(AEVK_LBUTTON))
+	{
+		refresher = true;
+	}
+
+	if (AEInputCheckTriggered(AEVK_LBUTTON) && !exit_game)
 	{
 		for (int i{}; i < ARRAYSIZE(menu_buttons); ++i)
 		{
@@ -89,11 +98,40 @@ void MenuUpdate()
 					break;
 
 				case 3:
-					gGameStateNext = GS_QUIT;
+					exit_game = !exit_game;
+					refresher = false;
+
 					break;
 
 				}
 
+			}
+		}
+	}
+
+	if (refresher)
+	{
+		if (AEInputCheckTriggered(AEVK_LBUTTON) && exit_game)
+		{
+			for (int i{}; i < ARRAYSIZE(menu_buttons); ++i)
+			{
+				if (aabbbutton(&menu_buttons[i], mouse_pos))
+				{
+					switch (i)
+					{
+					case 1:
+						gGameStateNext = GS_QUIT;
+						break;
+
+					case 2:
+						exit_game = !exit_game;
+						break;
+
+					 default:
+						 break;
+
+					}
+				}
 			}
 		}
 	}
@@ -144,6 +182,40 @@ void MenuDraw()
 		f32 middle = -(((float)strlen(MainMenu[i]) / 2) / (AEGetWindowWidth() / FONT_SIZE));
 		f32 textY = (float)((text_start - i * linespace_main) / ((f32)AEGetWindowHeight() / 2));
 		AEGfxPrint(font, (s8*)MainMenu[i], middle, textY, 1, 0, 0, 0);
+	}
+
+	if (exit_game)
+	{
+		for (int i{}; i < ARRAYSIZE(menu_buttons)-1; ++i)
+		{
+			AEGfxTextureSet(Menu_UI, 0, 0);
+			AEMtx33Trans(&translate, 0, texture_start + (i * linespace_main));
+			AEMtx33Rot(&rotate, 0);
+			if (i == 0)
+			{
+				AEMtx33Scale(&scale, main_button_size.x*2, main_button_size.y * 200);
+			}
+			else
+			{
+				AEMtx33Scale(&scale, main_button_size.x, main_button_size.y * 2);
+			}
+			AEMtx33Concat(&transform, &rotate, &scale);
+			AEMtx33Concat(&transform, &translate, &transform);
+			AEGfxSetTransform(transform.m);
+			AEGfxMeshDraw(pMesh_MainMenu, AE_GFX_MDM_TRIANGLES);
+		}
+
+
+		const char* confirm_exit[] = { {"Exit?"}, {"Yes"}, {"No"}};
+
+		for (int i{}; i < ARRAYSIZE(confirm_exit); ++i)
+		{
+			f32 middle = -(((float)strlen(confirm_exit[i]) / 2) / (AEGetWindowWidth() / FONT_SIZE));
+			f32 textY = (float)((text_start - i * linespace_main) / ((f32)AEGetWindowHeight() / 2));
+			AEGfxPrint(font, (s8*)confirm_exit[i], middle, textY, 1, 0, 0, 0);
+		}
+
+
 	}
 
 }
