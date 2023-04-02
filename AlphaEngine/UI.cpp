@@ -281,7 +281,7 @@ void level_transition(level_enum const& num, double const &time, std::string &tm
 		i = (int)(time * transition_speed);
 	}
 
-	offsetfullscreen = (fullscreen) ? 0.2f : 0.0f;
+	offsetfullscreen = (fullscreen) ? 0.5f : 0.0f;
 	f32 middle = -((float)strlen(tmp.c_str()) / 2) / (AEGetWindowWidth() / FONT_SIZE);
 	f32 textY = 0;
 	AEGfxPrint(font, (s8*)tmp.c_str(), middle+offsetfullscreen, textY+offsetfullscreen, 1, 1, 1, 1);
