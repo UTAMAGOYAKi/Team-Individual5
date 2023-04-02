@@ -36,7 +36,7 @@ void CreditsLoad() {
 		0.5f, -0.5f, 0x00000000, 1.0f, 1.0f);
 	pMesh_Creditscreen = AEGfxMeshEnd();
 
-	fmodcredits = AEGfxTextureLoad("Assets/FMODlogo.png");
+	fmodcredits = AEGfxTextureLoad("Assets/Art/FMODlogo.png");
 }
 
 void CreditsInit() {

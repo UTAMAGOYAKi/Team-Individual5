@@ -84,7 +84,7 @@ bool pause_mode = false;
 bool check_exit = false;
 bool toggler = true;
 bool sub_menu = false;
-static bool fullscreen = false;
+static bool fullscreen = true;
 
 //Level Turn checks
 Turn turn;
@@ -164,46 +164,46 @@ void GameStateAlchemiceLoad() {
 
 	particle_mesh = AEGfxMeshEnd();
 
-	chara = AEGfxTextureLoad("Assets/char.png");
-	rat = AEGfxTextureLoad("Assets/Rat.png");
-	big_rat_texture = AEGfxTextureLoad("Assets/big_rat.png");
-	sub = AEGfxTextureLoad("Assets/submenu.png");
-	pause_box = AEGfxTextureLoad("Assets/pause_button.png");
-	end_turn_box = AEGfxTextureLoad("Assets/end_button.png");
-	crafting_test = AEGfxTextureLoad("Assets/copyright_table.png");
-	bg = AEGfxTextureLoad("Assets/background.png");
-	mana_full = AEGfxTextureLoad("Assets/mana_full.png");
-	mana_empty = AEGfxTextureLoad("Assets/mana_empty.png");
+	chara = AEGfxTextureLoad("Assets/Art/char.png");
+	rat = AEGfxTextureLoad("Assets/Art/Rat.png");
+	big_rat_texture = AEGfxTextureLoad("Assets/Art/big_rat.png");
+	sub = AEGfxTextureLoad("Assets/Art/submenu.png");
+	pause_box = AEGfxTextureLoad("Assets/Art/pause_button.png");
+	end_turn_box = AEGfxTextureLoad("Assets/Art/end_button.png");
+	crafting_test = AEGfxTextureLoad("Assets/Art/copyright_table.png");
+	bg = AEGfxTextureLoad("Assets/Art/background.png");
+	mana_full = AEGfxTextureLoad("Assets/Art/mana_full.png");
+	mana_empty = AEGfxTextureLoad("Assets/Art/mana_empty.png");
 
-	base_mid_pipe = AEGfxTextureLoad("Assets/midpipe.png");
-	base_cap_pipe = AEGfxTextureLoad("Assets/side_ui.png");
-	unlocked_spell_slot = AEGfxTextureLoad("Assets/box_ui.png");
+	base_mid_pipe = AEGfxTextureLoad("Assets/Art/midpipe.png");
+	base_cap_pipe = AEGfxTextureLoad("Assets/Art/side_ui.png");
+	unlocked_spell_slot = AEGfxTextureLoad("Assets/Art/box_ui.png");
 
-	umbral_tendrils_icon = AEGfxTextureLoad("Assets/umbral.png");
-	inferno_blast_icon = AEGfxTextureLoad("Assets/inferno_blast.png");
-	toxic_deluge_icon = AEGfxTextureLoad("Assets/toxic_deluge.png");
-	maelstrom_surge_icon = AEGfxTextureLoad("Assets/maelstrom_surge.png");
-	venemous_bite_icon = AEGfxTextureLoad("Assets/venemous_bite.png");
-	shadow_cloak_icon = AEGfxTextureLoad("Assets/shadow_cloak.png");
-	flame_burst_icon = AEGfxTextureLoad("Assets/flame_burst.png");
-	rat_swarm_icon = AEGfxTextureLoad("Assets/rat_swarm.png");
-	bubonic_blaze_icon = AEGfxTextureLoad("Assets/bubonic_blaze.png");
+	umbral_tendrils_icon = AEGfxTextureLoad("Assets/Art/umbral.png");
+	inferno_blast_icon = AEGfxTextureLoad("Assets/Art/inferno_blast.png");
+	toxic_deluge_icon = AEGfxTextureLoad("Assets/Art/toxic_deluge.png");
+	maelstrom_surge_icon = AEGfxTextureLoad("Assets/Art/maelstrom_surge.png");
+	venemous_bite_icon = AEGfxTextureLoad("Assets/Art/venemous_bite.png");
+	shadow_cloak_icon = AEGfxTextureLoad("Assets/Art/shadow_cloak.png");
+	flame_burst_icon = AEGfxTextureLoad("Assets/Art/flame_burst.png");
+	rat_swarm_icon = AEGfxTextureLoad("Assets/Art/rat_swarm.png");
+	bubonic_blaze_icon = AEGfxTextureLoad("Assets/Art/bubonic_blaze.png");
 
 
-	blast[0] = AEGfxTextureLoad("Assets/blast1.png");
-	blast[1] = AEGfxTextureLoad("Assets/blast2.png");
-	blast[2] = AEGfxTextureLoad("Assets/blast3.png");
-	blast[3] = AEGfxTextureLoad("Assets/blast4.png");
+	blast[0] = AEGfxTextureLoad("Assets/Art/blast1.png");
+	blast[1] = AEGfxTextureLoad("Assets/Art/blast2.png");
+	blast[2] = AEGfxTextureLoad("Assets/Art/blast3.png");
+	blast[3] = AEGfxTextureLoad("Assets/Art/blast4.png");
 
 	//Icon Loading
 	//load_enemy_texture();
-	fire_icon = AEGfxTextureLoad("Assets/fire_icon.png");
-	water_icon = AEGfxTextureLoad("Assets/water_icon.png");
-	shadow_icon = AEGfxTextureLoad("Assets/shadow_icon.png");
-	poison_icon = AEGfxTextureLoad("Assets/poison_icon.png");
+	fire_icon = AEGfxTextureLoad("Assets/Art/fire_icon.png");
+	water_icon = AEGfxTextureLoad("Assets/Art/water_icon.png");
+	shadow_icon = AEGfxTextureLoad("Assets/Art/shadow_icon.png");
+	poison_icon = AEGfxTextureLoad("Assets/Art/poison_icon.png");
 
-	tick_box[0] = AEGfxTextureLoad("Assets/tick_box_1.png");
-	tick_box[1] = AEGfxTextureLoad("Assets/tick_box_2.png");
+	tick_box[0] = AEGfxTextureLoad("Assets/Art/tick_box_1.png");
+	tick_box[1] = AEGfxTextureLoad("Assets/Art/tick_box_2.png");
 
 	PositionInit();
 	alchemice = create_player();
@@ -221,7 +221,7 @@ void GameStateAlchemiceLoad() {
 
 	//Init All Spells
 	spellbook = init_all_spells();
-	book_icon = AEGfxTextureLoad("Assets/Spellbook.png");
+	book_icon = AEGfxTextureLoad("Assets/Art/Spellbook.png");
 
 	spellbook.init_spells_coords();
 	AEAudioSetGroupVolume(bgm_g, (float)sound);

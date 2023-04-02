@@ -33,8 +33,8 @@ void GameOverLoad() {
 		0.5f, -0.5f, 0x00000000, 1.0f, 1.0f);
 	pMesh_GameOver = AEGfxMeshEnd();
 
-	Gameover_screen = AEGfxTextureLoad("Assets/GameOver_Text.png");
-	Victory_screen = AEGfxTextureLoad("Assets/Victory_Text.png");
+	Gameover_screen = AEGfxTextureLoad("Assets/Art/GameOver_Text.png");
+	Victory_screen = AEGfxTextureLoad("Assets/Art/Victory_Text.png");
 }
 
 

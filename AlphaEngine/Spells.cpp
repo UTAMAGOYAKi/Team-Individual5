@@ -33,15 +33,15 @@ spell_book init_all_spells()
 	spell_book x;
 
 	//Currently Textures are used as placeholder, ignore the meaning
-	umbral_tendrils = AEGfxTextureLoad("Assets/Card-Sprite-umbral.png");
-	inferno_blast = AEGfxTextureLoad("Assets/Card-Sprite-Inferno-Blast.png");
-	toxic_deluge = AEGfxTextureLoad("Assets/Card-Sprite-Toxic-Deluge.png");
-	maelstrom_surge = AEGfxTextureLoad("Assets/Card-Sprite-Maelstrom.png");
-	venemous_bite = AEGfxTextureLoad("Assets/Card-Sprite-Venemous.png");
-	shadow_cloak = AEGfxTextureLoad("Assets/Card-Sprite-shadow-cloak.png");
-	flame_burst = AEGfxTextureLoad("Assets/Card-Sprite-flame-burst.png");
-	rat_swarm = AEGfxTextureLoad("Assets/Card-Sprite-Rat-Swarm.png");
-	bubonic_blaze = AEGfxTextureLoad("Assets/Card-Sprite-Bubonic-Blaze.png");
+	umbral_tendrils = AEGfxTextureLoad("Assets/Art/Card-Sprite-umbral.png");
+	inferno_blast = AEGfxTextureLoad("Assets/Art/Card-Sprite-Inferno-Blast.png");
+	toxic_deluge = AEGfxTextureLoad("Assets/Art/Card-Sprite-Toxic-Deluge.png");
+	maelstrom_surge = AEGfxTextureLoad("Assets/Art/Card-Sprite-Maelstrom.png");
+	venemous_bite = AEGfxTextureLoad("Assets/Art/Card-Sprite-Venemous.png");
+	shadow_cloak = AEGfxTextureLoad("Assets/Art/Card-Sprite-shadow-cloak.png");
+	flame_burst = AEGfxTextureLoad("Assets/Art/Card-Sprite-flame-burst.png");
+	rat_swarm = AEGfxTextureLoad("Assets/Art/Card-Sprite-Rat-Swarm.png");
+	bubonic_blaze = AEGfxTextureLoad("Assets/Art/Card-Sprite-Bubonic-Blaze.png");
 
 	// +1 due to invalid spell
 	Spell* spellbook = new Spell[max_spells + 1]{

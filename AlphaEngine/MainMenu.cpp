@@ -45,8 +45,8 @@ void MenuLoad()
 	// Saving the mesh (list of triangles) in pMesh_MainMenu
 	pMesh_MainMenu = AEGfxMeshEnd();
 
-	Menu_BG = AEGfxTextureLoad("Assets/MainMenu_Text.png");
-	Menu_UI = AEGfxTextureLoad("Assets/Menu_placeh.png");
+	Menu_BG = AEGfxTextureLoad("Assets/Art/MainMenu_Text.png");
+	Menu_UI = AEGfxTextureLoad("Assets/Art/Menu_placeh.png");
 
 }
 

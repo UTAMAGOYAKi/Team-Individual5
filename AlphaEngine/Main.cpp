@@ -38,7 +38,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
 	// Using custom window procedure
 	AESysInit(hInstance, nCmdShow, 1280, 720, 1, FRAMERATE, true, NULL);
-	AESysToggleFullScreen(false);
+	AESysToggleFullScreen(true);
 
 
 	// Changing the window title

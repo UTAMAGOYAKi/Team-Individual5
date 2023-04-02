@@ -36,7 +36,7 @@ void LoadScreenLoad() {
 		0.5f, -0.5f, 0x00000000, 1.0f, 1.0f);
 	pMesh_Loadscreen = AEGfxMeshEnd();
 
-	load_screen = AEGfxTextureLoad("Assets/digilogo.png");
+	load_screen = AEGfxTextureLoad("Assets/Art/digilogo.png");
 }
 
 /*
