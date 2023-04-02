@@ -26,7 +26,6 @@ prior written consent of DigiPen Institute of Technology is prohibited.
 #include "AEEngine.h"
 #include "Math.h"
 #include "Elements.h"
-#include "Battle_system.h"
 #include "Buttons.h"
 #include "Credits.h"
 #include "EnemyObject.h"
